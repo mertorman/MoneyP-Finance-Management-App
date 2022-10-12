@@ -12,15 +12,15 @@ class OnBoardModels {
   static final List<OnBoardModel> onBoardModels = [
     OnBoardModel(
         'Track Your Spend',
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s,',
+        'Do you have trouble in tracking and managing your money expenses ? Take note of your money expenses with moneyp app, track them easily',
         'onboard_1'),
     OnBoardModel(
         'Calculate Your Spend',
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s,',
+        'Calculate your money expenses easily, keep your money in your wallet',
         'onboard_2'),
     OnBoardModel(
         'See Your Daily And Monthly Expenses',
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s,',
+        'You can see your daily and monthly expenses and review your money expenses.',
         'onboard_3'),
   ];
 }
