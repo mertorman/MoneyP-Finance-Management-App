@@ -13,12 +13,24 @@ class OnboardPage extends StatefulWidget {
 class _OnboardPageState extends State<OnboardPage>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
-  OnBoardModels models = OnBoardModels();
+  
+
+  bool opacity = false;
+
+  // ignore: unused_element
+  void _changeOpacity() {
+    setState(() {
+      opacity = !opacity;
+    });
+  }
 
   @override
   void initState() {
     _tabController = TabController(length: 3, vsync: this);
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _changeOpacity();
+    });
   }
 
   void _changeIndicator(int value) {
@@ -28,11 +40,25 @@ class _OnboardPageState extends State<OnboardPage>
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData = MediaQuery.of(context);
+    ThemeData theme = Theme.of(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        title: Center(
+          child: AnimatedOpacity(
+            duration: const Duration(seconds: 1),
+            opacity: opacity ? 1 : 0,
+            child: Text(
+              'MoneyP',
+              style: theme.textTheme.headlineMedium!.apply(
+                color: const Color(0xff017DA8),
+                fontFamily: 'Arial',
+              ),
+            ),
+          ),
+        ),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: Padding(
@@ -52,22 +78,19 @@ class _OnboardPageState extends State<OnboardPage>
                       ),
                       SvgPicture.asset(
                         OnBoardModels.onBoardModels[index].getImageUrl,
-                        height: queryData.size.height * 0.5,
+                        height: queryData.size.height * 0.4,
+                        width: queryData.size.width,
                       ),
-                       Text(
+                      Text(
                         OnBoardModels.onBoardModels[index].title,
-                        style: const TextStyle(
-                            color: Color.fromARGB(255, 50, 59, 108),
-                            fontWeight: FontWeight.w700,
-                            fontFamily: 'OpenSans',
-                            fontSize: 28),
-                            textAlign: TextAlign.center,
+                        style: theme.textTheme.headlineMedium,
+                        textAlign: TextAlign.center,
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                       Text(
-                         OnBoardModels.onBoardModels[index].desc,
+                      Text(
+                        OnBoardModels.onBoardModels[index].desc,
                         style: const TextStyle(
                             color: Color(0xff585858),
                             fontWeight: FontWeight.w500,
@@ -84,7 +107,7 @@ class _OnboardPageState extends State<OnboardPage>
               controller: _tabController,
             ),
             SizedBox(
-              height: 30,
+              height: 80,
             )
           ],
         ),
