@@ -1,7 +1,11 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moneyp/feature/onboard/models/onboard_model.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:moneyp/product/constant/color_settings.dart';
 
 class OnboardPage extends StatefulWidget {
   const OnboardPage({super.key});
@@ -13,11 +17,11 @@ class OnboardPage extends StatefulWidget {
 class _OnboardPageState extends State<OnboardPage>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
-  
+
+  PageController pageController = PageController();
 
   bool opacity = false;
 
-  // ignore: unused_element
   void _changeOpacity() {
     setState(() {
       opacity = !opacity;
@@ -52,14 +56,17 @@ class _OnboardPageState extends State<OnboardPage>
             opacity: opacity ? 1 : 0,
             child: Text(
               'MoneyP',
-              style: theme.textTheme.headlineMedium!.apply(
-                color: const Color(0xff017DA8),
-                fontFamily: 'Arial',
-              ),
+              style: GoogleFonts.pacifico(
+                  textStyle: TextStyle(
+                      color: ColorSettings.themeColor,
+                      fontSize: 30,
+                      letterSpacing: 2,
+                      fontWeight: FontWeight.w500)),
             ),
           ),
         ),
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
+        systemOverlayStyle: SystemUiOverlayStyle.light
+            .copyWith(statusBarColor: ColorSettings.themeColor.shade200),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -67,6 +74,7 @@ class _OnboardPageState extends State<OnboardPage>
           children: [
             Expanded(
               child: PageView.builder(
+                controller: pageController,
                 onPageChanged: (value) => _changeIndicator(value),
                 itemCount: OnBoardModels.onBoardModels.length,
                 itemBuilder: (context, index) {
@@ -81,37 +89,55 @@ class _OnboardPageState extends State<OnboardPage>
                         height: queryData.size.height * 0.4,
                         width: queryData.size.width,
                       ),
-                       Text(
+                      Text(
                         OnBoardModels.onBoardModels[index].title,
-                        style: const TextStyle(
-                            color: Color.fromARGB(255, 50, 59, 108),
-                            fontWeight: FontWeight.w700,
-                            fontFamily: 'OpenSans',
-                            fontSize: 28),
-                            textAlign: TextAlign.center,
+                        style: TextStylesOnBoard.onBoardTitleText,
+                        textAlign: TextAlign.center,
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                       Text(
-                         OnBoardModels.onBoardModels[index].desc,
-                        style: const TextStyle(
-                            color: Color(0xff585858),
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Poppins',
-                            fontSize: 18),
+                      Text(
+                        OnBoardModels.onBoardModels[index].desc,
+                        style: TextStylesOnBoard.onBoardDescriptionText,
                         textAlign: TextAlign.center,
                       ),
+                     
                     ],
                   );
                 },
               ),
             ),
-            TabPageSelector(
-              controller: _tabController,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                FloatingActionButton(
+                  backgroundColor: Colors.white,
+                  onPressed: () {
+                    pageController.previousPage(
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut);
+                  },
+                  child: const Icon(Icons.arrow_back,
+                      color: Color.fromRGBO(0, 125, 168, 1)),
+                ),
+                TabPageSelector(
+                  controller: _tabController,
+                ),
+                FloatingActionButton(
+                  backgroundColor: Colors.white,
+                  onPressed: () {
+                    pageController.nextPage(
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut);
+                  },
+                  child: const Icon(Icons.arrow_forward,
+                      color: Color.fromRGBO(0, 125, 168, 1)),
+                )
+              ],
             ),
-            SizedBox(
-              height: 30,
+            const SizedBox(
+              height: 50,
             )
           ],
         ),
@@ -122,7 +148,7 @@ class _OnboardPageState extends State<OnboardPage>
 
 class TextStylesOnBoard {
   static TextStyle onBoardTitleText = const TextStyle(
-      color: Color.fromRGBO(0, 125, 168, 1), //App Theme Color Here
+      color: Color(0xFF007DA8), //App Theme Color Here
       fontWeight: FontWeight.w700,
       fontFamily: 'OpenSans',
       fontSize: 25);
