@@ -81,16 +81,20 @@ class _OnboardPageState extends State<OnboardPage>
                         height: queryData.size.height * 0.4,
                         width: queryData.size.width,
                       ),
-                      Text(
+                       Text(
                         OnBoardModels.onBoardModels[index].title,
-                        style: theme.textTheme.headlineMedium,
-                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            color: Color.fromARGB(255, 50, 59, 108),
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'OpenSans',
+                            fontSize: 28),
+                            textAlign: TextAlign.center,
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      Text(
-                        OnBoardModels.onBoardModels[index].desc,
+                       Text(
+                         OnBoardModels.onBoardModels[index].desc,
                         style: const TextStyle(
                             color: Color(0xff585858),
                             fontWeight: FontWeight.w500,
@@ -107,11 +111,25 @@ class _OnboardPageState extends State<OnboardPage>
               controller: _tabController,
             ),
             SizedBox(
-              height: 80,
+              height: 30,
             )
           ],
         ),
       ),
     );
   }
+}
+
+class TextStylesOnBoard {
+  static TextStyle onBoardTitleText = const TextStyle(
+      color: Color.fromRGBO(0, 125, 168, 1), //App Theme Color Here
+      fontWeight: FontWeight.w700,
+      fontFamily: 'OpenSans',
+      fontSize: 25);
+
+  static TextStyle onBoardDescriptionText = const TextStyle(
+      color: Color(0xff585858),
+      fontWeight: FontWeight.w500,
+      fontFamily: 'Poppins',
+      fontSize: 18);
 }
