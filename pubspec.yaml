@@ -39,7 +39,7 @@ dependencies:
   google_fonts: ^3.0.1
   flutter_svg_provider: ^1.0.3
   sign_button: ^2.0.2
-
+  kartal: ^2.5.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

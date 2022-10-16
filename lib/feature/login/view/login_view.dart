@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:kartal/kartal.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:moneyp/product/constant/color_settings.dart';
 import 'package:sign_button/sign_button.dart';
@@ -31,10 +31,14 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image(
-              image: Svg("assets/images/login.svg"),
-              width: MediaQuery.of(context).size.width,
-              height: 275,
+            AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              height: context.isKeyBoardOpen ? 0 : 275,
+              child: Image(
+                width: MediaQuery.of(context).size.width,
+                height: 275,
+                image: Svg("assets/images/login.svg"),
+              ),
             ),
             Text(
               "Login",
@@ -55,9 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     Expanded(
                         child: TextField(
-                      decoration: InputDecoration(
-                        hintText: "Enter username",
-                      ),
+                      decoration: InputDecoration(hintText: "Enter username"),
                     ))
                   ],
                 ),
@@ -71,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     Expanded(
                         child: TextField(
-                      decoration: InputDecoration(hintText: "Enter Something"),
+                      decoration: InputDecoration(hintText: "Enter password"),
                     ))
                   ],
                 ),
