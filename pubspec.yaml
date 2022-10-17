@@ -40,6 +40,7 @@ dependencies:
   flutter_svg_provider: ^1.0.3
   sign_button: ^2.0.2
   kartal: ^2.5.1
+  flutter_signin_button: ^2.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
