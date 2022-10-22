@@ -40,6 +40,7 @@ dependencies:
   kartal: ^2.5.1
   flutter_signin_button: ^2.0.0
   rounded_expansion_tile: ^0.0.13
+  fl_chart: ^0.55.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

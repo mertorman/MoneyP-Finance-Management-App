@@ -1,16 +1,13 @@
 import 'dart:ui';
 import 'package:moneyp/feature/home/components/card_widget.dart';
-
 import '/product/constant/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:moneyp/feature/home/view/model/list_item_model.dart';
-
 import 'package:moneyp/feature/home/model/card_widget_model.dart';
-
 import 'package:moneyp/product/constant/color_settings.dart';
 import 'package:rounded_expansion_tile/rounded_expansion_tile.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,33 +21,32 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const Drawer(),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         toolbarHeight: 80,
         centerTitle: true,
         titleTextStyle: Theme.of(context).textTheme.headlineMedium,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.blue,
         leading: Padding(
           padding: const EdgeInsets.all(20),
           child: Builder(
             builder: (context) => IconButton(
               icon: const Icon(
                 Icons.menu_outlined,
-                color: Colors.grey,
+                color: Colors.white,
               ),
               onPressed: () => Scaffold.of(context).openDrawer(),
             ),
           ),
         ),
         elevation: 0,
-        title: Text(
-          'Dashboard',
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-            color: ColorSettings.themeColor.shade200,
-          ),
-        ),
+        title: Text('MoneyP',
+            style: GoogleFonts.pacifico(
+                textStyle: TextStyle(
+                    color: Colors.white.withOpacity(0.90),
+                    fontSize: 30,
+                    letterSpacing: 2,
+                    fontWeight: FontWeight.w500))),
         actions: const [
           Padding(
             padding: EdgeInsets.only(right: 20),
@@ -62,63 +58,105 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.only(left: 20, right: 20),
         child: Column(
           children: [
-            TopCardWidget(),
-            SizedBox(
-              height: 30,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Stack(
               children: [
-                Text("Cards",
-                    style: GoogleFonts.daysOne(
-                      textStyle: const TextStyle(
-                          color: Color(0xFF40565a),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
-                    ))
+                Material(
+                  elevation: 15,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.20,
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+                Column(
+                  children: const [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Hello Mert',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        '₺123456',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 23,
+                    ),
+                    TopCardWidget()
+                  ],
+                ),
               ],
             ),
-            const SizedBox(
-              height: 15,
-            ),
-            Container(
-              height: 165,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 5,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return const CardWidget();
-                },
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: Column(
+                children: [
+                  AspectRatio(
+                    aspectRatio: 1.7,
+                    child: Card(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4)),
+                      color: const Color(0xff2c4260),
+                      child: const _BarChart(),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+              
+            
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Expenses",
+                          style: GoogleFonts.daysOne(
+                            textStyle: const TextStyle(
+                                color: Color(0xFF40565a),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          ))
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Container(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: ListItemModel.models.length,
+                      itemBuilder: (context, index) {
+                        return ListItem(
+                            expenseTitle:
+                                ListItemModel.models[index].expenseTitle,
+                            expenseDescription:
+                                ListItemModel.models[index].expenseDescription,
+                            expenseIcon:
+                                ListItemModel.models[index].expenseIcon);
+                      },
+                    ),
+                  )
+                ],
               ),
             ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Expenses",
-                    style: GoogleFonts.daysOne(
-                      textStyle: const TextStyle(
-                          color: Color(0xFF40565a),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
-                    ))
-              ],
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-       Container(
-         child: ListView.builder(shrinkWrap: true,itemCount: ListItemModel.models.length,itemBuilder: (context, index) {
-           return ListItem(expenseTitle: ListItemModel.models[index].expenseTitle, expenseDescription: ListItemModel.models[index].expenseDescription, expenseIcon: ListItemModel.models[index].expenseIcon);
-         },),
-       )
-
-            
-           
           ],
         ),
       ),
@@ -127,40 +165,45 @@ class _HomePageState extends State<HomePage> {
 }
 
 class ListItem extends StatelessWidget {
-  const ListItem({
-    Key? key,required this.expenseTitle , required this.expenseDescription , required this.expenseIcon
-  }) : super(key: key);
+  const ListItem(
+      {Key? key,
+      required this.expenseTitle,
+      required this.expenseDescription,
+      required this.expenseIcon})
+      : super(key: key);
 
-final expenseTitle;
-final expenseDescription;
-final Icon expenseIcon;
+  final expenseTitle;
+  final expenseDescription;
+  final Icon expenseIcon;
   @override
   Widget build(BuildContext context) {
-    return Container( padding: EdgeInsets.all(4),
+    return Container(
+      padding: EdgeInsets.all(4),
       height: 74,
       child: Card(
         color: Colors.indigoAccent.shade200,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(28)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
         child: RoundedExpansionTile(
           enabled: false,
           trailing: IconButton(
             highlightColor: Colors.transparent,
             splashColor: Colors.transparent,
             hoverColor: Colors.transparent,
-            icon: Icon(Icons.edit , color: Colors.white,),
+            icon: Icon(
+              Icons.edit,
+              color: Colors.white,
+            ),
             onPressed: () {},
           ),
-          leading:
-              expenseIcon,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24)),
+          leading: expenseIcon,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
           title: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-              expenseTitle,
+                expenseTitle,
                 style: Theme.of(context).textTheme.subtitle1?.copyWith(
                     color: Colors.white,
                     fontSize: 18,
@@ -192,16 +235,13 @@ final Icon expenseIcon;
                 ),
               ),
             )
-
-        
-
           ],
         ),
       ),
     );
   }
 }
-
+/*
 class CardWidget extends StatelessWidget {
   const CardWidget({
     Key? key,
@@ -256,4 +296,193 @@ class CardWidget extends StatelessWidget {
       ),
     );
   }
+}*/
+
+class _BarChart extends StatelessWidget {
+  const _BarChart();
+
+  @override
+  Widget build(BuildContext context) {
+    return BarChart(
+      BarChartData(
+        backgroundColor: Colors.grey.shade100,
+        barTouchData: barTouchData,
+        titlesData: titlesData,
+        borderData: borderData,
+        barGroups: barGroups,
+        gridData: FlGridData(show: false),
+        alignment: BarChartAlignment.spaceAround,
+        maxY: 20,
+      ),
+    );
+  }
+
+  BarTouchData get barTouchData => BarTouchData(
+        enabled: false,
+        touchTooltipData: BarTouchTooltipData(
+          tooltipBgColor: Colors.transparent,
+          tooltipPadding: EdgeInsets.zero,
+          tooltipMargin: 8,
+          getTooltipItem: (
+            BarChartGroupData group,
+            int groupIndex,
+            BarChartRodData rod,
+            int rodIndex,
+          ) {
+            return BarTooltipItem(
+              rod.toY.round().toString(),
+              const TextStyle(
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+              ),
+            );
+          },
+        ),
+      );
+
+  Widget getTitles(double value, TitleMeta meta) {
+    const style = TextStyle(
+      color: Color(0xff7589a2),
+      fontWeight: FontWeight.bold,
+      fontSize: 14,
+    );
+    String text;
+    switch (value.toInt()) {
+      case 0:
+        text = 'Mn';
+        break;
+      case 1:
+        text = 'Te';
+        break;
+      case 2:
+        text = 'Wd';
+        break;
+      case 3:
+        text = 'Tu';
+        break;
+      case 4:
+        text = 'Fr';
+        break;
+      case 5:
+        text = 'St';
+        break;
+      case 6:
+        text = 'Sn';
+        break;
+      default:
+        text = '';
+        break;
+    }
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 4,
+      child: Text(text, style: style),
+    );
+  }
+
+  FlTitlesData get titlesData => FlTitlesData(
+        show: true,
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30,
+            getTitlesWidget: getTitles,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        topTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        rightTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+      );
+
+  FlBorderData get borderData => FlBorderData(
+        show: false,
+      );
+
+  LinearGradient get _barsGradient => const LinearGradient(
+        colors: [
+          Colors.lightBlueAccent,
+          Colors.greenAccent,
+        ],
+        begin: Alignment.bottomCenter,
+        end: Alignment.topCenter,
+      );
+
+  List<BarChartGroupData> get barGroups => [
+        BarChartGroupData(
+          x: 0,
+          barRods: [
+            BarChartRodData(
+              toY: 8,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 1,
+          barRods: [
+            BarChartRodData(
+              toY: 10,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 2,
+          barRods: [
+            BarChartRodData(
+              toY: 14,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 3,
+          barRods: [
+            BarChartRodData(
+              toY: 15,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 4,
+          barRods: [
+            BarChartRodData(
+              toY: 13,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 5,
+          barRods: [
+            BarChartRodData(
+              toY: 10,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 6,
+          barRods: [
+            BarChartRodData(
+              toY: 16,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+      ];
 }

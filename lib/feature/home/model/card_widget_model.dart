@@ -14,9 +14,14 @@ class CardModel {
 class CardModels {
   static final List<CardModel> cardItems = [
     CardModel(
-        cardTitle: 'Total Balance',
+        cardTitle: 'Total',
         cardMoneyIcon: "₺",
         cardTotalMoney: '2,500',
-        cardSpendMoney: '3000')
+        cardSpendMoney: '3000'),
+    CardModel(
+        cardTitle: 'Spent',
+        cardMoneyIcon: "₺",
+        cardTotalMoney: '2,500',
+        cardSpendMoney: '3000'),
   ];
 }

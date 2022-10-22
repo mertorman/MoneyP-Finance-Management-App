@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const cardTitleColor = Colors.grey;
-const cardMoneyColor = Color(0xFF40565a);
-var cardMoneyIconColor = Colors.grey.shade600;
+const cardTitleColor = Colors.green;
+const cardMoneyColor = Colors.green;
+var cardMoneyIconColor = Colors.green;
 
 var cardTitleTextStyle = const TextStyle(
     color: cardTitleColor, fontSize: 15, fontWeight: FontWeight.w400);

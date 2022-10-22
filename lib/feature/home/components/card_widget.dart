@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyp/feature/home/model/card_widget_model.dart';
 
 import '../../../product/constant/constant.dart';
@@ -20,8 +21,8 @@ class _CardWidgetState extends State<TopCardWidget> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         color: Colors.grey.shade50,
         child: Container(
-          width: MediaQuery.of(context).size.width * 0.85,
-          height: MediaQuery.of(context).size.height * 0.16,
+          width: MediaQuery.of(context).size.width * 0.90,
+          height: MediaQuery.of(context).size.height * 0.15,
           child: Padding(
             padding:
                 const EdgeInsets.only(top: 25, left: 35, right: 35, bottom: 20),
@@ -50,38 +51,37 @@ class _CardWidgetState extends State<TopCardWidget> {
                   ],
                 ),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              color: Colors.red.shade100,
-                              borderRadius: BorderRadius.circular(15)),
-                          child: const Icon(
-                            Icons.arrow_upward_outlined,
+                    Text(CardModels.cardItems[1].cardTitle,
+                        style: TextStyle(
                             color: Colors.red,
-                          ),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400)),
+                    Row(
+                      children: [
+                        Text(
+                          CardModels.cardItems[1].cardMoneyIcon,
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold),
                         ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Text(CardModels.cardItems[0].cardMoneyIcon,
-                            style: cardSpenMoneyIconTextStyle),
                         Padding(
                           padding: const EdgeInsets.only(top: 7),
-                          child: Text(CardModels.cardItems[0].cardSpendMoney,
-                              style: cardSpendMoneyTextStyle),
+                          child: Text('1000',
+                              style: GoogleFonts.daysOne(
+                                  textStyle: const TextStyle(
+                                fontSize: 32,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w500,
+                              ))),
                         )
                       ],
-                    ),
-                    const SizedBox(),
+                    )
                   ],
-                )
+                ),
               ],
             ),
           ),
