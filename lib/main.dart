@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moneyp/feature/forgot_password/view/forgot_password_view.dart';
+import 'package:moneyp/feature/home/view/homepage_view.dart';
 import 'package:moneyp/feature/login/view/login_view.dart';
 import 'package:moneyp/feature/onboard/view/onboard_view.dart';
 import 'package:moneyp/product/constant/color_settings.dart';
@@ -14,7 +15,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(primarySwatch: ColorSettings.themeColor),
       debugShowCheckedModeBanner: false,
-      
       home: LoginPage(),
     );
   }

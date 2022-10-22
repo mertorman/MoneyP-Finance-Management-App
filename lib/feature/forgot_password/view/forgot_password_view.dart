@@ -25,7 +25,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back_ios_new_outlined),
+          icon: const Icon(Icons.arrow_back_ios_new_outlined),
           color: Colors.black,
         ),
       ),

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:kartal/kartal.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:moneyp/feature/forgot_password/view/forgot_password_view.dart';
+import 'package:moneyp/feature/home/view/homepage_view.dart';
+import 'package:moneyp/feature/login/view/sign_up_view.dart';
 import 'package:moneyp/product/constant/color_settings.dart';
 //import 'package:sign_button/sign_button.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -15,6 +17,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       Expanded(
                           child: TextField(
+                        controller: _usernameController,
                         decoration: InputDecoration(hintText: "Enter username"),
                       ))
                     ],
@@ -72,6 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       Expanded(
                           child: TextField(
+                        controller: _passwordController,
                         obscureText: true,
                         decoration: InputDecoration(hintText: "Enter password"),
                       ))
@@ -95,7 +101,16 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (_usernameController.text == "admin" &&
+                      _passwordController.text == "123") {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomePage(),
+                        ));
+                  }
+                },
                 child: Text("Login"),
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
@@ -124,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
               Row(
-              mainAxisSize: MainAxisSize.max,
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   Expanded(
                     child: SignInButton(
@@ -150,7 +165,14 @@ class _LoginPageState extends State<LoginPage> {
                         style: Theme.of(context).textTheme.button!.apply(
                             fontWeightDelta: 3,
                             color: ColorSettings.themeColor.shade200),
-                        recognizer: TapGestureRecognizer()..onTap = () {})
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SignUp(),
+                                ));
+                          })
                   ],
                 )),
               ),
