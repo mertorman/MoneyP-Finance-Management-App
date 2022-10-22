@@ -112,7 +112,7 @@ packages:
     source: hosted
     version: "2.0.0"
   flutter_svg:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_svg
       url: "https://pub.dartlang.org"
@@ -359,6 +359,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.4"
+  rounded_expansion_tile:
+    dependency: "direct main"
+    description:
+      name: rounded_expansion_tile
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.13"
   share:
     dependency: transitive
     description:
@@ -366,13 +373,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.4"
-  sign_button:
-    dependency: "direct main"
-    description:
-      name: sign_button
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.2"
   sky_engine:
     dependency: transitive
     description: flutter
