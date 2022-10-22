@@ -1,8 +1,14 @@
 import 'dart:ui';
+import 'package:moneyp/feature/home/components/card_widget.dart';
 
+import '/product/constant/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:moneyp/feature/home/view/model/list_item_model.dart';
+
+import 'package:moneyp/feature/home/model/card_widget_model.dart';
+
 import 'package:moneyp/product/constant/color_settings.dart';
 import 'package:rounded_expansion_tile/rounded_expansion_tile.dart';
 
@@ -59,131 +65,7 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: Column(
           children: [
-            Center(
-              child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(32)),
-                color: Colors.grey.shade50,
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.85,
-                  height: MediaQuery.of(context).size.height * 0.16,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 25, left: 35, right: 35, bottom: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Balance',
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                            Row(
-                              children: [
-                                Text('₺',
-                                    style: TextStyle(
-                                        color: Colors.grey.shade600,
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold)),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 7),
-                                  child: Text('2,400',
-                                      style: GoogleFonts.daysOne(
-                                          textStyle: const TextStyle(
-                                        fontSize: 32,
-                                        color: Color(0xFF40565a),
-                                        fontWeight: FontWeight.w500,
-                                      ))),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                      color: Colors.red.shade100,
-                                      borderRadius: BorderRadius.circular(15)),
-                                  child: const Icon(
-                                    Icons.arrow_upward_outlined,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Text('₺',
-                                    style: TextStyle(
-                                        color: Colors.grey.shade600,
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold)),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 7),
-                                  child: Text('3,000',
-                                      style: GoogleFonts.daysOne(
-                                          textStyle: const TextStyle(
-                                              fontSize: 18,
-                                              color: Color(0xFF40565a),
-                                              fontWeight: FontWeight.w500))),
-                                )
-                              ],
-                            ),
-                            const SizedBox(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                      color: Colors.green.shade100,
-                                      borderRadius: BorderRadius.circular(15)),
-                                  child: const Icon(
-                                    Icons.arrow_downward_outlined,
-                                    color: Colors.green,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Text('₺',
-                                    style: TextStyle(
-                                        color: Colors.grey.shade600,
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold)),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 7),
-                                  child: Text('600',
-                                      style: GoogleFonts.daysOne(
-                                          textStyle: const TextStyle(
-                                              fontSize: 18,
-                                              color: Color(0xFF40565a),
-                                              fontWeight: FontWeight.w500))),
-                                )
-                              ],
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            TopCardWidget(),
             SizedBox(
               height: 30,
             ),
@@ -213,6 +95,7 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -309,6 +192,9 @@ final Icon expenseIcon;
                 ),
               ),
             )
+
+        
+
           ],
         ),
       ),
