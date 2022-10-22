@@ -4,8 +4,13 @@ import 'package:moneyp/feature/home/components/card_widget.dart';
 import '/product/constant/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'package:moneyp/feature/home/view/model/list_item_model.dart';
+
 import 'package:moneyp/feature/home/model/card_widget_model.dart';
+
 import 'package:moneyp/product/constant/color_settings.dart';
+import 'package:rounded_expansion_tile/rounded_expansion_tile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -56,7 +61,7 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: Column(
           children: [
@@ -90,7 +95,106 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Expenses",
+                    style: GoogleFonts.daysOne(
+                      textStyle: const TextStyle(
+                          color: Color(0xFF40565a),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600),
+                    ))
+              ],
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+       Container(
+         child: ListView.builder(shrinkWrap: true,itemCount: ListItemModel.models.length,itemBuilder: (context, index) {
+           return ListItem(expenseTitle: ListItemModel.models[index].expenseTitle, expenseDescription: ListItemModel.models[index].expenseDescription, expenseIcon: ListItemModel.models[index].expenseIcon);
+         },),
+       )
+
+            
+           
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ListItem extends StatelessWidget {
+  const ListItem({
+    Key? key,required this.expenseTitle , required this.expenseDescription , required this.expenseIcon
+  }) : super(key: key);
+
+final expenseTitle;
+final expenseDescription;
+final Icon expenseIcon;
+  @override
+  Widget build(BuildContext context) {
+    return Container( padding: EdgeInsets.all(4),
+      height: 74,
+      child: Card(
+        color: Colors.indigoAccent.shade200,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(28)),
+        child: RoundedExpansionTile(
+          enabled: false,
+          trailing: IconButton(
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+            icon: Icon(Icons.edit , color: Colors.white,),
+            onPressed: () {},
+          ),
+          leading:
+              expenseIcon,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24)),
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+              expenseTitle,
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                expenseDescription,
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    ?.copyWith(color: Colors.white, fontSize: 14),
+              ),
+            ],
+          ),
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Container(
+                height: 400,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.red, width: 2),
+                  color: Colors.grey.shade200,
+                ),
+                child: Center(
+                  child: Text(
+                    'Widget',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              ),
+            )
+
         
+
           ],
         ),
       ),
