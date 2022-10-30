@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:moneyp/feature/home/view/auth_check.dart';
 import 'package:moneyp/feature/home/view/homepage_view.dart';
 import 'package:moneyp/feature/login/view/login_view.dart';
 import 'package:moneyp/product/constant/color_settings.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-void main() => runApp(const MyApp());
+import "package:firebase_core/firebase_core.dart";
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +32,7 @@ class MyApp extends StatelessWidget {
       ),
       theme: ThemeData(primarySwatch: ColorSettings.themeColor),
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: AuthCheck(),
     );
   }
 }
