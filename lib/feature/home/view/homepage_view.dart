@@ -1,3 +1,6 @@
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:flutter/services.dart';
 import 'package:moneyp/feature/home/components/card_widget.dart';
 import 'package:moneyp/feature/home/components/expense_add_widget.dart';
@@ -121,298 +124,427 @@ List<PieChartSectionData> showingSections() {
   });
 }
 
+double value = 0;
+
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        notchMargin: 8.0,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.show_chart,
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: Colors.blue,
+          body: Padding(
+            padding: const EdgeInsets.all(20),
+            child: SafeArea(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.38,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    DrawerHeader(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CircleAvatar(
+                            radius: 50,
+                            backgroundImage:
+                                AssetImage('assets/images/pp3.jpg'),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Mert',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          ListTile(
+                            leading: Icon(
+                              Icons.home,
+                              color: Colors.white,
+                            ),
+                            title: Text(
+                              'Home',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 17),
+                            ),
+                          ),
+                          ListTile(
+                            leading: Icon(
+                              Icons.person,
+                              color: Colors.white,
+                            ),
+                            title: Text(
+                              'Profile',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 17),
+                            ),
+                          ),
+                          ListTile(
+                            leading: Icon(
+                              Icons.settings,
+                              color: Colors.white,
+                            ),
+                            title: Text(
+                              'Settings',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 17),
+                            ),
+                          ),
+                          ListTile(
+                            leading: Icon(
+                              Icons.logout,
+                              color: Colors.white,
+                            ),
+                            title: Text(
+                              'Log out',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 17),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-              onPressed: () {},
-            ),
-            SizedBox(width: 48.0),
-            IconButton(
-              icon: Icon(
-                Icons.filter_list,
-              ),
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
-        child: Icon(Icons.add),
-        onPressed: () {
-          showModalBottomSheet(
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              context: context,
-              builder: (ctx) => ExpenseBottomSheet());
-        },
-      ),
-      drawer: const Drawer(),
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        systemOverlayStyle:
-            SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.blue),
-        toolbarHeight: 80,
-        centerTitle: true,
-        titleTextStyle: Theme.of(context).textTheme.headlineMedium,
-        backgroundColor: Colors.blue,
-        leading: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(
-                Icons.menu_outlined,
-                color: Colors.white,
-              ),
-              onPressed: () => Scaffold.of(context).openDrawer(),
             ),
           ),
         ),
-        elevation: 0,
-        title: Text('MoneyP',
-            style: GoogleFonts.pacifico(
-                textStyle: TextStyle(
-                    color: Colors.white.withOpacity(0.90),
-                    fontSize: 30,
-                    letterSpacing: 2,
-                    fontWeight: FontWeight.w500))),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 20),
-            child: CircleAvatar(
-              radius: 25,
-              backgroundImage: AssetImage('assets/images/pp3.jpg'),
-            ),
-          )
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                Material(
-                  elevation: 15,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.20,
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                    ),
+        TweenAnimationBuilder(
+          tween: Tween<double>(begin: 0, end: value),
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInExpo,
+          builder: (_, double val, __) {
+            return Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.identity()
+                ..setEntry(3, 2, 0.001)
+                ..setEntry(0, 3, 200 * val)
+                ..rotateY((pi / 6) * val),
+              child: Scaffold(
+                extendBody: true,
+                bottomNavigationBar: BottomAppBar(
+                  shape: CircularNotchedRectangle(),
+                  notchMargin: 8.0,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.show_chart,
+                        ),
+                        onPressed: () {},
+                      ),
+                      SizedBox(width: 48.0),
+                      IconButton(
+                        icon: Icon(
+                          Icons.filter_list,
+                        ),
+                        onPressed: () {},
+                      ),
+                    ],
                   ),
                 ),
-                Column(
-                  children: [
-                    SizedBox(
-                      height: 10,
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerDocked,
+                floatingActionButton: FloatingActionButton(
+                  backgroundColor: Colors.blue,
+                  child: Icon(Icons.add),
+                  onPressed: () {
+                    showModalBottomSheet(
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        context: context,
+                        builder: (ctx) => ExpenseBottomSheet());
+                  },
+                ),
+                appBar: AppBar(
+                  systemOverlayStyle: SystemUiOverlayStyle.light
+                      .copyWith(statusBarColor: Colors.blue),
+                  toolbarHeight: 80,
+                  centerTitle: true,
+                  titleTextStyle: Theme.of(context).textTheme.headlineMedium,
+                  backgroundColor: Colors.blue,
+                  leading: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Builder(
+                      builder: (context) => IconButton(
+                        icon: const Icon(
+                          Icons.menu_outlined,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            value == 0 ? value = 1 : value = 0;
+                          });
+                          //Scaffold.of(context).openDrawer();
+                        },
+                      ),
                     ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                  elevation: 0,
+                  title: Text('MoneyP',
+                      style: GoogleFonts.pacifico(
+                          textStyle: TextStyle(
+                              color: Colors.white.withOpacity(0.90),
+                              fontSize: 30,
+                              letterSpacing: 2,
+                              fontWeight: FontWeight.w500))),
+                ),
+                body: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Stack(
                         children: [
-                          Icon(Icons.waving_hand_outlined, color: Colors.white),
-                          Text(
-                            ' Hello Mert',
-                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          Material(
+                            elevation: 15,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.20,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                          Column(
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.waving_hand_outlined,
+                                        color: Colors.white),
+                                    Text(
+                                      ' Hello Mert',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  '₺5.400',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 42,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 23,
+                              ),
+                              TopCardWidget()
+                            ],
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        '₺5.400',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 42,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 23,
-                    ),
-                    TopCardWidget()
-                  ],
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        child: AspectRatio(
-                          aspectRatio: 1.2,
-                          child: PieChart(
-                            PieChartData(
-                                pieTouchData: PieTouchData(
-                                  touchCallback:
-                                      (FlTouchEvent event, pieTouchResponse) {
-                                    setState(() {
-                                      if (!event.isInterestedForInteractions ||
-                                          pieTouchResponse == null ||
-                                          pieTouchResponse.touchedSection ==
-                                              null) {
-                                        touchedIndex = -1;
-                                        return;
-                                      }
-                                      touchedIndex = pieTouchResponse
-                                          .touchedSection!.touchedSectionIndex;
-                                    });
-                                  },
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  child: AspectRatio(
+                                    aspectRatio: 1.2,
+                                    child: PieChart(
+                                      PieChartData(
+                                          pieTouchData: PieTouchData(
+                                            touchCallback: (FlTouchEvent event,
+                                                pieTouchResponse) {
+                                              setState(() {
+                                                if (!event
+                                                        .isInterestedForInteractions ||
+                                                    pieTouchResponse == null ||
+                                                    pieTouchResponse
+                                                            .touchedSection ==
+                                                        null) {
+                                                  touchedIndex = -1;
+                                                  return;
+                                                }
+                                                touchedIndex = pieTouchResponse
+                                                    .touchedSection!
+                                                    .touchedSectionIndex;
+                                              });
+                                            },
+                                          ),
+                                          startDegreeOffset: 180,
+                                          borderData: FlBorderData(
+                                            show: false,
+                                          ),
+                                          sectionsSpace: 1,
+                                          centerSpaceRadius: 0,
+                                          sections: showingSections()),
+                                    ),
+                                  ),
                                 ),
-                                startDegreeOffset: 180,
-                                borderData: FlBorderData(
-                                  show: false,
+                                SizedBox(
+                                  width: 50,
                                 ),
-                                sectionsSpace: 1,
-                                centerSpaceRadius: 0,
-                                sections: showingSections()),
-                          ),
+                                Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Indicator(
+                                          color: CategoryWidgetModel
+                                              .categoryWidgetModels[0]
+                                              .containerColor,
+                                          text: 'Travel',
+                                          isSquare: false,
+                                          size: touchedIndex == 0 ? 18 : 16,
+                                          textColor: touchedIndex == 0
+                                              ? Colors.black
+                                              : Colors.grey,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Indicator(
+                                          color: CategoryWidgetModel
+                                              .categoryWidgetModels[1]
+                                              .containerColor,
+                                          text: 'Food',
+                                          isSquare: false,
+                                          size: touchedIndex == 1 ? 18 : 16,
+                                          textColor: touchedIndex == 1
+                                              ? Colors.black
+                                              : Colors.grey,
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Indicator(
+                                          color: CategoryWidgetModel
+                                              .categoryWidgetModels[2]
+                                              .containerColor,
+                                          text: 'Shopping',
+                                          isSquare: false,
+                                          size: touchedIndex == 2 ? 18 : 16,
+                                          textColor: touchedIndex == 2
+                                              ? Colors.black
+                                              : Colors.grey,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Indicator(
+                                          color: CategoryWidgetModel
+                                              .categoryWidgetModels[3]
+                                              .containerColor,
+                                          text: 'Billing',
+                                          isSquare: false,
+                                          size: touchedIndex == 3 ? 18 : 16,
+                                          textColor: touchedIndex == 3
+                                              ? Colors.black
+                                              : Colors.grey,
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Indicator(
+                                      color: CategoryWidgetModel
+                                          .categoryWidgetModels[4]
+                                          .containerColor,
+                                      text: 'Other',
+                                      isSquare: false,
+                                      size: touchedIndex == 4 ? 18 : 16,
+                                      textColor: touchedIndex == 4
+                                          ? Colors.black
+                                          : Colors.grey,
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Expenses",
+                                    style: GoogleFonts.daysOne(
+                                      textStyle: const TextStyle(
+                                          color: Color(0xFF40565a),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
+                                    ))
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            Container(
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: ListItemModel.models.length,
+                                itemBuilder: (context, index) {
+                                  return ListItem(
+                                      expenseTitle: ListItemModel
+                                          .models[index].expenseTitle,
+                                      expenseDescription: ListItemModel
+                                          .models[index].expenseDescription,
+                                      expenseTotal: ListItemModel
+                                          .models[index].expenseTotal,
+                                      expenseIcon: ListItemModel
+                                          .models[index].expenseIcon);
+                                },
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                      SizedBox(
-                        width: 50,
-                      ),
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Indicator(
-                                color: CategoryWidgetModel
-                                    .categoryWidgetModels[0].containerColor,
-                                text: 'Travel',
-                                isSquare: false,
-                                size: touchedIndex == 0 ? 18 : 16,
-                                textColor: touchedIndex == 0
-                                    ? Colors.black
-                                    : Colors.grey,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Indicator(
-                                color: CategoryWidgetModel
-                                    .categoryWidgetModels[1].containerColor,
-                                text: 'Food',
-                                isSquare: false,
-                                size: touchedIndex == 1 ? 18 : 16,
-                                textColor: touchedIndex == 1
-                                    ? Colors.black
-                                    : Colors.grey,
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Indicator(
-                                color: CategoryWidgetModel
-                                    .categoryWidgetModels[2].containerColor,
-                                text: 'Shopping',
-                                isSquare: false,
-                                size: touchedIndex == 2 ? 18 : 16,
-                                textColor: touchedIndex == 2
-                                    ? Colors.black
-                                    : Colors.grey,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Indicator(
-                                color: CategoryWidgetModel
-                                    .categoryWidgetModels[3].containerColor,
-                                text: 'Billing',
-                                isSquare: false,
-                                size: touchedIndex == 3 ? 18 : 16,
-                                textColor: touchedIndex == 3
-                                    ? Colors.black
-                                    : Colors.grey,
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Indicator(
-                            color: CategoryWidgetModel
-                                .categoryWidgetModels[4].containerColor,
-                            text: 'Other',
-                            isSquare: false,
-                            size: touchedIndex == 4 ? 18 : 16,
-                            textColor:
-                                touchedIndex == 4 ? Colors.black : Colors.grey,
-                          ),
-                        ],
-                      )
                     ],
                   ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Expenses",
-                          style: GoogleFonts.daysOne(
-                            textStyle: const TextStyle(
-                                color: Color(0xFF40565a),
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600),
-                          ))
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Container(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: ListItemModel.models.length,
-                      itemBuilder: (context, index) {
-                        return ListItem(
-                            expenseTitle:
-                                ListItemModel.models[index].expenseTitle,
-                            expenseDescription:
-                                ListItemModel.models[index].expenseDescription,
-                            expenseTotal:
-                                ListItemModel.models[index].expenseTotal,
-                            expenseIcon:
-                                ListItemModel.models[index].expenseIcon);
-                      },
-                    ),
-                  )
-                ],
+                ),
               ),
-            ),
-          ],
+            );
+          },
         ),
-      ),
+        GestureDetector(
+          onHorizontalDragUpdate: (details) {
+            if (details.delta.dx > 0) {
+              setState(() {
+                value = 1;
+              });
+            } else {
+              setState(() {
+                value = 0;
+              });
+            }
+          },
+        ),
+      ],
     );
   }
 }
