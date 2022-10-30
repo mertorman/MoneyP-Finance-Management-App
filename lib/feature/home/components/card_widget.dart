@@ -16,10 +16,10 @@ class _CardWidgetState extends State<TopCardWidget> {
   Widget build(BuildContext context) {
     return Center(
       child: Card(
-        elevation: 3,
-        shadowColor: Colors.grey.shade400,
+        elevation: 2,
+
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-        color: Colors.grey.shade50,
+        color: Colors.white,
         child: Container(
           width: MediaQuery.of(context).size.width * 0.90,
           height: MediaQuery.of(context).size.height * 0.15,

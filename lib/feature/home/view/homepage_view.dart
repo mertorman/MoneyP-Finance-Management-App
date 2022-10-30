@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:moneyp/feature/home/components/card_widget.dart';
 import 'package:moneyp/feature/home/components/expense_add_widget.dart';
@@ -162,7 +163,7 @@ class _HomePageState extends State<HomePage> {
         },
       ),
       drawer: const Drawer(),
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         systemOverlayStyle:
             SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.blue),
@@ -190,15 +191,6 @@ class _HomePageState extends State<HomePage> {
                     fontSize: 30,
                     letterSpacing: 2,
                     fontWeight: FontWeight.w500))),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 20),
-            child: CircleAvatar(
-              radius: 25,
-              backgroundImage: AssetImage('assets/images/pp3.jpg'),
-            ),
-          )
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -230,6 +222,12 @@ class _HomePageState extends State<HomePage> {
                             ' Hello Mert',
                             style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
+                          MaterialButton(
+                            onPressed: () {
+                              FirebaseAuth.instance.signOut();
+                            },
+                            color: Colors.deepPurple,
+                          )
                         ],
                       ),
                     ),
