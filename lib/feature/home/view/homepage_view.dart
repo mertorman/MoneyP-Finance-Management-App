@@ -1,15 +1,14 @@
-import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:moneyp/feature/home/components/card_widget.dart';
 import 'package:moneyp/feature/home/components/expense_add_widget.dart';
-import '/product/constant/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:moneyp/feature/home/model/category_widget_model.dart';
 import 'package:moneyp/feature/home/model/list_item_model.dart';
-import 'package:moneyp/feature/home/model/card_widget_model.dart';
-import 'package:moneyp/product/constant/color_settings.dart';
 import 'package:rounded_expansion_tile/rounded_expansion_tile.dart';
 import 'package:fl_chart/fl_chart.dart';
+
+import '../components/indicator.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,11 +17,114 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+int touchedIndex = -1;
+List<PieChartSectionData> showingSections() {
+  return List.generate(5, (i) {
+    final isTouched = i == touchedIndex;
+    final opacity = isTouched ? 1.0 : 0.6;
+
+    const color0 = Color(0xff0293ee);
+    const color1 = Color(0xfff8b250);
+    const color2 = Color(0xff845bef);
+    const color3 = Color(0xff13d38e);
+
+    switch (i) {
+      case 0:
+        return PieChartSectionData(
+          color: CategoryWidgetModel.categoryWidgetModels[0].containerColor
+              .withOpacity(opacity),
+          value: 25,
+          title: '',
+          radius: 80,
+          titleStyle: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Color(0xff044d7c),
+          ),
+          titlePositionPercentageOffset: 0.55,
+          borderSide: isTouched
+              ? BorderSide(
+                  color: CategoryWidgetModel
+                      .categoryWidgetModels[0].containerColor,
+                  width: 6)
+              : BorderSide(color: color0.withOpacity(0)),
+        );
+      case 1:
+        return PieChartSectionData(
+          color: CategoryWidgetModel.categoryWidgetModels[1].containerColor
+              .withOpacity(opacity),
+          value: 25,
+          title: '',
+          radius: 65,
+          titleStyle: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Color(0xff90672d),
+          ),
+          titlePositionPercentageOffset: 0.55,
+          borderSide: isTouched
+              ? BorderSide(color: color1, width: 6)
+              : BorderSide(color: color2.withOpacity(0)),
+        );
+      case 2:
+        return PieChartSectionData(
+          color: CategoryWidgetModel.categoryWidgetModels[2].containerColor
+              .withOpacity(opacity),
+          value: 25,
+          title: '',
+          radius: 75,
+          titleStyle: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Color(0xff4c3788),
+          ),
+          titlePositionPercentageOffset: 0.6,
+          borderSide: isTouched
+              ? BorderSide(color: Colors.red, width: 6)
+              : BorderSide(color: color2.withOpacity(0)),
+        );
+      case 3:
+        return PieChartSectionData(
+          color: CategoryWidgetModel.categoryWidgetModels[3].containerColor
+              .withOpacity(opacity),
+          value: 25,
+          title: '',
+          radius: 65,
+          titleStyle: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Color(0xff0c7f55),
+          ),
+          borderSide: isTouched
+              ? BorderSide(color: Colors.red, width: 6)
+              : BorderSide(color: color2.withOpacity(0)),
+        );
+      case 4:
+        return PieChartSectionData(
+          color: CategoryWidgetModel.categoryWidgetModels[4].containerColor
+              .withOpacity(opacity),
+          value: 25,
+          title: '',
+          radius: 75,
+          titleStyle: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Color(0xff0c7f55),
+          ),
+          borderSide: isTouched
+              ? BorderSide(color: Colors.red, width: 6)
+              : BorderSide(color: color2.withOpacity(0)),
+        );
+      default:
+        throw Error();
+    }
+  });
+}
+
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-   
       extendBody: true,
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
@@ -114,15 +216,21 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Column(
-                  children: const [
+                  children: [
                     SizedBox(
                       height: 10,
                     ),
                     Align(
                       alignment: Alignment.center,
-                      child: Text(
-                        'Hello Mert',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.waving_hand_outlined, color: Colors.white),
+                          Text(
+                            ' Hello Mert',
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(
@@ -134,7 +242,7 @@ class _HomePageState extends State<HomePage> {
                         '₺5.400',
                         style: TextStyle(
                             color: Colors.white,
-                            fontSize: 36,
+                            fontSize: 42,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -150,15 +258,119 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: Column(
                 children: [
-                  AspectRatio(
-                    aspectRatio: 1.7,
-                    child: Card(
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4)),
-                      color: const Color(0xff2c4260),
-                      child: const _BarChart(),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: AspectRatio(
+                          aspectRatio: 1.2,
+                          child: PieChart(
+                            PieChartData(
+                                pieTouchData: PieTouchData(
+                                  touchCallback:
+                                      (FlTouchEvent event, pieTouchResponse) {
+                                    setState(() {
+                                      if (!event.isInterestedForInteractions ||
+                                          pieTouchResponse == null ||
+                                          pieTouchResponse.touchedSection ==
+                                              null) {
+                                        touchedIndex = -1;
+                                        return;
+                                      }
+                                      touchedIndex = pieTouchResponse
+                                          .touchedSection!.touchedSectionIndex;
+                                    });
+                                  },
+                                ),
+                                startDegreeOffset: 180,
+                                borderData: FlBorderData(
+                                  show: false,
+                                ),
+                                sectionsSpace: 1,
+                                centerSpaceRadius: 0,
+                                sections: showingSections()),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 50,
+                      ),
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Indicator(
+                                color: CategoryWidgetModel
+                                    .categoryWidgetModels[0].containerColor,
+                                text: 'Travel',
+                                isSquare: false,
+                                size: touchedIndex == 0 ? 18 : 16,
+                                textColor: touchedIndex == 0
+                                    ? Colors.black
+                                    : Colors.grey,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Indicator(
+                                color: CategoryWidgetModel
+                                    .categoryWidgetModels[1].containerColor,
+                                text: 'Food',
+                                isSquare: false,
+                                size: touchedIndex == 1 ? 18 : 16,
+                                textColor: touchedIndex == 1
+                                    ? Colors.black
+                                    : Colors.grey,
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Indicator(
+                                color: CategoryWidgetModel
+                                    .categoryWidgetModels[2].containerColor,
+                                text: 'Shopping',
+                                isSquare: false,
+                                size: touchedIndex == 2 ? 18 : 16,
+                                textColor: touchedIndex == 2
+                                    ? Colors.black
+                                    : Colors.grey,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Indicator(
+                                color: CategoryWidgetModel
+                                    .categoryWidgetModels[3].containerColor,
+                                text: 'Billing',
+                                isSquare: false,
+                                size: touchedIndex == 3 ? 18 : 16,
+                                textColor: touchedIndex == 3
+                                    ? Colors.black
+                                    : Colors.grey,
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Indicator(
+                            color: CategoryWidgetModel
+                                .categoryWidgetModels[4].containerColor,
+                            text: 'Other',
+                            isSquare: false,
+                            size: touchedIndex == 4 ? 18 : 16,
+                            textColor:
+                                touchedIndex == 4 ? Colors.black : Colors.grey,
+                          ),
+                        ],
+                      )
+                    ],
                   ),
                   SizedBox(
                     height: 15,
@@ -188,6 +400,8 @@ class _HomePageState extends State<HomePage> {
                                 ListItemModel.models[index].expenseTitle,
                             expenseDescription:
                                 ListItemModel.models[index].expenseDescription,
+                            expenseTotal:
+                                ListItemModel.models[index].expenseTotal,
                             expenseIcon:
                                 ListItemModel.models[index].expenseIcon);
                       },
@@ -208,74 +422,69 @@ class ListItem extends StatelessWidget {
       {Key? key,
       required this.expenseTitle,
       required this.expenseDescription,
+      required this.expenseTotal,
       required this.expenseIcon})
       : super(key: key);
 
   final expenseTitle;
   final expenseDescription;
   final Icon expenseIcon;
+  final expenseTotal;
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(4),
-      height: 74,
-      child: Card(
-        color: Colors.indigoAccent.shade200,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-        child: RoundedExpansionTile(
-          enabled: false,
-          trailing: IconButton(
-            highlightColor: Colors.transparent,
-            splashColor: Colors.transparent,
-            hoverColor: Colors.transparent,
-            icon: Icon(
-              Icons.edit,
-              color: Colors.white,
-            ),
-            onPressed: () {},
+      height: 100,
+      child: RoundedExpansionTile(
+        enabled: false,
+        trailing: IconButton(
+          highlightColor: Colors.transparent,
+          splashColor: Colors.transparent,
+          hoverColor: Colors.transparent,
+          icon: Icon(
+            Icons.edit,
+            color: Colors.black,
           ),
-          leading: expenseIcon,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                expenseTitle,
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
-              ),
-              Text(
-                expenseDescription,
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    ?.copyWith(color: Colors.white, fontSize: 14),
-              ),
-            ],
-          ),
+          onPressed: () {},
+        ),
+        leading: expenseIcon,
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(12),
-              child: Container(
-                height: 400,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.red, width: 2),
-                  color: Colors.grey.shade200,
-                ),
-                child: Center(
-                  child: Text(
-                    'Widget',
-                    style: TextStyle(color: Colors.grey),
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    expenseTitle,
+                    style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
                   ),
-                ),
+                  Text(
+                    expenseDescription,
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        ?.copyWith(color: Colors.grey.shade600, fontSize: 14),
+                  ),
+                  Text(
+                    expenseTotal + " ",
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        ?.copyWith(color: Colors.black, fontSize: 14),
+                  ),
+                ],
               ),
-            )
+            ),
           ],
         ),
+        children: [],
       ),
     );
   }
@@ -337,191 +546,3 @@ class CardWidget extends StatelessWidget {
   }
 }*/
 
-class _BarChart extends StatelessWidget {
-  const _BarChart();
-
-  @override
-  Widget build(BuildContext context) {
-    return BarChart(
-      BarChartData(
-        backgroundColor: Colors.grey.shade100,
-        barTouchData: barTouchData,
-        titlesData: titlesData,
-        borderData: borderData,
-        barGroups: barGroups,
-        gridData: FlGridData(show: false),
-        alignment: BarChartAlignment.spaceAround,
-        maxY: 20,
-      ),
-    );
-  }
-
-  BarTouchData get barTouchData => BarTouchData(
-        enabled: false,
-        touchTooltipData: BarTouchTooltipData(
-          tooltipBgColor: Colors.transparent,
-          tooltipPadding: EdgeInsets.zero,
-          tooltipMargin: 8,
-          getTooltipItem: (
-            BarChartGroupData group,
-            int groupIndex,
-            BarChartRodData rod,
-            int rodIndex,
-          ) {
-            return BarTooltipItem(
-              rod.toY.round().toString(),
-              const TextStyle(
-                color: Colors.blue,
-                fontWeight: FontWeight.bold,
-              ),
-            );
-          },
-        ),
-      );
-
-  Widget getTitles(double value, TitleMeta meta) {
-    const style = TextStyle(
-      color: Color(0xff7589a2),
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-    );
-    String text;
-    switch (value.toInt()) {
-      case 0:
-        text = 'Mn';
-        break;
-      case 1:
-        text = 'Te';
-        break;
-      case 2:
-        text = 'Wd';
-        break;
-      case 3:
-        text = 'Tu';
-        break;
-      case 4:
-        text = 'Fr';
-        break;
-      case 5:
-        text = 'St';
-        break;
-      case 6:
-        text = 'Sn';
-        break;
-      default:
-        text = '';
-        break;
-    }
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      space: 4,
-      child: Text(text, style: style),
-    );
-  }
-
-  FlTitlesData get titlesData => FlTitlesData(
-        show: true,
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            getTitlesWidget: getTitles,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        rightTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-      );
-
-  FlBorderData get borderData => FlBorderData(
-        show: false,
-      );
-
-  LinearGradient get _barsGradient => const LinearGradient(
-        colors: [
-          Colors.lightBlueAccent,
-          Colors.greenAccent,
-        ],
-        begin: Alignment.bottomCenter,
-        end: Alignment.topCenter,
-      );
-
-  List<BarChartGroupData> get barGroups => [
-        BarChartGroupData(
-          x: 0,
-          barRods: [
-            BarChartRodData(
-              toY: 8,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 1,
-          barRods: [
-            BarChartRodData(
-              toY: 10,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 2,
-          barRods: [
-            BarChartRodData(
-              toY: 14,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 3,
-          barRods: [
-            BarChartRodData(
-              toY: 15,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 4,
-          barRods: [
-            BarChartRodData(
-              toY: 13,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 5,
-          barRods: [
-            BarChartRodData(
-              toY: 10,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 6,
-          barRods: [
-            BarChartRodData(
-              toY: 16,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-      ];
-}

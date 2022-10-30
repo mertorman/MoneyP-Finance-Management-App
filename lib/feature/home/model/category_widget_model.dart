@@ -16,16 +16,13 @@ class CategoryWidgetModel {
         imageUrl: 'assets/images/shopping.png',
         containerColor: Color(0xFFE8D439)),
     category_widget(
-        title: 'Travel',
-        imageUrl: 'assets/images/travel.png',
-        containerColor: Color(0xFFEA4D35)),
+        title: 'Billing',
+        imageUrl: 'assets/images/billing.png',
+        containerColor: Color(0xFFFF8FE839)),
     category_widget(
-        title: 'Food',
-        imageUrl: 'assets/images/food.png',
-        containerColor: Color(0xFF3474ED)),
-    category_widget(
-        title: 'Shopping',
-        imageUrl: 'assets/images/shopping.png',
-        containerColor: Color(0xFFE8D439)),
+        title: 'Other',
+        imageUrl: 'assets/images/other.png',
+        containerColor: Color(0xFFFF39CFE8)),
+    
   ];
 }

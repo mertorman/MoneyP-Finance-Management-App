@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       ),
       theme: ThemeData(primarySwatch: ColorSettings.themeColor),
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: HomePage(),
     );
   }
 }
