@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:moneyp/feature/home/components/card_widget.dart';
 import 'package:moneyp/feature/home/components/expense_add_widget.dart';
@@ -200,6 +201,9 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           ListTile(
+                            onTap: () {
+                              FirebaseAuth.instance.signOut();
+                            },
                             leading: Icon(
                               Icons.logout,
                               color: Colors.white,
