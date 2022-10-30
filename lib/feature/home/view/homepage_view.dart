@@ -1,9 +1,11 @@
 import 'dart:ui';
+import 'package:flutter/services.dart';
 import 'package:moneyp/feature/home/components/card_widget.dart';
+import 'package:moneyp/feature/home/components/expense_add_widget.dart';
 import '/product/constant/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:moneyp/feature/home/view/model/list_item_model.dart';
+import 'package:moneyp/feature/home/model/list_item_model.dart';
 import 'package:moneyp/feature/home/model/card_widget_model.dart';
 import 'package:moneyp/product/constant/color_settings.dart';
 import 'package:rounded_expansion_tile/rounded_expansion_tile.dart';
@@ -20,9 +22,48 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+   
+      extendBody: true,
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        notchMargin: 8.0,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.show_chart,
+              ),
+              onPressed: () {},
+            ),
+            SizedBox(width: 48.0),
+            IconButton(
+              icon: Icon(
+                Icons.filter_list,
+              ),
+              onPressed: () {},
+            ),
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
+        child: Icon(Icons.add),
+        onPressed: () {
+          showModalBottomSheet(
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              context: context,
+              builder: (ctx) => ExpenseBottomSheet());
+        },
+      ),
       drawer: const Drawer(),
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+        systemOverlayStyle:
+            SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.blue),
         toolbarHeight: 80,
         centerTitle: true,
         titleTextStyle: Theme.of(context).textTheme.headlineMedium,
@@ -90,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        '₺123456',
+                        '₺5.400',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 36,
@@ -122,8 +163,6 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     height: 15,
                   ),
-              
-            
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
