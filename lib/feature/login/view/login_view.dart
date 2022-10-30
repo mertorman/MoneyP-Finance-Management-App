@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:kartal/kartal.dart';
@@ -19,6 +21,20 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
+  Future signIn() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _usernameController.text.trim(),
+          password: _passwordController.text.trim());
+    } on FirebaseAuthException catch (e) {
+      const snackBar = SnackBar(
+        content: Text('Wrong email or password !'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,10 +42,7 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).padding.bottom,
-              left: 20,
-              right: 20),
+          padding: EdgeInsets.only(left: 20, right: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                       Expanded(
                           child: TextField(
                         controller: _usernameController,
-                        decoration: InputDecoration(hintText: "Enter username"),
+                        decoration: InputDecoration(hintText: "Enter email"),
                       ))
                     ],
                   ),
@@ -101,16 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
               ElevatedButton(
-                onPressed: () {
-                  if (_usernameController.text == "admin" &&
-                      _passwordController.text == "123") {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomePage(),
-                        ));
-                  }
-                },
+                onPressed: signIn,
                 child: Text("Login"),
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
