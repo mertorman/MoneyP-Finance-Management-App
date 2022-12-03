@@ -15,12 +15,12 @@ class CardModels {
   static final List<CardModel> cardItems = [
     CardModel(
         cardTitle: 'Total',
-        cardMoneyIcon: "₺",
+        cardMoneyIcon: "€",
         cardTotalMoney: '2,500',
         cardSpendMoney: '3000'),
     CardModel(
         cardTitle: 'Spent',
-        cardMoneyIcon: "₺",
+        cardMoneyIcon: "€",
         cardTotalMoney: '2,500',
         cardSpendMoney: '3000'),
   ];

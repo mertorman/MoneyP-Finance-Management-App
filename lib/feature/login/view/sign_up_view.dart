@@ -2,22 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:kartal/kartal.dart';
+import 'package:moneyp/feature/home/controller/auth_controller.dart';
 import 'package:moneyp/product/constant/color_settings.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
-
-  @override
-  State<SignUp> createState() => _SignUpState();
-}
-
-class _SignUpState extends State<SignUp> {
+class SignUp extends GetWidget<AuthController> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
- 
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle.light,
         backgroundColor: Colors.white,
@@ -68,32 +65,34 @@ class _SignUpState extends State<SignUp> {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Padding(
+                  children: [
+                    const Padding(
                       padding: EdgeInsets.only(top: 8.0),
                       child: Icon(Icons.mail_lock_outlined),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 12,
                     ),
                     Expanded(
                         child: TextField(
+                      controller: _emailController,
                       decoration: InputDecoration(hintText: "Email"),
                     ))
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Padding(
                       padding: EdgeInsets.only(top: 8.0),
                       child: Icon(Icons.lock_clock_outlined),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 12,
                     ),
                     Expanded(
                         child: TextField(
+                      controller: _passwordController,
                       obscureText: true,
                       decoration: InputDecoration(hintText: "Password"),
                     ))
@@ -118,24 +117,27 @@ class _SignUpState extends State<SignUp> {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Padding(
                       padding: EdgeInsets.only(top: 8.0),
                       child: Icon(Icons.person_outline_outlined),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 12,
                     ),
                     Expanded(
                         child: TextField(
-                      obscureText: true,
+                      controller: _nameController,
                       decoration: InputDecoration(hintText: "Full name"),
                     ))
                   ],
                 ),
                 SizedBox(height: 40),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    controller.signUp(_emailController.text,
+                        _passwordController.text, _nameController.text);
+                  },
                   child: Text("Sign Up"),
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(

@@ -1,39 +1,20 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:kartal/kartal.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+import 'package:get/get.dart';
+import 'package:kartal/kartal.dart';
 import 'package:moneyp/feature/forgot_password/view/forgot_password_view.dart';
-import 'package:moneyp/feature/home/view/homepage_view.dart';
+import 'package:moneyp/feature/home/controller/auth_controller.dart';
 import 'package:moneyp/feature/login/view/sign_up_view.dart';
 import 'package:moneyp/product/constant/color_settings.dart';
-//import 'package:sign_button/sign_button.dart';
+
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginPage extends StatelessWidget {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-
-  Future signIn() async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _usernameController.text.trim(),
-          password: _passwordController.text.trim());
-    } on FirebaseAuthException catch (e) {
-      const snackBar = SnackBar(
-        content: Text('Wrong email or password !'),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
-  }
+  AuthController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -48,21 +29,38 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AnimatedContainer(
-                duration: Duration(milliseconds: 300),
+                duration: const Duration(milliseconds: 300),
                 height: context.isKeyBoardOpen ? 0 : 275,
                 child: Image(
                   width: MediaQuery.of(context).size.width,
                   height: 275,
-                  image: Svg("assets/images/login.svg"),
+                  image: const Svg("assets/images/login.svg"),
                 ),
               ),
-              Text(
-                "Login",
-                style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: ColorSettings.themeColor.shade200),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Welcome Back",
+                    style: TextStyle(
+                        
+                        fontFamily: 'Rubik',
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: ColorSettings.themeColor.shade200),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Text('I am so happy to see you. Please sign in to continue',
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          color: Color(0xff565656),
+                          letterSpacing: 1,
+                          fontSize: 17)),
+                ],
               ),
+              
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -103,18 +101,17 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   TextButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ForgotPasswordView(),
-                          ));
+                      Get.to(() => const ForgotPasswordView());
                     },
                     child: Text("Forgot Password?"),
                   )
                 ],
               ),
               ElevatedButton(
-                onPressed: signIn,
+                onPressed: () {
+                  controller.signIn(_usernameController.text.trim(),
+                      _passwordController.text.trim());
+                },
                 child: Text("Login"),
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
@@ -171,11 +168,7 @@ class _LoginPageState extends State<LoginPage> {
                             color: ColorSettings.themeColor.shade200),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SignUp(),
-                                ));
+                            Get.to(SignUp());
                           })
                   ],
                 )),

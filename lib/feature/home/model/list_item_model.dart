@@ -1,38 +1,36 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:moneyp/feature/home/view/homepage_view.dart';
-import 'package:rounded_expansion_tile/rounded_expansion_tile.dart';
+class ListItemModel {
+  Timestamp? date;
+  DateTime? expenseDate;
+  int? expenseYear;
+  int? expenseMonth;
+  int? expenseDay;
+  String? expenseType;
+  String? expenseTitle;
+  String? expenseDescription;
+  String? expenseTotal;
+  String? expenseIcon;
+  String? expenseColor;
+  ListItemModel(
+      {this.expenseType,
+      this.expenseTitle,
+      this.expenseDescription,
+      this.expenseTotal,
+      this.expenseIcon,
+      this.expenseColor});
 
-import 'package:flutter/material.dart';
-class ListItemModel  {
-
-  static final List<ListItem> models = [
-
-
-    ListItem(
-        expenseTitle: "Titldssdsdsaasdde 1",
-        expenseDescription: "Description 1",
-        expenseTotal: "100",
-        expenseIcon: Icon(
-          Icons.abc_outlined,
-          color: Colors.black,
-        )),
-    ListItem(
-        expenseTitle: "Title 2",
-        expenseDescription: "Description 2",
-        expenseTotal: "100",
-        expenseIcon: Icon(
-          Icons.abc_outlined,
-          color: Colors.black,
-        )),
-    ListItem(
-        expenseTitle: "Title 3",
-        expenseDescription: "Description 3",
-        expenseTotal: "100",
-        expenseIcon: Icon(
-          Icons.abc_outlined,
-          color: Colors.black,
-        )),
-
-
-  ];
+  ListItemModel.fromDocumentSnapshot(DocumentSnapshot data) {
+    date = data["expenseDate"];
+    expenseDate = (date?.toDate()) ?? DateTime(0);
+    expenseYear = (date?.toDate().year) ?? 0;
+    expenseMonth = (date?.toDate().month) ?? 0;
+    expenseDay = (date?.toDate().day) ?? 0;
+    expenseType = data["expenseType"];
+    expenseTitle = data["expenseTitle"];
+    expenseDescription = data["expenseDesc"];
+    expenseTotal = data["expenseTotal"];
+    expenseIcon = data["expenseIcon"];
+    expenseColor = data["expenseColor"];
+  }
 }

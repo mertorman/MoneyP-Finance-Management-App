@@ -1,17 +1,23 @@
 import 'dart:math';
 import 'dart:ui';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:moneyp/feature/home/components/expenses_list.dart';
+
+import 'package:moneyp/feature/home/model/list_item_model.dart';
+import 'package:moneyp/feature/profile/view/profile_page_view.dart';
 import 'package:moneyp/feature/home/components/card_widget.dart';
 import 'package:moneyp/feature/home/components/expense_add_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:moneyp/feature/home/model/category_widget_model.dart';
-import 'package:moneyp/feature/home/model/list_item_model.dart';
+import 'package:moneyp/feature/home/controller/home_controller.dart';
+import 'package:moneyp/feature/home/model/expense_model.dart';
 import 'package:rounded_expansion_tile/rounded_expansion_tile.dart';
 import 'package:fl_chart/fl_chart.dart';
-
+import 'package:sticky_grouped_list/sticky_grouped_list.dart';
+import '../../../product/constant/color_settings.dart';
+import '../controller/auth_controller.dart';
 import '../components/indicator.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,6 +28,7 @@ class HomePage extends StatefulWidget {
 }
 
 int touchedIndex = -1;
+
 List<PieChartSectionData> showingSections() {
   return List.generate(5, (i) {
     final isTouched = i == touchedIndex;
@@ -35,35 +42,36 @@ List<PieChartSectionData> showingSections() {
     switch (i) {
       case 0:
         return PieChartSectionData(
-          color: CategoryWidgetModel.categoryWidgetModels[0].containerColor
+          color: Color(int.parse(ExpenseModel.expenseItems[0][2]))
               .withOpacity(opacity),
-          value: 25,
-          title: '',
+          value: (homeController.expenseListYuzdeOran.value[0]) ?? 25,
+          title:
+              '%${(homeController.expenseListYuzdeOran.value[0].toInt()).toString()}',
           radius: 80,
           titleStyle: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Color(0xff044d7c),
+            color: Colors.white,
           ),
           titlePositionPercentageOffset: 0.55,
           borderSide: isTouched
               ? BorderSide(
-                  color: CategoryWidgetModel
-                      .categoryWidgetModels[0].containerColor,
+                  color: Color(int.parse(ExpenseModel.expenseItems[0][2])),
                   width: 6)
               : BorderSide(color: color0.withOpacity(0)),
         );
       case 1:
         return PieChartSectionData(
-          color: CategoryWidgetModel.categoryWidgetModels[1].containerColor
+          color: Color(int.parse(ExpenseModel.expenseItems[1][2]))
               .withOpacity(opacity),
-          value: 25,
-          title: '',
+          value: (homeController.expenseListYuzdeOran.value[1]) ?? 25,
+          title:
+              '%${(homeController.expenseListYuzdeOran.value[1].toInt()).toString()}',
           radius: 65,
           titleStyle: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Color(0xff90672d),
+            color: Colors.white,
           ),
           titlePositionPercentageOffset: 0.55,
           borderSide: isTouched
@@ -72,15 +80,16 @@ List<PieChartSectionData> showingSections() {
         );
       case 2:
         return PieChartSectionData(
-          color: CategoryWidgetModel.categoryWidgetModels[2].containerColor
+          color: Color(int.parse(ExpenseModel.expenseItems[2][2]))
               .withOpacity(opacity),
-          value: 25,
-          title: '',
+          value: homeController.expenseListYuzdeOran.value[2] ?? 25,
+          title:
+              '%${(homeController.expenseListYuzdeOran.value[2].toInt()).toString()}',
           radius: 75,
           titleStyle: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Color(0xff4c3788),
+            color: Colors.white,
           ),
           titlePositionPercentageOffset: 0.6,
           borderSide: isTouched
@@ -89,15 +98,16 @@ List<PieChartSectionData> showingSections() {
         );
       case 3:
         return PieChartSectionData(
-          color: CategoryWidgetModel.categoryWidgetModels[3].containerColor
+          color: Color(int.parse(ExpenseModel.expenseItems[3][2]))
               .withOpacity(opacity),
-          value: 25,
-          title: '',
+          value: homeController.expenseListYuzdeOran.value[3] ?? 25,
+          title:
+              '%${(homeController.expenseListYuzdeOran.value[3].toInt()).toString()}',
           radius: 65,
           titleStyle: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Color(0xff0c7f55),
+            color: Colors.white,
           ),
           borderSide: isTouched
               ? BorderSide(color: Colors.red, width: 6)
@@ -105,15 +115,16 @@ List<PieChartSectionData> showingSections() {
         );
       case 4:
         return PieChartSectionData(
-          color: CategoryWidgetModel.categoryWidgetModels[4].containerColor
+          color: Color(int.parse(ExpenseModel.expenseItems[4][2]))
               .withOpacity(opacity),
-          value: 25,
-          title: '',
+          value: homeController.expenseListYuzdeOran.value[4] ?? 25,
+          title:
+              '%${(homeController.expenseListYuzdeOran.value[4].toInt()).toString()}',
           radius: 75,
           titleStyle: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Color(0xff0c7f55),
+            color: Colors.white,
           ),
           borderSide: isTouched
               ? BorderSide(color: Colors.red, width: 6)
@@ -126,559 +137,488 @@ List<PieChartSectionData> showingSections() {
 }
 
 double value = 0;
+AuthController authController = Get.find<AuthController>();
+HomeController homeController = Get.find();
 
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          backgroundColor: Colors.blue,
-          body: Padding(
-            padding: const EdgeInsets.all(20),
-            child: SafeArea(
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.38,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    DrawerHeader(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CircleAvatar(
-                            radius: 50,
-                            backgroundImage:
-                                AssetImage('assets/images/pp3.jpg'),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'Mert',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          ListTile(
-                            leading: Icon(
-                              Icons.home,
-                              color: Colors.white,
-                            ),
-                            title: Text(
-                              'Home',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 17),
-                            ),
-                          ),
-                          ListTile(
-                            leading: Icon(
-                              Icons.person,
-                              color: Colors.white,
-                            ),
-                            title: Text(
-                              'Profile',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 17),
-                            ),
-                          ),
-                          ListTile(
-                            leading: Icon(
-                              Icons.settings,
-                              color: Colors.white,
-                            ),
-                            title: Text(
-                              'Settings',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 17),
-                            ),
-                          ),
-                          ListTile(
-                            onTap: () {
-                              FirebaseAuth.instance.signOut();
-                            },
-                            leading: Icon(
-                              Icons.logout,
-                              color: Colors.white,
-                            ),
-                            title: Text(
-                              'Log out',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 17),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
+    return homeController.obx(
+        onLoading: Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
           ),
-        ),
-        TweenAnimationBuilder(
-          tween: Tween<double>(begin: 0, end: value),
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInExpo,
-          builder: (_, double val, __) {
-            return Transform(
-              alignment: Alignment.center,
-              transform: Matrix4.identity()
-                ..setEntry(3, 2, 0.001)
-                ..setEntry(0, 3, 200 * val)
-                ..rotateY((pi / 6) * val),
-              child: Scaffold(
-                extendBody: true,
-                bottomNavigationBar: BottomAppBar(
-                  shape: CircularNotchedRectangle(),
-                  notchMargin: 8.0,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.show_chart,
-                        ),
-                        onPressed: () {},
-                      ),
-                      SizedBox(width: 48.0),
-                      IconButton(
-                        icon: Icon(
-                          Icons.filter_list,
-                        ),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                ),
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.centerDocked,
-                floatingActionButton: FloatingActionButton(
-                  backgroundColor: Colors.blue,
-                  child: Icon(Icons.add),
-                  onPressed: () {
-                    showModalBottomSheet(
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        context: context,
-                        builder: (ctx) => ExpenseBottomSheet());
-                  },
-                ),
-                appBar: AppBar(
-                  systemOverlayStyle: SystemUiOverlayStyle.light
-                      .copyWith(statusBarColor: Colors.blue),
-                  toolbarHeight: 80,
-                  centerTitle: true,
-                  titleTextStyle: Theme.of(context).textTheme.headlineMedium,
-                  backgroundColor: Colors.blue,
-                  leading: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Builder(
-                      builder: (context) => IconButton(
-                        icon: const Icon(
-                          Icons.menu_outlined,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            value == 0 ? value = 1 : value = 0;
-                          });
-                          //Scaffold.of(context).openDrawer();
-                        },
-                      ),
-                    ),
-                  ),
-                  elevation: 0,
-                  title: Text('MoneyP',
-                      style: GoogleFonts.pacifico(
-                          textStyle: TextStyle(
-                              color: Colors.white.withOpacity(0.90),
-                              fontSize: 30,
-                              letterSpacing: 2,
-                              fontWeight: FontWeight.w500))),
-                ),
-                body: SingleChildScrollView(
+        ), (state) {
+      return Stack(
+        children: [
+          Scaffold(
+            backgroundColor: Colors.blue,
+            body: Padding(
+              padding: const EdgeInsets.all(20),
+              child: SafeArea(
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.38,
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Stack(
-                        children: [
-                          Material(
-                            elevation: 15,
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.20,
-                              decoration: BoxDecoration(
-                                color: Colors.blue,
-                              ),
-                            ),
-                          ),
-                          Column(
-                            children: [
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Align(
-                                alignment: Alignment.center,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.waving_hand_outlined,
-                                        color: Colors.white),
-                                    Text(
-                                      ' Hello Mert',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 20),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  '₺5.400',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 42,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 23,
-                              ),
-                              TopCardWidget()
-                            ],
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20),
+                      DrawerHeader(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(
-                                  child: AspectRatio(
-                                    aspectRatio: 1.2,
-                                    child: PieChart(
-                                      PieChartData(
-                                          pieTouchData: PieTouchData(
-                                            touchCallback: (FlTouchEvent event,
-                                                pieTouchResponse) {
-                                              setState(() {
-                                                if (!event
-                                                        .isInterestedForInteractions ||
-                                                    pieTouchResponse == null ||
-                                                    pieTouchResponse
-                                                            .touchedSection ==
-                                                        null) {
-                                                  touchedIndex = -1;
-                                                  return;
-                                                }
-                                                touchedIndex = pieTouchResponse
-                                                    .touchedSection!
-                                                    .touchedSectionIndex;
-                                              });
-                                            },
-                                          ),
-                                          startDegreeOffset: 180,
-                                          borderData: FlBorderData(
-                                            show: false,
-                                          ),
-                                          sectionsSpace: 1,
-                                          centerSpaceRadius: 0,
-                                          sections: showingSections()),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 50,
-                                ),
-                                Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Indicator(
-                                          color: CategoryWidgetModel
-                                              .categoryWidgetModels[0]
-                                              .containerColor,
-                                          text: 'Travel',
-                                          isSquare: false,
-                                          size: touchedIndex == 0 ? 18 : 16,
-                                          textColor: touchedIndex == 0
-                                              ? Colors.black
-                                              : Colors.grey,
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Indicator(
-                                          color: CategoryWidgetModel
-                                              .categoryWidgetModels[1]
-                                              .containerColor,
-                                          text: 'Food',
-                                          isSquare: false,
-                                          size: touchedIndex == 1 ? 18 : 16,
-                                          textColor: touchedIndex == 1
-                                              ? Colors.black
-                                              : Colors.grey,
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Indicator(
-                                          color: CategoryWidgetModel
-                                              .categoryWidgetModels[2]
-                                              .containerColor,
-                                          text: 'Shopping',
-                                          isSquare: false,
-                                          size: touchedIndex == 2 ? 18 : 16,
-                                          textColor: touchedIndex == 2
-                                              ? Colors.black
-                                              : Colors.grey,
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Indicator(
-                                          color: CategoryWidgetModel
-                                              .categoryWidgetModels[3]
-                                              .containerColor,
-                                          text: 'Billing',
-                                          isSquare: false,
-                                          size: touchedIndex == 3 ? 18 : 16,
-                                          textColor: touchedIndex == 3
-                                              ? Colors.black
-                                              : Colors.grey,
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Indicator(
-                                      color: CategoryWidgetModel
-                                          .categoryWidgetModels[4]
-                                          .containerColor,
-                                      text: 'Other',
-                                      isSquare: false,
-                                      size: touchedIndex == 4 ? 18 : 16,
-                                      textColor: touchedIndex == 4
-                                          ? Colors.black
-                                          : Colors.grey,
-                                    ),
-                                  ],
-                                )
-                              ],
+                            CircleAvatar(
+                              radius: 50,
+                              backgroundImage:
+                                  AssetImage('assets/images/pp3.jpg'),
                             ),
                             SizedBox(
-                              height: 15,
+                              height: 10,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Expenses",
-                                    style: GoogleFonts.daysOne(
-                                      textStyle: const TextStyle(
-                                          color: Color(0xFF40565a),
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600),
-                                    ))
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            Container(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: ListItemModel.models.length,
-                                itemBuilder: (context, index) {
-                                  return ListItem(
-                                      expenseTitle: ListItemModel
-                                          .models[index].expenseTitle,
-                                      expenseDescription: ListItemModel
-                                          .models[index].expenseDescription,
-                                      expenseTotal: ListItemModel
-                                          .models[index].expenseTotal,
-                                      expenseIcon: ListItemModel
-                                          .models[index].expenseIcon);
-                                },
-                              ),
+                            Text(
+                              'Mert',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
                             )
                           ],
                         ),
                       ),
+                      Expanded(
+                        child: ListView(
+                          children: [
+                            ListTile(
+                              leading: Icon(
+                                Icons.home,
+                                color: Colors.white,
+                              ),
+                              title: Text(
+                                'Home',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 17),
+                              ),
+                            ),
+                            ListTile(
+                              onTap: () {
+                                Get.to(() => ProfilePage(),
+                                    transition: Transition.circularReveal,
+                                    duration: Duration(milliseconds: 1500));
+                              },
+                              leading: Icon(
+                                Icons.person,
+                                color: Colors.white,
+                              ),
+                              title: Text(
+                                'Profile',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 17),
+                              ),
+                            ),
+                            ListTile(
+                              leading: Icon(
+                                Icons.settings,
+                                color: Colors.white,
+                              ),
+                              title: Text(
+                                'Settings',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 17),
+                              ),
+                            ),
+                            ListTile(
+                              onTap: () {
+                                authController.logOut();
+                              },
+                              leading: Icon(
+                                Icons.logout,
+                                color: Colors.white,
+                              ),
+                              title: Text(
+                                'Log out',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 17),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ),
               ),
-            );
-          },
-        ),
-        GestureDetector(
-          onHorizontalDragUpdate: (details) {
-            if (details.delta.dx > 0) {
-              setState(() {
-                value = 1;
-              });
-            } else {
-              setState(() {
-                value = 0;
-              });
-            }
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class ListItem extends StatelessWidget {
-  const ListItem(
-      {Key? key,
-      required this.expenseTitle,
-      required this.expenseDescription,
-      required this.expenseTotal,
-      required this.expenseIcon})
-      : super(key: key);
-
-  final expenseTitle;
-  final expenseDescription;
-  final Icon expenseIcon;
-  final expenseTotal;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(4),
-      height: 100,
-      child: RoundedExpansionTile(
-        enabled: false,
-        trailing: IconButton(
-          highlightColor: Colors.transparent,
-          splashColor: Colors.transparent,
-          hoverColor: Colors.transparent,
-          icon: Icon(
-            Icons.edit,
-            color: Colors.black,
-          ),
-          onPressed: () {},
-        ),
-        leading: expenseIcon,
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    expenseTitle,
-                    style: Theme.of(context).textTheme.subtitle2?.copyWith(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    expenseDescription,
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        ?.copyWith(color: Colors.grey.shade600, fontSize: 14),
-                  ),
-                  Text(
-                    expenseTotal + " ",
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        ?.copyWith(color: Colors.black, fontSize: 14),
-                  ),
-                ],
-              ),
             ),
-          ],
-        ),
-        children: [],
-      ),
-    );
+          ),
+          TweenAnimationBuilder(
+            tween: Tween<double>(begin: 0, end: value),
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInExpo,
+            builder: (_, double val, __) {
+              return Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.identity()
+                  ..setEntry(3, 2, 0.001)
+                  ..setEntry(0, 3, 200 * val)
+                  ..rotateY((pi / 6) * val),
+                child: Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  backgroundColor: Color(0xFFF7F7F7),
+                  extendBody: false,
+                  bottomNavigationBar: BottomAppBar(
+                    shape: CircularNotchedRectangle(),
+                    notchMargin: 8.0,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.home_outlined),
+                          onPressed: () {},
+                        ),
+                        SizedBox(width: 48.0),
+                        IconButton(
+                          icon: Icon(
+                            Icons.person,
+                          ),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                  ),
+                  floatingActionButtonLocation:
+                      FloatingActionButtonLocation.centerDocked,
+                  floatingActionButton: FloatingActionButton(
+                    backgroundColor: Colors.blue,
+                    child: Icon(Icons.add),
+                    onPressed: () {
+                      showModalBottomSheet(
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              context: context,
+                              builder: (ctx) => ExpenseBottomSheet())
+                          .whenComplete(() async {
+                        await Future.delayed(const Duration(seconds: 1));
+                        setState(() {
+                          touchedIndex = -1;
+                        });
+                      });
+                    },
+                  ),
+                  appBar: AppBar(
+                    systemOverlayStyle: SystemUiOverlayStyle.light
+                        .copyWith(statusBarColor: Colors.blue),
+                    toolbarHeight: 80,
+                    centerTitle: true,
+                    titleTextStyle: Theme.of(context).textTheme.headlineMedium,
+                    backgroundColor: Colors.blue,
+                    leading: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Builder(
+                        builder: (context) => IconButton(
+                          icon: const Icon(
+                            Icons.menu_outlined,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              value == 0 ? value = 1 : value = 0;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    elevation: 0,
+                    title: Text('MoneyP',
+                        style: GoogleFonts.pacifico(
+                            textStyle: TextStyle(
+                                color: Colors.white.withOpacity(0.90),
+                                fontSize: 30,
+                                letterSpacing: 2,
+                                fontWeight: FontWeight.w500))),
+                  ),
+                  body: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Stack(
+                          children: [
+                            Material(
+                              elevation: 15,
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.20,
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            ),
+                            Column(
+                              children: [
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.waving_hand_outlined,
+                                          color: Colors.white),
+                                      Obx(
+                                        () {
+                                          return Text(
+                                            'Hello ${homeController.homeModelValue.name}',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20),
+                                          );
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    '€10.400',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 42,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 23,
+                                ),
+                                TopCardWidget()
+                              ],
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(
+                                    child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: Obx(
+                                        () => PieChart(
+                                          PieChartData(
+                                              pieTouchData: PieTouchData(
+                                                touchCallback:
+                                                    (FlTouchEvent event,
+                                                        pieTouchResponse) {
+                                                  setState(() {
+                                                    if (!event
+                                                            .isInterestedForInteractions ||
+                                                        pieTouchResponse ==
+                                                            null ||
+                                                        pieTouchResponse
+                                                                .touchedSection ==
+                                                            null) {
+                                                      touchedIndex = -1;
+                                                      return;
+                                                    }
+                                                    touchedIndex =
+                                                        pieTouchResponse
+                                                            .touchedSection!
+                                                            .touchedSectionIndex;
+                                                  });
+                                                },
+                                              ),
+                                              startDegreeOffset: 180,
+                                              borderData: FlBorderData(
+                                                show: false,
+                                              ),
+                                              sectionsSpace: 1,
+                                              centerSpaceRadius: 0,
+                                              sections: showingSections()),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 70,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Indicator(
+                                            color: Color(int.parse(ExpenseModel
+                                                .expenseItems[0][2])),
+                                            text: 'Travel',
+                                            isSquare: false,
+                                            size: touchedIndex == 0 ? 18 : 16,
+                                            textColor: touchedIndex == 0
+                                                ? Colors.black
+                                                : Colors.grey,
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Indicator(
+                                            color: Color(int.parse(ExpenseModel
+                                                .expenseItems[1][2])),
+                                            text: 'Food',
+                                            isSquare: false,
+                                            size: touchedIndex == 1 ? 18 : 16,
+                                            textColor: touchedIndex == 1
+                                                ? Colors.black
+                                                : Colors.grey,
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Indicator(
+                                            color: Color(int.parse(ExpenseModel
+                                                .expenseItems[2][2])),
+                                            text: 'Shopping',
+                                            isSquare: false,
+                                            size: touchedIndex == 2 ? 18 : 16,
+                                            textColor: touchedIndex == 2
+                                                ? Colors.black
+                                                : Colors.grey,
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Indicator(
+                                            color: Color(int.parse(ExpenseModel
+                                                .expenseItems[3][2])),
+                                            text: 'Billing',
+                                            isSquare: false,
+                                            size: touchedIndex == 3 ? 18 : 16,
+                                            textColor: touchedIndex == 3
+                                                ? Colors.black
+                                                : Colors.grey,
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Indicator(
+                                        color: Color(int.parse(
+                                            ExpenseModel.expenseItems[4][2])),
+                                        text: 'Other',
+                                        isSquare: false,
+                                        size: touchedIndex == 4 ? 18 : 16,
+                                        textColor: touchedIndex == 4
+                                            ? Colors.black
+                                            : Colors.grey,
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Expenses",
+                                      style: GoogleFonts.daysOne(
+                                        textStyle: const TextStyle(
+                                            color: Color(0xFF40565a),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600),
+                                      ))
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              Obx(
+                                () {
+                                  return StickyGroupedListView<ListItemModel,
+                                          DateTime>(
+                                      elements: homeController.expenses,
+                                      addAutomaticKeepAlives: true,
+                                      scrollDirection: Axis.vertical,
+                                      groupSeparatorBuilder: (value) =>
+                                          ListItem.getGroupSeparator(value),
+                                      shrinkWrap: true,
+                                      groupBy: (element) => DateTime(
+                                          element.expenseYear!,
+                                          element.expenseMonth!,
+                                          element.expenseDay!),
+                                      order: StickyGroupedListOrder.ASC,
+                                      groupComparator:
+                                          (DateTime value1, DateTime value2) =>
+                                              value2.compareTo(value1),
+                                      itemBuilder: ListItem.getItem);
+
+                                  /* ListView.builder(
+                                    addAutomaticKeepAlives: true,
+                                    shrinkWrap: true,
+                                    itemCount: homeController.expenses.length,
+                                    physics: ScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 16),
+                                        child: ListItem(
+                                          expenseType: homeController
+                                              .expenses[index].expenseType,
+                                          expenseTitle: homeController
+                                              .expenses[index].expenseTitle,
+                                          expenseDescription: homeController
+                                              .expenses[index]
+                                              .expenseDescription,
+                                          expenseTotal: homeController
+                                              .expenses[index].expenseTotal,
+                                          expenseIcon: homeController
+                                              .expenses[index].expenseIcon,
+                                          expenseColor: homeController
+                                              .expenses[index].expenseColor,
+                                        ),
+                                      );
+                                    },
+                                  );*/
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+          GestureDetector(
+            onHorizontalDragUpdate: (details) {
+              if (details.delta.dx > 0) {
+                setState(() {
+                  value = 1;
+                });
+              } else {
+                setState(() {
+                  value = 0;
+                });
+              }
+            },
+          ),
+        ],
+      );
+    });
   }
 }
-/*
-class CardWidget extends StatelessWidget {
-  const CardWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(10),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-      color: Colors.indigoAccent.shade200,
-      child: Container(
-        width: 140,
-        height: 165,
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'VISA',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 35,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text('₺',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500)),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 7),
-                    child: Text('600',
-                        style: GoogleFonts.daysOne(
-                            textStyle: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500))),
-                  )
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}*/
-

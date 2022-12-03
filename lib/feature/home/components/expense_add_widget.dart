@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:moneyp/feature/home/model/category_widget_model.dart';
+import 'package:get/get.dart';
+import 'package:moneyp/feature/home/controller/home_controller.dart';
+import 'package:moneyp/feature/home/controller/expense_controller.dart';
+import 'package:moneyp/feature/home/model/expense_model.dart';
+import 'package:moneyp/feature/home/view/homepage_view.dart';
 import 'package:moneyp/product/constant/color_settings.dart';
 
 class ExpenseBottomSheet extends StatefulWidget {
@@ -10,7 +14,11 @@ class ExpenseBottomSheet extends StatefulWidget {
 }
 
 class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
-  int selectedIndex = -1;
+  ExpenseController controller = Get.find();
+  final listKey = GlobalKey<AnimatedListState>();
+  TextEditingController title = TextEditingController();
+  TextEditingController expenseDesc = TextEditingController();
+  TextEditingController expenseTotal = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,17 +44,40 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
               padding: const EdgeInsets.only(top: 20, left: 20),
               child: Container(
                 height: 100,
-                child: ListView.builder(
+                child:
+
+                    /*AnimatedList(
+                    key: listKey,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    initialItemCount: ExpenseModel.expenseItems.length,
+                    itemBuilder: (context, index, animation) {
+                      return category_widget(
+                        title: ExpenseModel.expenseItems[index][0],
+                        imageUrl: ExpenseModel.expenseItems[index][1],
+                        containerColor: Color(
+                            int.parse(ExpenseModel.expenseItems[index][2])),
+                        onPressed: () {
+                          controller.expenseSec(index);
+                          listKey.currentState.build(context)
+                        },
+                      );
+                    },
+                  )*/
+                    ListView.builder(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  itemCount: CategoryWidgetModel.categoryWidgetModels.length,
+                  itemCount: ExpenseModel.expenseItems.length,
                   itemBuilder: (context, index) {
-                    //   CategoryWidgetModel model = CategoryWidgetModels
-                    //       .categoryWidgetModels
-                    //      .elementAt(index);
-
-                    //   containerSize = model.onTap ? 120 : 90;
-                    return CategoryWidgetModel.categoryWidgetModels[index];
+                    return category_widget(
+                      title: ExpenseModel.expenseItems[index][0],
+                      imageUrl: ExpenseModel.expenseItems[index][1],
+                      containerColor:
+                          Color(int.parse(ExpenseModel.expenseItems[index][2])),
+                      onPressed: () {
+                        controller.expenseSec(index);
+                      },
+                    );
                   },
                 ),
               ),
@@ -72,6 +103,7 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
                     ),
                     Expanded(
                         child: TextField(
+                      controller: expenseTotal,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration.collapsed(
                         hintText: "Enter total budget",
@@ -106,13 +138,14 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
                     left: 10, right: 18, top: 10, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
+                  children: [
                     Icon(Icons.title, color: Colors.grey),
                     SizedBox(
                       width: 10,
                     ),
                     Expanded(
                         child: TextField(
+                      controller: title,
                       decoration: InputDecoration.collapsed(
                         hintText: "Enter expense title",
                         border: InputBorder.none,
@@ -144,7 +177,10 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
                           fontWeight: FontWeight.bold,
                           color: Colors.grey.shade500),
                     ),
-                    Expanded(child: TextField()),
+                    Expanded(
+                        child: TextField(
+                      controller: expenseDesc,
+                    )),
                     Expanded(child: TextField())
                   ],
                 ),
@@ -156,7 +192,15 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      if (title.text.length > 1) {
+                        await controller.addExpense(
+                            title.text, expenseDesc.text, expenseTotal.text);
+                        await homeController.grafikYuzdeHesaplama();
+                      }
+
+                      Get.back();
+                    },
                     child: Text(
                       'Save',
                     ),
@@ -190,73 +234,57 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
   }
 }
 
-class category_widget extends StatefulWidget {
-  category_widget({
-    Key? key,
-    required this.imageUrl,
-    required this.title,
-    required this.containerColor,
-  }) : super(key: key);
+class category_widget extends StatelessWidget {
+  category_widget(
+      {Key? key,
+      required this.title,
+      required this.imageUrl,
+      required this.containerColor,
+      required this.onPressed,
+      this.widthHeight})
+      : super(key: key);
 
-  String imageUrl;
-  String title;
-  Color containerColor;
-
-  @override
-  State<category_widget> createState() => _category_widgetState();
-}
-
-class _category_widgetState extends State<category_widget> {
-  bool open = false;
-  bool visible = false;
-
+  final String imageUrl;
+  final String title;
+  final Color containerColor;
+  void Function()? onPressed;
+  double? widthHeight = 90;
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-      child: GestureDetector(
-        onTap: () async {
-          setState(() {
-            open = !open;
-          });
-          await Future.delayed(Duration(milliseconds: open ? 280 : 100), () {
-            setState(() {
-              visible = !visible;
-            });
-          });
-        },
-        child: Row(
-          children: [
-            AnimatedContainer(
-              duration: Duration(milliseconds: 100),
-              width: open ? 120 : 90,
-              height: open ? 120 : 90,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(18),
-                color: widget.containerColor.withOpacity(0.33),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Image.asset(
-                    widget.imageUrl,
-                    width: 25,
-                    height: 25,
-                  ),
-                  Text(
-                    widget.title,
-                    style: TextStyle(
-                        color: widget.containerColor,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
+    return GestureDetector(
+      onTap: onPressed,
+      child: Row(
+        children: [
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 100),
+            width: MediaQuery.of(context).size.width * 0.18,
+            height: MediaQuery.of(context).size.height * 0.1,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              color: containerColor.withOpacity(0.33),
             ),
-            SizedBox(
-              width: 30,
-            )
-          ],
-        ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Image.asset(
+                  imageUrl,
+                  width: 25,
+                  height: 25,
+                ),
+                Text(
+                  title,
+                  style: TextStyle(
+                      color: containerColor,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            width: 30,
+          )
+        ],
       ),
     );
   }
