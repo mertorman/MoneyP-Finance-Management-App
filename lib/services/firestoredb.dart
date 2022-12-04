@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get/get.dart';
-import 'package:moneyp/feature/home/controller/home_controller.dart';
+import 'package:moneyp/feature/home/model/incomes_model.dart';
 import 'package:moneyp/feature/home/model/list_item_model.dart';
 import 'package:moneyp/feature/home/model/user_model.dart';
-import 'package:moneyp/feature/home/view/homepage_view.dart';
-import '../../product/constant/constant.dart';
+
 
 class FireStoreDb {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -35,6 +33,21 @@ class FireStoreDb {
     });
   }
 
+  Stream<List<IncomesModel>> incomesStream(String uid) {
+    return _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('incomes')
+        .snapshots()
+        .map((QuerySnapshot query) {
+      List<IncomesModel> retValue = [];
+      query.docs.forEach((element) {
+        retValue.add(IncomesModel.fromDocumentSnapshot(element));
+      });
+      return retValue;
+    });
+  }
+
   Future<void> addExpense(
       String uid,
       String expenseType,
@@ -54,7 +67,6 @@ class FireStoreDb {
         'expenseDate': FieldValue.serverTimestamp()
       });
     } catch (e) {
-      print(e);
       rethrow;
     }
   }

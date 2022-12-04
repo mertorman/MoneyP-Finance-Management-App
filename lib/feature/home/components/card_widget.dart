@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyp/feature/home/model/card_widget_model.dart';
-
 import '../../../product/constant/constant.dart';
 
 class TopCardWidget extends StatefulWidget {
@@ -54,7 +53,7 @@ class _CardWidgetState extends State<TopCardWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(CardModels.cardItems[1].cardTitle,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.red,
                             fontSize: 15,
                             fontWeight: FontWeight.w400)),
@@ -62,7 +61,7 @@ class _CardWidgetState extends State<TopCardWidget> {
                       children: [
                         Text(
                           CardModels.cardItems[1].cardMoneyIcon,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.red,
                               fontSize: 22,
                               fontWeight: FontWeight.bold),

@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:moneyp/feature/home/controller/auth_controller.dart';
 import 'package:moneyp/feature/home/controller/expense_controller.dart';
 import 'package:moneyp/feature/home/controller/home_controller.dart';
 

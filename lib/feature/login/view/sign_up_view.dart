@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kartal/kartal.dart';
 import 'package:moneyp/feature/home/controller/auth_controller.dart';
@@ -37,12 +36,12 @@ class SignUp extends GetWidget<AuthController> {
               top: MediaQuery.of(context).padding.top),
           child: Column(children: [
             AnimatedContainer(
-              duration: Duration(milliseconds: 300),
+              duration: const Duration(milliseconds: 300),
               height: context.isKeyBoardOpen ? 0 : 275,
               child: Image(
                 width: MediaQuery.of(context).size.width,
                 height: 275,
-                image: Svg("assets/images/signUp.svg"),
+                image: const Svg("assets/images/signUp.svg"),
               ),
             ),
             const SizedBox(
@@ -60,7 +59,7 @@ class SignUp extends GetWidget<AuthController> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Column(
               children: [
                 Row(
@@ -76,14 +75,14 @@ class SignUp extends GetWidget<AuthController> {
                     Expanded(
                         child: TextField(
                       controller: _emailController,
-                      decoration: InputDecoration(hintText: "Email"),
+                      decoration: const InputDecoration(hintText: "Email"),
                     ))
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.only(top: 8.0),
                       child: Icon(Icons.lock_clock_outlined),
                     ),
@@ -94,7 +93,7 @@ class SignUp extends GetWidget<AuthController> {
                         child: TextField(
                       controller: _passwordController,
                       obscureText: true,
-                      decoration: InputDecoration(hintText: "Password"),
+                      decoration: const InputDecoration(hintText: "Password"),
                     ))
                   ],
                 ),
@@ -118,7 +117,7 @@ class SignUp extends GetWidget<AuthController> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Padding(
+                   const  Padding(
                       padding: EdgeInsets.only(top: 8.0),
                       child: Icon(Icons.person_outline_outlined),
                     ),
@@ -128,11 +127,11 @@ class SignUp extends GetWidget<AuthController> {
                     Expanded(
                         child: TextField(
                       controller: _nameController,
-                      decoration: InputDecoration(hintText: "Full name"),
+                      decoration: const InputDecoration(hintText: "Full name"),
                     ))
                   ],
                 ),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 ElevatedButton(
                   onPressed: () {
                     controller.signUp(_emailController.text,

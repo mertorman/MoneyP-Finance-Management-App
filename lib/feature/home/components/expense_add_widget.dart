@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:moneyp/feature/home/controller/home_controller.dart';
 import 'package:moneyp/feature/home/controller/expense_controller.dart';
 import 'package:moneyp/feature/home/model/expense_model.dart';
 import 'package:moneyp/feature/home/view/homepage_view.dart';
@@ -44,27 +43,7 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
               padding: const EdgeInsets.only(top: 20, left: 20),
               child: Container(
                 height: 100,
-                child:
-
-                    /*AnimatedList(
-                    key: listKey,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    initialItemCount: ExpenseModel.expenseItems.length,
-                    itemBuilder: (context, index, animation) {
-                      return category_widget(
-                        title: ExpenseModel.expenseItems[index][0],
-                        imageUrl: ExpenseModel.expenseItems[index][1],
-                        containerColor: Color(
-                            int.parse(ExpenseModel.expenseItems[index][2])),
-                        onPressed: () {
-                          controller.expenseSec(index);
-                          listKey.currentState.build(context)
-                        },
-                      );
-                    },
-                  )*/
-                    ListView.builder(
+                child:ListView.builder(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   itemCount: ExpenseModel.expenseItems.length,
@@ -82,7 +61,7 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Container(
@@ -97,20 +76,20 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.euro, color: Colors.grey),
-                    SizedBox(
+                    const Icon(Icons.euro, color: Colors.grey),
+                    const SizedBox(
                       width: 10,
                     ),
                     Expanded(
                         child: TextField(
                       controller: expenseTotal,
                       keyboardType: TextInputType.number,
-                      decoration: InputDecoration.collapsed(
+                      decoration: const InputDecoration.collapsed(
                         hintText: "Enter total budget",
                         border: InputBorder.none,
                       ),
                     )),
-                    VerticalDivider(color: Colors.blue),
+                    const VerticalDivider(color: Colors.blue),
                     DropdownButton(
                       hint: Text(
                         'EUR',
@@ -139,14 +118,14 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.title, color: Colors.grey),
-                    SizedBox(
+                    const Icon(Icons.title, color: Colors.grey),
+                   const SizedBox(
                       width: 10,
                     ),
                     Expanded(
                         child: TextField(
                       controller: title,
-                      decoration: InputDecoration.collapsed(
+                      decoration: const InputDecoration.collapsed(
                         hintText: "Enter expense title",
                         border: InputBorder.none,
                       ),
@@ -155,7 +134,7 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
                 ),
               ),
             ),
-            SizedBox(
+           const SizedBox(
               height: 10,
             ),
             Container(
@@ -181,7 +160,7 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
                         child: TextField(
                       controller: expenseDesc,
                     )),
-                    Expanded(child: TextField())
+                    const Expanded(child: TextField()) 
                   ],
                 ),
               ),
@@ -215,8 +194,8 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
                     child: Text('Reset'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.red,
-                      side: BorderSide(color: Colors.red),
-                      minimumSize: Size(
+                      side: const BorderSide(color: Colors.red),
+                      minimumSize: const Size(
                         130,
                         55,
                       ),

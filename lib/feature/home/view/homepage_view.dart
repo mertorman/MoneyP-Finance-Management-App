@@ -1,10 +1,8 @@
 import 'dart:math';
-import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:moneyp/feature/home/components/expenses_list.dart';
-
+import 'package:moneyp/feature/home/components/list_item_widget.dart';
+import 'package:moneyp/feature/home/model/incomes_model.dart';
 import 'package:moneyp/feature/home/model/list_item_model.dart';
 import 'package:moneyp/feature/profile/view/profile_page_view.dart';
 import 'package:moneyp/feature/home/components/card_widget.dart';
@@ -13,10 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyp/feature/home/controller/home_controller.dart';
 import 'package:moneyp/feature/home/model/expense_model.dart';
-import 'package:rounded_expansion_tile/rounded_expansion_tile.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:sticky_grouped_list/sticky_grouped_list.dart';
-import '../../../product/constant/color_settings.dart';
 import '../controller/auth_controller.dart';
 import '../components/indicator.dart';
 
@@ -144,7 +140,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return homeController.obx(
-        onLoading: Scaffold(
+        onLoading: const Scaffold(
           body: Center(
             child: CircularProgressIndicator(),
           ),
@@ -164,7 +160,7 @@ class _HomePageState extends State<HomePage> {
                       DrawerHeader(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
+                          children: const [
                             CircleAvatar(
                               radius: 50,
                               backgroundImage:
@@ -186,7 +182,7 @@ class _HomePageState extends State<HomePage> {
                       Expanded(
                         child: ListView(
                           children: [
-                            ListTile(
+                            const ListTile(
                               leading: Icon(
                                 Icons.home,
                                 color: Colors.white,
@@ -203,17 +199,17 @@ class _HomePageState extends State<HomePage> {
                                     transition: Transition.circularReveal,
                                     duration: Duration(milliseconds: 1500));
                               },
-                              leading: Icon(
+                              leading: const Icon(
                                 Icons.person,
                                 color: Colors.white,
                               ),
-                              title: Text(
+                              title: const Text(
                                 'Profile',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 17),
                               ),
                             ),
-                            ListTile(
+                            const ListTile(
                               leading: Icon(
                                 Icons.settings,
                                 color: Colors.white,
@@ -228,11 +224,11 @@ class _HomePageState extends State<HomePage> {
                               onTap: () {
                                 authController.logOut();
                               },
-                              leading: Icon(
+                              leading: const Icon(
                                 Icons.logout,
                                 color: Colors.white,
                               ),
-                              title: Text(
+                              title: const Text(
                                 'Log out',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 17),
@@ -273,9 +269,9 @@ class _HomePageState extends State<HomePage> {
                           icon: Icon(Icons.home_outlined),
                           onPressed: () {},
                         ),
-                        SizedBox(width: 48.0),
+                        const SizedBox(width: 48.0),
                         IconButton(
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.person,
                           ),
                           onPressed: () {},
@@ -345,7 +341,7 @@ class _HomePageState extends State<HomePage> {
                                 width: MediaQuery.of(context).size.width,
                                 height:
                                     MediaQuery.of(context).size.height * 0.20,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: Colors.blue,
                                 ),
                               ),
@@ -366,7 +362,7 @@ class _HomePageState extends State<HomePage> {
                                         () {
                                           return Text(
                                             'Hello ${homeController.homeModelValue.name}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 20),
                                           );
@@ -375,10 +371,10 @@ class _HomePageState extends State<HomePage> {
                                     ],
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
-                                Align(
+                                const Align(
                                   alignment: Alignment.center,
                                   child: Text(
                                     '€10.400',
@@ -388,7 +384,7 @@ class _HomePageState extends State<HomePage> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 23,
                                 ),
                                 TopCardWidget()
@@ -443,7 +439,7 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 70,
                                   ),
                                   Column(
@@ -462,7 +458,7 @@ class _HomePageState extends State<HomePage> {
                                                 ? Colors.black
                                                 : Colors.grey,
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 10,
                                           ),
                                           Indicator(
@@ -477,7 +473,7 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Row(
@@ -494,7 +490,7 @@ class _HomePageState extends State<HomePage> {
                                                 ? Colors.black
                                                 : Colors.grey,
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 10,
                                           ),
                                           Indicator(
@@ -509,7 +505,7 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Indicator(
@@ -526,20 +522,93 @@ class _HomePageState extends State<HomePage> {
                                   )
                                 ],
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 15,
                               ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Expenses",
-                                      style: GoogleFonts.daysOne(
-                                        textStyle: const TextStyle(
-                                            color: Color(0xFF40565a),
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600),
-                                      ))
+                                  GestureDetector(
+                                    onTap: () {
+                                      homeController.isExpensesOnTap.value =
+                                          true;
+                                    },
+                                    child: Obx(
+                                      () => 
+                                       Row(
+                                        children: [
+                                          AnimatedOpacity(
+                                              opacity: homeController
+                                                      .isExpensesOnTap.value
+                                                  ? 1
+                                                  : 0,
+                                              duration:
+                                                  Duration(milliseconds: 500),
+                                              child: Icon(
+                                                color: Colors.grey,
+                                                size: 17.5,
+                                                
+                                                  Icons.arrow_forward_rounded)),
+                                           Text("Expenses",
+                                                style: GoogleFonts.daysOne(
+                                                  textStyle: TextStyle(
+                                                      color: homeController
+                                                              .isExpensesOnTap
+                                                              .value
+                                                          ? Colors.red.shade300
+                                                          : Colors.red.shade300
+                                                              .withOpacity(0.45),
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                )),
+                                          
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      homeController.isExpensesOnTap.value =
+                                          false;
+                                    },
+                                    child: Obx(
+                                      () => 
+                                       Row(
+                                        children: [
+                                                 Text("Incomes",
+                                                  style: GoogleFonts.daysOne(
+                                                    textStyle: TextStyle(
+                                                        color: homeController
+                                                                .isExpensesOnTap
+                                                                .value
+                                                            ? Colors
+                                                                .green.shade300
+                                                                .withOpacity(0.45)
+                                                            : Colors
+                                                                .green.shade300,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  )),
+                                            AnimatedOpacity(
+                                            opacity: homeController
+                                                    .isExpensesOnTap.value
+                                                ? 0
+                                                : 1,
+                                            duration: const Duration(milliseconds: 500),
+                                            child:Icon(
+                                                  Icons.arrow_back_outlined,
+                                                 color: Colors.grey,
+                                                size: 17.5,
+                                                  
+                                                  )
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
                                 ],
                               ),
                               const SizedBox(
@@ -547,23 +616,59 @@ class _HomePageState extends State<HomePage> {
                               ),
                               Obx(
                                 () {
-                                  return StickyGroupedListView<ListItemModel,
-                                          DateTime>(
-                                      elements: homeController.expenses,
-                                      addAutomaticKeepAlives: true,
-                                      scrollDirection: Axis.vertical,
-                                      groupSeparatorBuilder: (value) =>
-                                          ListItem.getGroupSeparator(value),
-                                      shrinkWrap: true,
-                                      groupBy: (element) => DateTime(
-                                          element.expenseYear!,
-                                          element.expenseMonth!,
-                                          element.expenseDay!),
-                                      order: StickyGroupedListOrder.ASC,
-                                      groupComparator:
-                                          (DateTime value1, DateTime value2) =>
-                                              value2.compareTo(value1),
-                                      itemBuilder: ListItem.getItem);
+                                  return homeController.isExpensesOnTap.value
+                                      ? AnimatedOpacity(
+                                          opacity: homeController
+                                                  .isExpensesOnTap.value
+                                              ? 1
+                                              : 0,
+                                          duration: const Duration(seconds: 6),
+                                          child: StickyGroupedListView<
+                                                  ListItemModel, DateTime>(
+                                              elements: homeController.expenses,
+                                              addAutomaticKeepAlives: true,
+                                              scrollDirection: Axis.vertical,
+                                              groupSeparatorBuilder: (value) =>
+                                                  ListItem.getGroupSeparator(
+                                                      value, null, context),
+                                              shrinkWrap: true,
+                                              groupBy: (element) => DateTime(
+                                                  element.expenseYear!,
+                                                  element.expenseMonth!,
+                                                  element.expenseDay!),
+                                              order: StickyGroupedListOrder.ASC,
+                                              groupComparator: (DateTime value1,
+                                                      DateTime value2) =>
+                                                  value2.compareTo(value1),
+                                              itemBuilder:
+                                                  ListItem.expenseGetItem),
+                                        )
+                                      : AnimatedOpacity(
+                                          duration: const Duration(seconds: 6),
+                                          opacity: homeController
+                                                  .isExpensesOnTap.value
+                                              ? 0
+                                              : 1,
+                                          child: StickyGroupedListView<
+                                                  IncomesModel, DateTime>(
+                                              elements: homeController.incomes,
+                                              addAutomaticKeepAlives: true,
+                                              scrollDirection: Axis.vertical,
+                                              groupSeparatorBuilder: (value) =>
+                                                  ListItem.getGroupSeparator(
+                                                      null, value, context),
+                                              shrinkWrap: true,
+                                              groupBy: (element) => DateTime(
+                                                  element.incomesYear!,
+                                                  element.incomesMonth!,
+                                                  element.incomesDay!),
+                                              order: StickyGroupedListOrder.ASC,
+                                              groupComparator: (DateTime value1,
+                                                      DateTime value2) =>
+                                                  value2.compareTo(value1),
+                                              itemBuilder:
+                                                  ListItem.incomesGetItem),
+                                        );
 
                                   /* ListView.builder(
                                     addAutomaticKeepAlives: true,

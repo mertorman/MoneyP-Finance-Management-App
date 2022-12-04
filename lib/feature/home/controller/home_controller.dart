@@ -1,22 +1,31 @@
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:moneyp/feature/home/controller/expense_controller.dart';
 import 'package:moneyp/feature/home/model/expense_model.dart';
+import 'package:moneyp/feature/home/model/incomes_model.dart';
 import 'package:moneyp/feature/home/model/list_item_model.dart';
 import 'package:moneyp/services/firestoredb.dart';
 import 'package:moneyp/feature/home/controller/auth_controller.dart';
 import 'package:moneyp/feature/home/model/user_model.dart';
 
 class HomeController extends GetxController with StateMixin {
+  //User details Rx
   Rx<HomeModel> homeModel = HomeModel().obs;
   HomeModel get homeModelValue => homeModel.value;
   set user(HomeModel value) => homeModel.value = value;
 
+  //Pie Chart Rx
   Rx<int> grafikToplam = Rx<int>(0);
   Rx<List> expenseListYuzdeOran = Rx<List>([]);
 
+  //Expenses list Rx
   RxList<ListItemModel> expenseList = RxList<ListItemModel>([]);
   List<ListItemModel> get expenses => expenseList.value;
+  
+  //Incomes list Rx
+  RxList<IncomesModel> incomesList = RxList<IncomesModel>([]);
+  List<IncomesModel> get incomes => incomesList.value;
+
+  //Home change listview builder RxBool
+  RxBool isExpensesOnTap = RxBool(true);
 
   AuthController controller = Get.find<AuthController>();
 
@@ -28,6 +37,10 @@ class HomeController extends GetxController with StateMixin {
         .firebaseUser
         .value!
         .uid)); //Harcama listesini veritabanından anlık olarak izlemek için.
+
+    incomesList.bindStream(
+        FireStoreDb().incomesStream(controller.firebaseUser.value!.uid));
+
     getUserData();
   }
 
@@ -49,7 +62,7 @@ class HomeController extends GetxController with StateMixin {
     int shoppingToplam = 0;
     int billingToplam = 0;
     int otherToplam = 0;
-    expenseList.value.forEach((element) {
+    for (var element in expenseList.value) {
       if (element.expenseType == ExpenseModel.expenseItems[0][0]) {
         travelToplam = travelToplam + int.parse(element.expenseTotal!);
       } else if (element.expenseType == ExpenseModel.expenseItems[1][0]) {
@@ -61,7 +74,7 @@ class HomeController extends GetxController with StateMixin {
       } else {
         otherToplam = otherToplam + int.parse(element.expenseTotal!);
       }
-    });
+    }
     grafikToplam.value = grafikToplam.value +
         travelToplam +
         foodToplam +
@@ -81,4 +94,5 @@ class HomeController extends GetxController with StateMixin {
     expenseListYuzdeOran.value
         .insert(4, (otherToplam * 100) / grafikToplam.value);
   }
+
 }

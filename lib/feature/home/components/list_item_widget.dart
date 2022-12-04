@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:moneyp/feature/home/controller/home_controller.dart';
+import 'package:moneyp/feature/home/model/incomes_model.dart';
 import 'package:rounded_expansion_tile/rounded_expansion_tile.dart';
-
 import '../../../product/constant/color_settings.dart';
 import '../model/list_item_model.dart';
 
 class ListItem extends StatelessWidget {
-  const ListItem(
+   ListItem(
       {Key? key,
-      required this.expenseType,
-      required this.expenseTitle,
-      required this.expenseDescription,
-      required this.expenseTotal,
-      required this.expenseIcon,
-      required this.expenseColor})
+      required this.listItemType,
+      required this.listItemTitle,
+      required this.listItemDescription,
+      required this.listItemTotal,
+      required this.listItemIcon,
+      required this.listItemColor})
       : super(key: key);
-  final String expenseType;
-  final String expenseTitle;
-  final String expenseDescription;
-  final String expenseIcon;
-  final String expenseTotal;
-  final String expenseColor;
+  final String listItemType;
+  final String listItemTitle;
+  final String listItemDescription;
+  final String listItemIcon;
+  final String listItemTotal;
+  final String listItemColor;
+
+  HomeController homeController=Get.find();
+
+ 
 
   Column info(String info, String value) {
     return Column(
@@ -33,12 +39,12 @@ class ListItem extends StatelessWidget {
               fontFamily: 'OpenSans',
               fontWeight: FontWeight.w400),
         ),
-        SizedBox(
+        const SizedBox(
           height: 8,
         ),
         Text(
           value,
-          style: TextStyle(
+          style: const TextStyle(
               fontSize: 14,
               fontFamily: 'OpenSans',
               fontWeight: FontWeight.w500),
@@ -47,36 +53,61 @@ class ListItem extends StatelessWidget {
     );
   }
 
-  static Widget getItem(BuildContext ctx, ListItemModel itemModel) {
+  static Widget expenseGetItem(BuildContext ctx, ListItemModel itemModel) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: ListItem(
-          expenseColor: itemModel.expenseColor!,
-          expenseDescription: itemModel.expenseDescription!,
-          expenseIcon: itemModel.expenseIcon!,
-          expenseTitle: itemModel.expenseTitle!,
-          expenseTotal: itemModel.expenseTotal!,
-          expenseType: itemModel.expenseType!),
+          listItemColor: itemModel.expenseColor!,
+          listItemDescription: itemModel.expenseDescription!,
+          listItemIcon: itemModel.expenseIcon!,
+          listItemTitle: itemModel.expenseTitle!,
+          listItemTotal: itemModel.expenseTotal!,
+          listItemType: itemModel.expenseType!),
     );
   }
 
-  static Widget getGroupSeparator(ListItemModel value) {
+  static Widget incomesGetItem(BuildContext ctx, IncomesModel itemModel) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: ListItem(
+          listItemColor: itemModel.incomesColor!,
+          listItemDescription: itemModel.incomesDescription!,
+          listItemIcon: itemModel.incomesIcon!,
+          listItemTitle: itemModel.incomesTitle!,
+          listItemTotal: itemModel.incomesAmount!,
+          listItemType: itemModel.type!),
+    );
+  }
+
+  static Widget getGroupSeparator(ListItemModel? expenseValue, IncomesModel? incomesValue,BuildContext context) {
     final DateTime now = DateTime.now();
     final DateFormat formatter = DateFormat('d');
     final String today = formatter.format(now);
     final String yesterday =
-        formatter.format(DateTime.now().subtract(Duration(days: 1)));
+        formatter.format(DateTime.now().subtract(const Duration(days: 1)));
+    late String groupText;
+    if (expenseValue != null) {
+      groupText =
+          '${expenseValue.expenseDay}.${expenseValue.expenseMonth}.${expenseValue.expenseYear}';
 
-    String groupText =
-        '${value.expenseDay}.${value.expenseMonth}.${value.expenseYear}';
+      if (expenseValue.expenseDay.toString() == today) {
+        groupText = 'Today';
+      } else if (expenseValue.expenseDay.toString() == yesterday) {
+        groupText = 'Yesterday';
+      }
+    } else if (incomesValue != null) {
+      groupText =
+          '${incomesValue.incomesDay}.${incomesValue.incomesMonth}.${incomesValue.incomesYear}';
 
-    if (value.expenseDay.toString() == today) {
-      groupText = 'Today';
-    } else if (value.expenseDay.toString() == yesterday) {
-      groupText = 'Yesterday';
+      if (incomesValue.incomesDay.toString() == today) {
+        groupText = 'Today';
+      } else if (incomesValue.incomesDay.toString() == yesterday) {
+        groupText = 'Yesterday';
+      }
     }
+
     return SizedBox(
-      height: 50,
+      height: MediaQuery.of(context).size.height * 0.054,
       child: Align(
         alignment: Alignment.centerLeft,
         child: Padding(
@@ -99,8 +130,8 @@ class ListItem extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          padding: EdgeInsets.all(8),
-          margin: EdgeInsets.only(top: 13),
+          padding: const EdgeInsets.all(8),
+          margin: const EdgeInsets.only(top: 13),
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(16)),
           child: RoundedExpansionTile(
@@ -114,7 +145,7 @@ class ListItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(24),
                 type: MaterialType.transparency,
                 clipBehavior: Clip.hardEdge,
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_downward_outlined,
                   color: Color(0xFFF7F7F7),
                 ),
@@ -126,9 +157,9 @@ class ListItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(right: 20),
+                    margin: const EdgeInsets.only(right: 20),
                     child: Image.asset(
-                      expenseIcon,
+                      listItemIcon,
                       width: 55,
                       height: 55,
                     ),
@@ -136,15 +167,15 @@ class ListItem extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        '\$$expenseTotal',
-                        style: TextStyle(
+                        '\$$listItemTotal',
+                        style: const TextStyle(
                             color: Color(0xFF3b67b5),
                             fontSize: 28,
                             fontWeight: FontWeight.bold),
                       ),
                       Container(
-                        margin: EdgeInsets.only(bottom: 12, left: 0),
-                        child: Text('.30',
+                        margin: const EdgeInsets.only(bottom: 12, left: 0),
+                        child: const Text('.30', //Dinamik hale getirelecek.
                             style: TextStyle(
                                 color: Color(0xFF3b67b5),
                                 fontSize: 16,
@@ -158,23 +189,23 @@ class ListItem extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Expanded(
+                 const  Expanded(
                     child: Divider(
                       thickness: 1,
                     ),
                   ),
                   Text(
-                    'Expense Details',
+                    '${homeController.isExpensesOnTap.value ? 'Expense' : 'Income'} Details',
                     style: TextStyle(color: Colors.grey.shade500),
                   ),
-                  Expanded(
+                  const Expanded(
                     child: Divider(
                       thickness: 1,
                     ),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               Padding(
@@ -182,13 +213,13 @@ class ListItem extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    info('Title', expenseTitle),
+                    info('Title', listItemTitle),
                     Container(
                       width: 1,
                       height: 40,
                       color: Colors.grey,
                     ),
-                    info('Description', expenseDescription),
+                    info('Description', listItemDescription),
                     Container(
                       width: 1,
                       height: 40,
@@ -209,18 +240,18 @@ class ListItem extends StatelessWidget {
           ),
         ),
         Container(
-          width: 132,
-          height: 24,
+          width: MediaQuery.of(context).size.width *0.275,
+          height: MediaQuery.of(context).size.height *0.0255,
           alignment: Alignment.center,
-          margin: EdgeInsets.only(left: 16),
-          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 24),
+          margin: const EdgeInsets.only(left: 16),
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 24),
           decoration: BoxDecoration(
-            color: Color(int.parse(expenseColor)).withOpacity(0.65),
+            color: Color(int.parse(listItemColor)).withOpacity(0.65),
             borderRadius: BorderRadius.circular(36),
           ),
           child: Text(
-            expenseType,
-            style: TextStyle(
+            listItemType,
+            style: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.w500, fontSize: 14),
           ),
         ),

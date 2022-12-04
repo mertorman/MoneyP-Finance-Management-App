@@ -11,7 +11,7 @@ class AppRoutes {
   static final routes = [
     GetPage(
       name: '/onboard',
-      page: () => OnboardPage(),
+      page: () => const OnboardPage(),
     ),
     GetPage(
         name: '/login', page: () => LoginPage(), binding: LoginPageBinding()),
@@ -19,7 +19,7 @@ class AppRoutes {
       name: '/register',
       page: () => SignUp(),
     ),
-    GetPage(name: '/home', page: () => HomePage(), binding: HomePageBinding()),
-    GetPage(name: '/profile', page: () => ProfilePage()),
+    GetPage(name: '/home', page: () => const HomePage(), binding: HomePageBinding()),
+    GetPage(name: '/profile', page: () => const ProfilePage()),
   ];
 }

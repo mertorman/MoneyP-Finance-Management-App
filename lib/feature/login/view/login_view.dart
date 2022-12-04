@@ -23,7 +23,7 @@ class LoginPage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20),
+          padding: const EdgeInsets.only(left: 20, right: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,10 +49,10 @@ class LoginPage extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: ColorSettings.themeColor.shade200),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
-                  Text('I am so happy to see you. Please sign in to continue',
+                  const Text('I am so happy to see you. Please sign in to continue',
                       style: TextStyle(
                           fontFamily: 'Rubik',
                           color: Color(0xff565656),
@@ -67,8 +67,8 @@ class LoginPage extends StatelessWidget {
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Icon(Icons.mail_lock_outlined),
-                      SizedBox(
+                     const Icon(Icons.mail_lock_outlined),
+                      const SizedBox(
                         width: 12,
                       ),
                       Expanded(
@@ -78,12 +78,12 @@ class LoginPage extends StatelessWidget {
                       ))
                     ],
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Icon(Icons.lock_outline),
-                      SizedBox(
+                      const Icon(Icons.lock_outline),
+                      const SizedBox(
                         width: 12,
                       ),
                       Expanded(
@@ -103,7 +103,7 @@ class LoginPage extends StatelessWidget {
                     onPressed: () {
                       Get.to(() => const ForgotPasswordView());
                     },
-                    child: Text("Forgot Password?"),
+                    child: const Text("Forgot Password?"),
                   )
                 ],
               ),
@@ -156,7 +156,7 @@ class LoginPage extends StatelessWidget {
                 child: RichText(
                     text: TextSpan(
                   children: [
-                    TextSpan(
+                    const TextSpan(
                         text: "Don't have an account ? ",
                         style: TextStyle(
                             color: Colors.black54,
@@ -173,7 +173,7 @@ class LoginPage extends StatelessWidget {
                   ],
                 )),
               ),
-              SizedBox()
+              const SizedBox()
             ],
           ),
         ),

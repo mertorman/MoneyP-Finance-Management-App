@@ -1,12 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:moneyp/services/firestoredb.dart';
-import 'package:moneyp/feature/home/controller/home_controller.dart';
-import '../../../product/constant/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:moneyp/feature/home/view/homepage_view.dart';
-import 'package:moneyp/feature/login/view/login_view.dart';
+
 
 class AuthController extends GetxController {
   late Rx<User?> firebaseUser;
@@ -25,7 +21,6 @@ class AuthController extends GetxController {
   _initialScreen(User? user) {
     if (user == null) {
       Get.toNamed('/login');
-      print('Login Page');
     } else {
       Get.toNamed('/home');
     }
@@ -39,7 +34,7 @@ class AuthController extends GetxController {
     } catch (e) {
       isLoading.value = false;
       Get.snackbar("About Login", "Login message",
-          titleText: Text('Login Failed.'));
+          titleText: const Text('Login Failed.'));
     }
   }
 
@@ -60,7 +55,7 @@ class AuthController extends GetxController {
       createUser(result.user!.uid, email, name);
     } catch (e) {
       Get.snackbar('About SignUp', 'Sign Up Message',
-          titleText: Text('Sign Up Failed.'));
+          titleText: const Text('Sign Up Failed.'));
     }
   }
 

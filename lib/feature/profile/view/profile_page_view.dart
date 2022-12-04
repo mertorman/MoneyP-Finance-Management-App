@@ -1,11 +1,6 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-
 import '../../../product/constant/color_settings.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -27,12 +22,12 @@ class _ProfilePageState extends State<ProfilePage> {
               fontFamily: 'OpenSans',
               fontWeight: FontWeight.w400),
         ),
-        SizedBox(
+       const SizedBox(
           height: 8,
         ),
         Text(
           value,
-          style: TextStyle(
+          style: const TextStyle(
               fontSize: 17,
               fontFamily: 'OpenSans',
               fontWeight: FontWeight.w700),
@@ -50,11 +45,11 @@ class _ProfilePageState extends State<ProfilePage> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              icon: Icon(Icons.chevron_left),
+              icon: const Icon(Icons.chevron_left),
               color: Colors.white,
               iconSize: 40),
           centerTitle: true,
-          title: Text(
+          title: const Text(
             'Profile',
             style: TextStyle(
               color: Colors.white,
@@ -71,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
             alignment: Alignment.topCenter,
             heightFactor: 0.3,
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   borderRadius:
                       BorderRadius.only(bottomLeft: Radius.circular(50)),
                   color: Colors.blue),
@@ -106,13 +101,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Spacer(
+                      const Spacer(
                         flex: 2,
                       ),
                       Column(
                         children: [
-                          SizedBox(),
-                          Text(
+                          const SizedBox(),
+                          const Text(
                             'Mert Orman',
                             style: TextStyle(
                                 fontSize: 28, fontWeight: FontWeight.bold),
@@ -126,7 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ],
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 45),
                         child: Row(
@@ -148,9 +143,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           ],
                         ),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Row(
-                        children: [
+                        children:const [
                           Expanded(child: Divider(thickness: 1)),
                           SizedBox(
                             width: 10,
@@ -168,24 +163,24 @@ class _ProfilePageState extends State<ProfilePage> {
                             child: Column(
                           children: [
                             TextFormField(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                   label: Text('Full Name'),
                                   prefixIcon: Icon(LineAwesomeIcons.user)),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 30,
                             ),
                             TextFormField(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                   label: Text('E-Mail'),
                                   prefixIcon:
                                       Icon(LineAwesomeIcons.envelope_1)),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 30,
                             ),
                             TextFormField(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                   label: Text('Password'),
                                   prefixIcon:
                                       Icon(LineAwesomeIcons.fingerprint)),
@@ -193,7 +188,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ],
                         )),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       ElevatedButton(
                         onPressed: () {},
                         child: Text("Edit Profile"),
@@ -204,7 +199,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             minimumSize: Size(
                                 MediaQuery.of(context).size.width * 0.8, 50)),
                       ),
-                      Spacer(),
+                      const Spacer(),
                     ],
                   ),
                 ),
@@ -212,7 +207,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           AnimatedContainer(
-            duration: Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 200),
             curve: Curves.easeIn,
             child: FractionallySizedBox(
               heightFactor: 0.73,
@@ -242,7 +237,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
                               color: Colors.blue.shade200),
-                          child: Icon(LineAwesomeIcons.alternate_pencil),
+                          child: const Icon(LineAwesomeIcons.alternate_pencil),
                         ),
                       )
                     ],
