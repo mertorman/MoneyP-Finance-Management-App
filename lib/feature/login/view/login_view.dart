@@ -6,15 +6,18 @@ import 'package:kartal/kartal.dart';
 import 'package:moneyp/feature/forgot_password/view/forgot_password_view.dart';
 import 'package:moneyp/feature/home/controller/auth_controller.dart';
 import 'package:moneyp/feature/login/view/sign_up_view.dart';
+import 'package:moneyp/feature/wallet_onboard/controller/wallet_controller.dart';
 import 'package:moneyp/product/constant/color_settings.dart';
 
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:moneyp/services/firestoredb.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   AuthController controller = Get.find();
+  WalletController walletController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +46,6 @@ class LoginPage extends StatelessWidget {
                   Text(
                     "Welcome Back",
                     style: TextStyle(
-                        
                         fontFamily: 'Rubik',
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
@@ -52,7 +54,8 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(
                     height: 8,
                   ),
-                  const Text('I am so happy to see you. Please sign in to continue',
+                  const Text(
+                      'I am so happy to see you. Please sign in to continue',
                       style: TextStyle(
                           fontFamily: 'Rubik',
                           color: Color(0xff565656),
@@ -60,14 +63,13 @@ class LoginPage extends StatelessWidget {
                           fontSize: 17)),
                 ],
               ),
-              
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                     const Icon(Icons.mail_lock_outlined),
+                      const Icon(Icons.mail_lock_outlined),
                       const SizedBox(
                         width: 12,
                       ),
@@ -111,6 +113,7 @@ class LoginPage extends StatelessWidget {
                 onPressed: () {
                   controller.signIn(_usernameController.text.trim(),
                       _passwordController.text.trim());
+                
                 },
                 child: Text("Login"),
                 style: ElevatedButton.styleFrom(

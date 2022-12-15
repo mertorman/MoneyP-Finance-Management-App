@@ -127,13 +127,13 @@ class ListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+     return Stack(
       children: [
         Container(
           padding: const EdgeInsets.all(8),
           margin: const EdgeInsets.only(top: 13),
           decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(16)),
+              color: Colors.white.withOpacity(0.8), borderRadius: BorderRadius.circular(16)),
           child: RoundedExpansionTile(
             trailing: Container(
               width: 36,

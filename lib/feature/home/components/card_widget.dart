@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:moneyp/feature/home/controller/home_controller.dart';
 import 'package:moneyp/feature/home/model/card_widget_model.dart';
 import '../../../product/constant/constant.dart';
 
@@ -11,6 +13,8 @@ class TopCardWidget extends StatefulWidget {
 }
 
 class _CardWidgetState extends State<TopCardWidget> {
+  HomeController homeController = Get.find();
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -33,18 +37,21 @@ class _CardWidgetState extends State<TopCardWidget> {
                   children: [
                     Text(CardModels.cardItems[0].cardTitle,
                         style: cardTitleTextStyle),
-                    Row(
-                      children: [
-                        Text(
-                          CardModels.cardItems[0].cardMoneyIcon,
-                          style: cardMoneyIconTextStyle,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 7),
-                          child: Text(CardModels.cardItems[0].cardTotalMoney,
-                              style: cardMoneyTextStyle),
-                        )
-                      ],
+                    Obx(
+                      () => 
+                       Row(
+                        children: [
+                          Text(
+                            homeController.wallets[homeController.currentWalletIndex.value].walletSymbol!,
+                            style: cardMoneyIconTextStyle,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 7),
+                            child: Text(homeController.wallets[homeController.currentWalletIndex.value].incomesTotal!,
+                                style: cardMoneyTextStyle),
+                          )
+                        ],
+                      ),
                     )
                   ],
                 ),
@@ -57,26 +64,29 @@ class _CardWidgetState extends State<TopCardWidget> {
                             color: Colors.red,
                             fontSize: 15,
                             fontWeight: FontWeight.w400)),
-                    Row(
-                      children: [
-                        Text(
-                          CardModels.cardItems[1].cardMoneyIcon,
-                          style: const TextStyle(
-                              color: Colors.red,
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 7),
-                          child: Text('1000',
-                              style: GoogleFonts.daysOne(
-                                  textStyle: const TextStyle(
-                                fontSize: 32,
+                    Obx(
+                      () => 
+                       Row(
+                        children: [
+                          Text(
+                            homeController.wallets[homeController.currentWalletIndex.value].walletSymbol!,
+                            style: const TextStyle(
                                 color: Colors.red,
-                                fontWeight: FontWeight.w500,
-                              ))),
-                        )
-                      ],
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 7),
+                            child: Text(homeController.wallets[homeController.currentWalletIndex.value].expenseTotal!,
+                                style: GoogleFonts.daysOne(
+                                    textStyle: const TextStyle(
+                                  fontSize: 32,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w500,
+                                ))),
+                          )
+                        ],
+                      ),
                     )
                   ],
                 ),

@@ -13,7 +13,6 @@ Future<void> main() async {
   await Future.delayed(const Duration(seconds: 1));
   FlutterNativeSplash.remove();
   Get.testMode = true;
-  print(Colors.green.shade500.value);
   runApp(const MyApp());
 }
 

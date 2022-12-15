@@ -1,16 +1,49 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyp/feature/home/controller/auth_controller.dart';
+import 'package:moneyp/feature/home/controller/home_controller.dart';
 import 'package:moneyp/feature/home/model/expense_model.dart';
 import '../../../services/firestoredb.dart';
 
-class ExpenseController extends GetxController {
+class ExpenseController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   AuthController authController = Get.find();
+  Rx<ExpenseModel?> selectedExpense = Rx<ExpenseModel?>(null);
 
   Rx<List> secilenWidget = Rx<List>([]);
-  static RxBool onTap = false.obs;
-  RxInt lastIndex = 0.obs;
-  RxInt indexCount = 0.obs;
-  RxInt onTapIndex = 0.obs;
+
+  HomeController homeController = Get.find();
+
+  late TabController tabController;
+
+  final List<Tab> tabs = <Tab>[
+    Tab(
+      child: Text(
+        'Expense Add',
+        style: GoogleFonts.poppins(fontSize: 14.8, fontWeight: FontWeight.w400),
+      ),
+    ),
+    Tab(
+      text: 'Income Add',
+    ),
+  ];
+
+  @override
+  void onInit() {
+    super.onInit();
+    tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+
+  void onClose() {
+
+    tabController.dispose();
+
+    super.onClose();
+
+  }
 
   addExpense(String title, String desc, String total) async {
     await FireStoreDb().addExpense(
@@ -20,31 +53,21 @@ class ExpenseController extends GetxController {
         desc,
         total,
         secilenWidget.value[1],
-        secilenWidget.value[2]);
+        secilenWidget.value[2],
+        homeController
+            .wallets[homeController.currentWalletIndex.value].walletType!);
   }
 
   expenseSec(int index) {
-    // if (indexCount.value == 0) {
-    //  lastIndex.value = index;
-    // expenseItems.value[index][3] = 120.0;
-    //expenseItems.value[index][3] = true;
-    // } else {
-    // expenseItems.value[lastIndex.value][3] = false;
-    // expenseItems.value[index][3] = true;
-    // expenseItems.value[lastIndex.value][3] = 90.0;
-    // expenseItems.value[index][3] = 120.0;
-    //    lastIndex.value = index;
-    // }
-    //  indexCount.value = indexCount.value + 1;
     secilenWidget.value.clear();
     secilenWidget.value.add(
-      ExpenseModel.expenseItems[index][0],
+      ExpenseModel.expenseItems.value[index].expenseType,
     );
     secilenWidget.value.add(
-      ExpenseModel.expenseItems[index][3],
+      ExpenseModel.expenseItems.value[index].imagePath2,
     );
     secilenWidget.value.add(
-      ExpenseModel.expenseItems[index][2].toString(),
+      ExpenseModel.expenseItems.value[index].color.toString(),
     );
   }
 }

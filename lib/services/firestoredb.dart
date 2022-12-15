@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:moneyp/feature/home/model/incomes_model.dart';
 import 'package:moneyp/feature/home/model/list_item_model.dart';
 import 'package:moneyp/feature/home/model/user_model.dart';
-
+import 'package:moneyp/feature/wallet_onboard/model/wallet_model.dart';
 
 class FireStoreDb {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Future<HomeModel> getUser(String uid) async {
     try {
       DocumentSnapshot doc =
@@ -18,10 +18,13 @@ class FireStoreDb {
     }
   }
 
-  Stream<List<ListItemModel>> expenseStream(String uid) {
+  Stream<List<ListItemModel>> expenseStream(
+      String uid, String currentWalletDoc) {
     return _firestore
         .collection('users')
         .doc(uid)
+        .collection('wallets')
+        .doc(currentWalletDoc)
         .collection('expenses')
         .snapshots()
         .map((QuerySnapshot query) {
@@ -48,6 +51,22 @@ class FireStoreDb {
     });
   }
 
+  Stream<List<WalletModel>> walletStream(String uid) {
+    return _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('wallets')
+        .where('enabled', isEqualTo: true)
+        .snapshots()
+        .map((QuerySnapshot query) {
+      List<WalletModel> retValue = [];
+      query.docs.forEach((element) {
+        retValue.add(WalletModel.fromDocumentSnapshot(element));
+      });
+      return retValue;
+    });
+  }
+
   Future<void> addExpense(
       String uid,
       String expenseType,
@@ -55,9 +74,16 @@ class FireStoreDb {
       String expenseDesc,
       String expenseTotal,
       String expenseIcon,
-      String expenseColor) async {
+      String expenseColor,
+      String currentWalletDoc) async {
     try {
-      await _firestore.collection('users').doc(uid).collection('expenses').add({
+      await _firestore
+          .collection('users')
+          .doc(uid)
+          .collection('wallets')
+          .doc(currentWalletDoc)
+          .collection('expenses')
+          .add({
         'expenseType': expenseType,
         'expenseTitle': expenseTitle,
         'expenseDesc': expenseDesc,
@@ -70,4 +96,69 @@ class FireStoreDb {
       rethrow;
     }
   }
+
+  Future<void> createWallet(
+      String uid, List<Map<dynamic, dynamic>> walletDetails) async {
+    var batch = _firestore.batch();
+
+    try {
+      for (var element in walletDetails) {
+        var docRef = _firestore
+            .collection('users')
+            .doc(uid) //düzeltilecek
+            .collection('wallets')
+            .doc(element['walletType']);
+
+        batch.set(docRef, {
+          'budget': element['budget'],
+          'enabled': element['enabled'],
+          'expenseTotal': element['expenseTotal'],
+          'incomesTotal': element['incomesTotal'],
+          'walletType': element['walletType'],
+          'walletTypeName': element['walletTypeName'],
+          'walletSymbol': element['walletSymbol']
+        });
+      }
+      batch.commit();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool?> walletIsEmptyCheck(String uid) async {
+    try {
+      var query = await _firestore
+          .collection('users')
+          .doc(uid)
+          .collection('wallets')
+          .get();
+      if (query.docs.isEmpty) {
+        return Future<bool>.value(true);
+      } else {
+        return Future<bool>.value(false);
+      }
+    } catch (e) {}
+  }
+
+  Future<void> walletUpdate(
+      String uid, List<Map<dynamic, dynamic>> walletUpdateDetails) async {
+    try {
+      var batch = _firestore.batch();
+      for (var element in walletUpdateDetails) {
+        var docRef = _firestore
+            .collection('users')
+            .doc(uid)
+            .collection('wallets')
+            .doc(element['walletType']);
+
+        batch.update(docRef, {
+          'budget': element['budget'],
+          'enabled': element['enabled'],
+        });
+      }
+      await batch.commit();
+    } catch (e) {}
+  }
+
+ 
 }

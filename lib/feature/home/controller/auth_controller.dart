@@ -2,13 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-
+import 'package:moneyp/feature/wallet_onboard/controller/wallet_controller.dart';
 
 class AuthController extends GetxController {
   late Rx<User?> firebaseUser;
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore db = FirebaseFirestore.instance;
   RxBool isLoading = false.obs;
+
+
+
 
   @override
   void onReady() {
@@ -21,15 +24,21 @@ class AuthController extends GetxController {
   _initialScreen(User? user) {
     if (user == null) {
       Get.toNamed('/login');
-    } else {
-      Get.toNamed('/home');
-    }
+    } else {}
   }
 
   void signIn(String email, password) async {
+ 
     isLoading.value = true;
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
+         WalletController walletController = Get.find();
+bool walletCheck =await walletController.walletCheck(firebaseUser.value!.uid);
+                  if (walletCheck) {
+                    Get.offAllNamed('/walletonboard');
+                  } else {
+                    Get.offAllNamed('/home');
+                  }
       isLoading.value = false;
     } catch (e) {
       isLoading.value = false;
