@@ -55,6 +55,8 @@ dependencies:
   flutter_switch: ^0.3.2
   quickalert: ^1.0.1
   tab_indicator_styler: ^2.0.0
+  http: ^0.13.5
+  fluttericon: ^2.0.0
  
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
+class AppConstants {
+  static const dovizApiUrl =
+      'https://api.genelpara.com/embed/para-birimleri.json';
+}
 
 const cardTitleColor = Colors.green;
 const cardMoneyColor = Colors.green;

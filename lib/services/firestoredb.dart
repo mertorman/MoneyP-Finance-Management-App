@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:moneyp/feature/home/model/incomes_model.dart';
 import 'package:moneyp/feature/home/model/list_item_model.dart';
@@ -36,10 +38,13 @@ class FireStoreDb {
     });
   }
 
-  Stream<List<IncomesModel>> incomesStream(String uid) {
+  Stream<List<IncomesModel>> incomesStream(
+      String uid, String currentWalletDoc) {
     return _firestore
         .collection('users')
         .doc(uid)
+        .collection('wallets')
+        .doc(currentWalletDoc)
         .collection('incomes')
         .snapshots()
         .map((QuerySnapshot query) {
@@ -97,6 +102,30 @@ class FireStoreDb {
     }
   }
 
+  Future<void> addIncome(
+      String uid,
+      String? incomesTitle,
+      String? incomesDescription,
+      String? incomesAmount,
+      String currentWalletDoc) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(uid)
+          .collection('wallets')
+          .doc(currentWalletDoc)
+          .collection('incomes')
+          .add({
+        'incomesTitle': incomesTitle,
+        'incomesDesc': incomesDescription,
+        'incomesAmount': incomesAmount,
+        'incomesDate': FieldValue.serverTimestamp()
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> createWallet(
       String uid, List<Map<dynamic, dynamic>> walletDetails) async {
     var batch = _firestore.batch();
@@ -105,7 +134,7 @@ class FireStoreDb {
       for (var element in walletDetails) {
         var docRef = _firestore
             .collection('users')
-            .doc(uid) //düzeltilecek
+            .doc(uid)
             .collection('wallets')
             .doc(element['walletType']);
 
@@ -125,7 +154,7 @@ class FireStoreDb {
     }
   }
 
-  Future<bool?> walletIsEmptyCheck(String uid) async {
+  Future<bool> walletIsEmptyCheck(String uid) async {
     try {
       var query = await _firestore
           .collection('users')
@@ -137,7 +166,9 @@ class FireStoreDb {
       } else {
         return Future<bool>.value(false);
       }
-    } catch (e) {}
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<void> walletUpdate(
@@ -160,5 +191,69 @@ class FireStoreDb {
     } catch (e) {}
   }
 
- 
+  Future<void> addTransactionWalletUpdate(String uid, String currentWalletDoc,
+      String budget, String amount, String transactionType) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(uid)
+          .collection('wallets')
+          .doc(currentWalletDoc)
+          .update({'budget': budget, transactionType: amount});
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<ListItemModel>> statsGetExpenses(
+      String uid, String currentWalletDoc) async {
+    DateTime currentDate = DateTime.now();
+    DateTime queryDate = currentDate.subtract(Duration(days: 30));
+    Timestamp timestamp = Timestamp.fromDate(queryDate);
+
+    try {
+      QuerySnapshot query = await _firestore
+          .collection('users')
+          .doc(uid)
+          .collection('wallets')
+          .doc(currentWalletDoc)
+          .collection('expenses')
+          .where('expenseDate', isGreaterThanOrEqualTo: timestamp)
+          .orderBy('expenseDate', descending: true)
+          .get();
+      List<ListItemModel> retValue = [];
+      query.docs.forEach((element) {
+        retValue.add(ListItemModel.fromDocumentSnapshot(element));
+      });
+      return retValue;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+   Future<List<IncomesModel>> statsGetIncomes(
+      String uid, String currentWalletDoc) async {
+    DateTime currentDate = DateTime.now();
+    DateTime queryDate = currentDate.subtract(Duration(days: 30));
+    Timestamp timestamp = Timestamp.fromDate(queryDate);
+
+    try {
+      QuerySnapshot query = await _firestore
+          .collection('users')
+          .doc(uid)
+          .collection('wallets')
+          .doc(currentWalletDoc)
+          .collection('incomes')
+          .where('incomesDate', isGreaterThanOrEqualTo: timestamp)
+          .orderBy('incomesDate', descending: true)
+          .get();
+      List<IncomesModel> retValue = [];
+      query.docs.forEach((element) {
+        retValue.add(IncomesModel.fromDocumentSnapshot(element));
+      });
+      return retValue;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

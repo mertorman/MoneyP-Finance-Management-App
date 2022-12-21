@@ -126,7 +126,9 @@ class _WalletOnboardPageState extends State<WalletOnboardPage> {
                                               horizontal: 10),
                                           label: Center(
                                               child: Text('Enter Budget')),
-                                          hintText: '₺',
+                                          hintText: walletController
+                                                        .wallets[index]
+                                                        .walletSymbol,
                                           hintTextDirection: TextDirection.rtl,
                                           border: OutlineInputBorder(
                                               borderRadius:

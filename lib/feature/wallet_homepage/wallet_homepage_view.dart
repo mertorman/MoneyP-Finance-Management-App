@@ -246,10 +246,11 @@ class _WalletsPageState extends State<WalletsPage> {
                           await walletController.walletUpdate(
                               authController.firebaseUser.value!.uid,
                               walletController.selectedUpdateWallets);
+                           homeController.listBindStream();
 
                           walletController.change(null,
                               status: RxStatus.success());
-                          print(homeController.currentWalletIndex.value);
+                        
                           Get.back();
                         },
                         child: const Text(

@@ -12,13 +12,12 @@ class IncomesModel {
   String? incomesAmount;
   String? incomesIcon;
   String? incomesColor;
-
+  
   IncomesModel(
       {this.type,
       this.incomesTitle,
       this.incomesDescription,
       this.incomesAmount,
-      
       this.incomesColor});
 
   IncomesModel.fromDocumentSnapshot(DocumentSnapshot data) {
@@ -27,7 +26,7 @@ class IncomesModel {
     incomesYear = (date?.toDate().year) ?? 0;
     incomesMonth = (date?.toDate().month) ?? 0;
     incomesDay = (date?.toDate().day) ?? 0;
-    type = data["incomesType"];
+    type = 'Incomes';
     incomesTitle = data["incomesTitle"];
     incomesDescription = data["incomesDesc"];
     incomesAmount = data["incomesAmount"];

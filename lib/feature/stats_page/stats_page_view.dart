@@ -2,7 +2,14 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
+import 'package:moneyp/feature/home/controller/home_controller.dart';
+import 'package:moneyp/feature/stats_page/components/bar_chart.dart';
+import 'package:moneyp/feature/stats_page/controller/stats_controller.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
+
+import '../home/model/expense_model.dart';
 
 class StatsPage extends StatefulWidget {
   const StatsPage({super.key});
@@ -12,39 +19,27 @@ class StatsPage extends StatefulWidget {
 }
 
 class _StatsPageState extends State<StatsPage> {
-  final Color leftBarColor = const Color(0xff53fdd7);
-  final Color rightBarColor = const Color(0xffff5182);
-  final double width = 25;
-
-  late List<BarChartGroupData> rawBarGroups;
-  late List<BarChartGroupData> showingBarGroups;
-  int touchedGroupIndex = -1;
-  @override
-  void initState() {
-    super.initState();
-    final barGroup1 = makeGroupData(0, 5, 12);
-    final barGroup2 = makeGroupData(1, 16, 12);
-    final barGroup3 = makeGroupData(2, 18, 5);
-    final barGroup4 = makeGroupData(3, 20, 16);
-
-    final items = [
-      barGroup1,
-      barGroup2,
-      barGroup3,
-      barGroup4,
-    ];
-
-    rawBarGroups = items;
-
-    showingBarGroups = rawBarGroups;
-  }
+  StatsController statsController = Get.find();
+  HomeController homeController = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Container(
-        decoration: BoxDecoration(
+    return statsController.obx(
+        onLoading: Scaffold(
+          body: Center(
+              child:
+                  Lottie.asset('assets/loading.json', width: 300, height: 300)),
+        ), (state) {
+      DateTime currentDate = DateTime.now();
+      DateTime queryDate = currentDate.subtract(Duration(days: 30));
+      final formatter = DateFormat('dd MMM yyyy');
+      final formatCurrentDate = formatter.format(currentDate);
+      final formatqueryDateDate = formatter.format(queryDate);
+
+      statsController.statsYuzdeHesaplama();
+      statsController.statsIncomeYuzdeHesaplama();
+      return Container(
+        decoration: const BoxDecoration(
             gradient: LinearGradient(
                 colors: [Color(0xFFE0EAFC), Color(0xFFCFDEF3)],
                 begin: Alignment.topCenter,
@@ -52,203 +47,129 @@ class _StatsPageState extends State<StatsPage> {
         child: Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              centerTitle: true,
-              elevation: 0,
-              title: Text(
-                'Stats',
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.2,
-                  fontSize: 25,
-                ),
-              ),
-              leading: IconButton(
-                onPressed: () {
-                  Get.back();
-                },
-                icon: Icon(Icons.chevron_left_outlined),
-                color: Colors.white,
-                iconSize: 40,
-              ),
-            ),
-            body: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Center(
-                    child: Container(
-                      width: 400,
-                      height: 50,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.white.withOpacity(0.8)),
-                      child: TabBar(
-                        indicator: RectangularIndicator(
-                          color: Colors.blue.shade300,
-                          topLeftRadius: 15,
-                          topRightRadius: 15,
-                          bottomLeftRadius: 15,
-                          bottomRightRadius: 15,
-                        ),
-                        indicatorColor: Colors.transparent,
-                        labelColor: Colors.white,
-                        unselectedLabelColor: Colors.grey,
-                        tabs: [
-                          Tab(
-                            text: 'Incomes',
-                          ),
-                          Tab(
-                            text: 'Expenses',
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Column(
+            
+            body: SingleChildScrollView(
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    
                     children: [
-                      Container(
-                        width: 400,
-                        height: 400,
-                        decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                '01 Jan 2022 - 01 Feb 2022',
-                                style: TextStyle(
-                                    color: Colors.blueGrey.shade300,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15.5),
+                      LottieBuilder.asset(
+                        "assets/stats.json",
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.20,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Center(
+                        child: Container(
+                          width: 400,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.white.withOpacity(0.8)),
+                          child: TabBar(
+                            controller: statsController.tabController,
+                            indicator: RectangularIndicator(
+                              color: Colors.blue.shade300,
+                              topLeftRadius: 15,
+                              topRightRadius: 15,
+                              bottomLeftRadius: 15,
+                              bottomRightRadius: 15,
+                            ),
+                            indicatorColor: Colors.transparent,
+                            labelColor: Colors.white,
+                            unselectedLabelColor: Colors.grey,
+                            tabs: const [
+                              Tab(
+                                text: 'Expenses',
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                '\$25.000',
-                                style: TextStyle(
-                                    color: Colors.green.shade300,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Expanded(
-                                child: BarChart(
-                                  BarChartData(
-                                    maxY: 24,
-                                    barTouchData: BarTouchData(
-                                      touchTooltipData: BarTouchTooltipData(
-                                        tooltipBgColor: Colors.transparent,
-                                        getTooltipItem: (a, b, c, d) => null,
-                                      ),
-                                    ),
-                                    titlesData: FlTitlesData(
-                                      show: true,
-                                      rightTitles: AxisTitles(
-                                        sideTitles:
-                                            SideTitles(showTitles: false),
-                                      ),
-                                      topTitles: AxisTitles(
-                                        sideTitles:
-                                            SideTitles(showTitles: false),
-                                      ),
-                                      bottomTitles: AxisTitles(
-                                        sideTitles: SideTitles(
-                                          showTitles: true,
-                                          getTitlesWidget: bottomTitles,
-                                          reservedSize: 42,
-                                        ),
-                                      ),
-                                      leftTitles: AxisTitles(
-                                        sideTitles: SideTitles(
-                                          showTitles: true,
-                                          reservedSize: 28,
-                                          interval: 1,
-                                          getTitlesWidget: leftTitles,
-                                        ),
-                                      ),
-                                    ),
-                                    borderData: FlBorderData(
-                                      show: false,
-                                    ),
-                                    barGroups: showingBarGroups,
-                                    gridData: FlGridData(show: false),
-                                  ),
-                                ),
+                              Tab(
+                                text: 'Incomes',
                               ),
                             ],
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                          child: Container(
-                        width: 100,
-                        height: 200,
-                        color: Colors.white.withOpacity(0.9),
-                      )),
-                      SizedBox(
-                        width: 20,
+                     const  SizedBox(
+                        height: 20,
                       ),
-                      Expanded(
-                          child: Container(
-                        width: 100,
-                        height: 200,
-                        color: Colors.white.withOpacity(0.9),
-                      ))
-                    ],
+                      Column(
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.85,
+                            height: MediaQuery.of(context).size.height * 0.44,
+                            decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.85),
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '$formatqueryDateDate - $formatCurrentDate',
+                                    style: TextStyle(
+                                        color: Colors.blueGrey.shade300,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15.5),
+                                  ),
+                                  SizedBox(
+                                    height: 13,
+                                  ),
+                                  Expanded(
+                                    child: TabBarView(
+                                        controller:
+                                            statsController.tabController,
+                                        children: [
+                                      BarChartWidget(
+                                        barGroups: makeGroupExpenses(),
+                                        statsController: statsController,
+                                        getTitlesWidget: bottomTitles,
+                                        text: statsController
+                                            .grafikToplam.value
+                                            .toStringAsFixed(2),
+                                        textColor: Colors.red.shade400,
+                                        homeController: homeController,
+                                      ),
+                                      BarChartWidget(
+                                        barGroups: makeGroupIncomes(),
+                                        statsController: statsController,
+                                        getTitlesWidget: bottomTitlesIncomes,
+                                        text: statsController
+                                            .incomeStatsToplam.value
+                                            .toStringAsFixed(2),
+                                        textColor: Colors.green.shade400,
+                                        homeController: homeController,
+                                      ),
+                                    ]),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                  ],
                   ),
-                  SizedBox(),
-                ],
+                ),
               ),
             )),
-      ),
-    );
-  }
-
-  Widget leftTitles(double value, TitleMeta meta) {
-    const style = TextStyle(
-      color: Color(0xff7589a2),
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-    );
-    String text;
-    if (value == 0) {
-      text = '1K';
-    } else if (value == 10) {
-      text = '5K';
-    } else if (value == 19) {
-      text = '10K';
-    } else {
-      return Container();
-    }
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      space: 0,
-      child: Text(text, style: style),
-    );
+      );
+    });
   }
 
   Widget bottomTitles(double value, TitleMeta meta) {
-    final titles = <String>['1. Week', '2. Week', '3. Week', '4. Week'];
+    final titles = <String>['Travel', 'Food', 'Shopping', 'Billing', 'Other'];
 
-    final Widget text = Text(
-      titles[value.toInt()],
-      style: const TextStyle(
-        color: Color(0xff7589a2),
-        fontWeight: FontWeight.bold,
-        fontSize: 14,
-      ),
-    );
+    final Widget text = Text(titles[value.toInt()],
+        style: GoogleFonts.poppins(
+            fontSize: 12.5,
+            fontWeight: FontWeight.w500,
+            color: Color(0xff7589a2)));
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
@@ -257,17 +178,67 @@ class _StatsPageState extends State<StatsPage> {
     );
   }
 
-  BarChartGroupData makeGroupData(int x, double y1, double y2) {
-    return BarChartGroupData(
-      barsSpace: 4,
-      x: x,
-      barRods: [
-        BarChartRodData(
-          toY: y1,
-          color: leftBarColor,
-          width: width,
-        ),
-      ],
+  Widget bottomTitlesIncomes(double value, TitleMeta meta) {
+    final titles = <String>['Incomes', 'Expenses'];
+
+    final Widget text = Text(titles[value.toInt()],
+        style: GoogleFonts.poppins(
+            fontSize: 12.5,
+            fontWeight: FontWeight.w500,
+            color: Color(0xff7589a2)));
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 16, //margin top
+      child: text,
     );
+  }
+
+  List<BarChartGroupData> makeGroupExpenses() {
+    List<BarChartGroupData> grafikListe = [];
+    int x = 0;
+    statsController.statsYuzde.forEach((element) {
+      grafikListe.add(BarChartGroupData(
+          showingTooltipIndicators: [0],
+          x: x,
+          barRods: [
+            BarChartRodData(
+                borderRadius: BorderRadius.circular(8),
+                toY: element,
+                width: 40,
+                color:
+                    Color(int.parse(ExpenseModel.expenseItems.value[x].color!))
+                        .withOpacity(0.6))
+          ]));
+      x++;
+    });
+    return grafikListe;
+  }
+
+  List<BarChartGroupData> makeGroupIncomes() {
+    List<BarChartGroupData> grafikListe = [];
+
+    grafikListe.add(BarChartGroupData(
+        showingTooltipIndicators: [0],
+        x: 0,
+        barRods: [
+          BarChartRodData(
+              borderRadius: BorderRadius.circular(8),
+              toY: statsController.incomesAmountPercent.value,
+              width: 40,
+              color: Colors.green)
+        ]));
+    grafikListe.add(BarChartGroupData(
+        showingTooltipIndicators: [0],
+        x: 1,
+        barRods: [
+          BarChartRodData(
+              borderRadius: BorderRadius.circular(8),
+              toY: statsController.expensesAmountPercent.value,
+              width: 40,
+              color: Colors.red)
+        ]));
+
+    return grafikListe;
   }
 }

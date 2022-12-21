@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:moneyp/feature/home/components/deneme.dart';
 import 'package:moneyp/feature/home/components/expense_widget.dart';
 import 'package:moneyp/feature/home/controller/expense_controller.dart';
 import 'package:moneyp/feature/home/model/expense_model.dart';
 import 'package:moneyp/feature/home/view/homepage_view.dart';
-import 'package:moneyp/product/constant/color_settings.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
 class ExpenseBottomSheet extends StatefulWidget {
-  const ExpenseBottomSheet({super.key});
+  ExpenseBottomSheet({super.key});
 
   @override
   State<ExpenseBottomSheet> createState() => _ExpenseBottomSheetState();
@@ -18,10 +17,18 @@ class ExpenseBottomSheet extends StatefulWidget {
 
 class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
   ExpenseController controller = Get.find();
-  TextEditingController title = TextEditingController();
+
+  TextEditingController expenseTitle = TextEditingController();
+
   TextEditingController expenseDesc = TextEditingController();
-  TextEditingController expenseTotal = TextEditingController();
-  ExpenseModel? _selectedExpense = null;
+
+  TextEditingController expenseAmount = TextEditingController();
+
+  TextEditingController incomeTitle = TextEditingController();
+
+  TextEditingController incomeDesc = TextEditingController();
+
+  TextEditingController incomeAmount = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -63,171 +70,47 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
               child: Divider(),
             ),
             Expanded(
-              child: TabBarView(controller: controller.tabController,children: [
-                ExpenseWidget(controller: controller, expenseTotal: expenseTotal, title: title, expenseDesc: expenseDesc),
-              ExpenseWidget(controller: controller, expenseTotal: expenseTotal, title: title, expenseDesc: expenseDesc),
-              ]),
-            ),
-           
-            /*
-            Padding(
-              padding: const EdgeInsets.only(top: 10, left: 20),
-              child: Container(
-                height: 100,
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: ExpenseModel.expenseItems.length,
-                    itemBuilder: (context, index) {
-                      return Obx(
-                        () => GestureDetector(
-                          onTap: () {
-                            controller.expenseSec(index);
-
-                            if (controller.selectedExpense.value != null) {
-                              controller.selectedExpense.value!.isSelected =
-                                  false;
-                            }
-                            ExpenseModel.expenseItems[index].isSelected =
-                                !ExpenseModel.expenseItems[index].isSelected!;
-                            controller.selectedExpense.value =
-                                ExpenseModel.expenseItems[index];
-                            ExpenseModel.expenseItems.refresh();
-                          },
-                          child: category_widget(
-                            isSelected:
-                               ExpenseModel.expenseItems[index].isSelected!,
-                            title:
-                                ExpenseModel.expenseItems[index].expenseType!,
-                            imageUrl:
-                                ExpenseModel.expenseItems[index].imagePath!,
-                            containerColor: Color(int.parse(
-                                ExpenseModel.expenseItems[index].color!)),
-                          ),
-                        ),
-                      );
-                    }),
-              ),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: MediaQuery.of(context).size.height * 0.07,
-              decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 245, 245, 245),
-                  borderRadius: BorderRadius.circular(10)),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 10, right: 18, top: 10, bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
+                  controller: controller.tabController,
                   children: [
-                    const Icon(Icons.euro, color: Colors.grey),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                        child: TextField(
-                      controller: expenseTotal,
-                      keyboardType: TextInputType.number,
-                      style: GoogleFonts.poppins(),
-                      decoration: const InputDecoration.collapsed(
-                        hintText: "Enter total budget",
-                        border: InputBorder.none,
-                      ),
-                    )),
-                    const VerticalDivider(color: Colors.blue),
-                    DropdownButton(
-                      hint: Text(
-                        'EUR',
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                      iconDisabledColor: Colors.blue,
-                      items: [],
-                      onChanged: (value) {},
-                    )
-                  ],
-                ),
-              ),
+                    ExpenseWidget(
+                        controller: controller,
+                        expenseTotal: expenseAmount,
+                        title: expenseTitle,
+                        expenseDesc: expenseDesc),
+                    ExpenseWidget(
+                        controller: controller,
+                        expenseTotal: incomeAmount,
+                        title: incomeTitle,
+                        expenseDesc: incomeDesc),
+                  ]),
             ),
-            const SizedBox(
-              height: 8,
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: MediaQuery.of(context).size.height * 0.07,
-              decoration: BoxDecoration(
-                  color: Color.fromARGB(228, 245, 245, 245),
-                  borderRadius: BorderRadius.circular(10)),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 10, right: 18, top: 10, bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Icon(Icons.title, color: Colors.grey),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                        child: TextField(
-                      controller: title,
-                      style: GoogleFonts.poppins(),
-                      decoration: const InputDecoration.collapsed(
-                        hintText: "Enter expense title",
-                        border: InputBorder.none,
-                      ),
-                    )),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: MediaQuery.of(context).size.height * 0.13,
-              decoration: BoxDecoration(
-                  color: Color.fromARGB(228, 245, 245, 245),
-                  borderRadius: BorderRadius.circular(10)),
-              child: Padding(
-                padding:
-                    EdgeInsets.only(right: 15, left: 15, top: 10, bottom: 2),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextField(
-                      controller: expenseDesc,
-                      maxLines: 4,
-                      keyboardType: TextInputType.multiline,
-                      style: GoogleFonts.poppins(),
-                      decoration: const InputDecoration.collapsed(
-                        hintText: "Enter expense description",
-                        border: InputBorder.none,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),*/
             Padding(
               padding: const EdgeInsets.all(15),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   OutlinedButton(
-                    onPressed: () {},
-                    child: Text('Reset',
-                        style: GoogleFonts.poppins(fontSize: 18)),
+                    onPressed: () {
+                      if (controller.tabController.index == 0) {
+                        expenseAmount.clear();
+                        expenseTitle.clear();
+                        expenseDesc.clear();
+                        controller.selectedExpense.value!.isSelected = false;
+                        ExpenseModel.expenseItems.refresh();
+                      } else {
+                        incomeAmount.clear();
+                        incomeTitle.clear();
+                        incomeDesc.clear();
+                      }
+                    },
+                    child:
+                        Text('Reset', style: GoogleFonts.poppins(fontSize: 18)),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.red,
                       side: const BorderSide(color: Colors.red),
-                      minimumSize:
-                          Size(MediaQuery.of(context).size.width, 50),
+                      minimumSize: Size(MediaQuery.of(context).size.width, 50),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
@@ -237,16 +120,81 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      if (title.text.length > 1) {
+                      if (expenseTitle.text.length > 1 &&
+                          expenseDesc.text.length > 1 &&
+                          controller.tabController.index == 0 &&
+                          controller.selectedExpense.value != null) {
                         await controller.addExpense(
-                            title.text, expenseDesc.text, expenseTotal.text);
-                        await homeController.grafikYuzdeHesaplama();
+                            expenseTitle.text,
+                            expenseDesc.text,
+                            controller.transactionAmount.value);
+                        String amount = (double.parse(homeController
+                                    .wallets[
+                                        homeController.currentWalletIndex.value]
+                                    .expenseTotal!) +
+                                double.parse(
+                                    controller.transactionAmount.value))
+                            .toStringAsFixed(0);
+                        String budget = (double.parse(homeController
+                                    .wallets[
+                                        homeController.currentWalletIndex.value]
+                                    .budget!) -
+                                double.parse(
+                                    controller.transactionAmount.value))
+                            .toStringAsFixed(0);
+                        await controller.walletUpdateOnTransaction(
+                            budget, amount, 'expenseTotal');
+                        
+                           Get.back();
+                        
+                      
+                      } else if (incomeTitle.text.length > 1 &&
+                          incomeDesc.text.length > 1 &&
+                          controller.tabController.index == 1) {
+                        await controller.addIncome(
+                            incomeTitle.text,
+                            incomeDesc.text,
+                            controller.transactionAmount.value);
+                        String amount = (double.parse(homeController
+                                    .wallets[
+                                        homeController.currentWalletIndex.value]
+                                    .incomesTotal!) +
+                                double.parse(
+                                    controller.transactionAmount.value))
+                            .toStringAsFixed(0);
+                        String budget = (double.parse(homeController
+                                    .wallets[
+                                        homeController.currentWalletIndex.value]
+                                    .budget!) +
+                                double.parse(
+                                    controller.transactionAmount.value))
+                            .toStringAsFixed(0);
+                        await controller.walletUpdateOnTransaction(
+                            budget, amount, 'incomesTotal');
+                        Get.back();
+                      } else if ((controller.tabController.index == 0) &&
+                          (controller.selectedExpense.value == null ||
+                              expenseTitle.text.length < 1 ||
+                              expenseDesc.text.length < 1 ||
+                              controller.transactionAmount.value == null)) {
+                        QuickAlert.show(
+                            context: context,
+                            type: QuickAlertType.warning,
+                            text:
+                                'Please be sure to select an expense category and enter a title, description and amount.');
+                      } else if ((controller.tabController.index == 1) &&
+                          (incomeTitle.text.length < 1 ||
+                              incomeDesc.text.length < 1 ||
+                              controller.transactionAmount.value == null)) {
+                        QuickAlert.show(
+                            context: context,
+                            type: QuickAlertType.warning,
+                            text:
+                                'Please be sure to enter the amount, title and description of your income.');
                       }
-
-                      Get.back();
                     },
-                    child: Text('Save',
-                        style: GoogleFonts.poppins(fontSize: 18)),
+                    child:
+                        Text('Save', style: GoogleFonts.poppins(fontSize: 18)),
                     style: ElevatedButton.styleFrom(
                         primary: Colors.blue,
                         minimumSize:

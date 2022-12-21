@@ -3,9 +3,11 @@ import 'package:moneyp/feature/home/model/expense_model.dart';
 import 'package:moneyp/feature/home/model/incomes_model.dart';
 import 'package:moneyp/feature/home/model/list_item_model.dart';
 import 'package:moneyp/feature/wallet_onboard/model/wallet_model.dart';
+import 'package:moneyp/services/dovizkurlari_service.dart';
 import 'package:moneyp/services/firestoredb.dart';
 import 'package:moneyp/feature/home/controller/auth_controller.dart';
 import 'package:moneyp/feature/home/model/user_model.dart';
+import 'package:moneyp/services/model/dovizkurlari_model.dart';
 
 class HomeController extends GetxController with StateMixin {
   //User details Rx
@@ -14,7 +16,7 @@ class HomeController extends GetxController with StateMixin {
   set user(HomeModel value) => homeModel.value = value;
 
   //Pie Chart Rx
-  Rx<int> grafikToplam = Rx<int>(0);
+
   Rx<List> expenseListYuzdeOran = Rx<List>([]);
 
   //Expenses list Rx
@@ -36,83 +38,104 @@ class HomeController extends GetxController with StateMixin {
 
   RxList<int> walletsLength = RxList<int>([]);
 
+  RxList<DovizKurlariModel> dovizKurlari = RxList<DovizKurlariModel>([]);
+
+  RxString eurToUsd = RxString("");
+  RxString usdToEur = RxString("");
+  RxString eurToTl = RxString("");
+  RxString usdToTl = RxString("");
+
   AuthController controller = Get.find<AuthController>();
 
   @override
   void onInit() async {
     super.onInit();
     change(null, status: RxStatus.loading());
-    expenseList = RxList<ListItemModel>([]);
     walletList.bindStream(
         FireStoreDb().walletStream(controller.firebaseUser.value!.uid));
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(Duration(milliseconds: 500));
+    ever(walletList, walletLengthCalculate);
+  }
 
-    expenseList = RxList<ListItemModel>([]);
+  @override
+  void onReady() async {
+    super.onReady();
+    await getDovizKurlari();
+    await getUserData();
+    listBindStream();
+    change(null, status: RxStatus.success());
+  }
+
+  listBindStream() {
+    
+    expenseList.clear();
+
     expenseList.bindStream(FireStoreDb().expenseStream(
         controller.firebaseUser.value!.uid,
         wallets[currentWalletIndex.value]
             .walletType!)); //Harcama listesini veritabanından anlık olarak izlemek için.
 
-    incomesList.bindStream(
-        FireStoreDb().incomesStream(controller.firebaseUser.value!.uid));
-
-    getUserData();
-    ever(walletList, walletLengthCalculate);
+    incomesList.bindStream(FireStoreDb().incomesStream(
+        controller.firebaseUser.value!.uid,
+        wallets[currentWalletIndex.value].walletType!));
+    
   }
 
   getUserData() async {
     user = await FireStoreDb().getUser(controller.firebaseUser.value!.uid);
-    do {
-      if (expenseList.value.isNotEmpty) {
-        grafikYuzdeHesaplama();
-        walletLengthCalculate(walletList);
-        change(null, status: RxStatus.success());
-      }
-    } while (expenseList.value.isEmpty);
+    walletLengthCalculate(walletList);
+  }
+
+  getDovizKurlari() async {
+    dovizKurlari.value = await DovizKurlariService().dovizKurGet();
+    eurToUsd.value = (double.parse(dovizKurlari.value[0].eurKur) -
+            double.parse(dovizKurlari.value[0].usdKur))
+        .toStringAsFixed(2);
+    usdToEur.value = (2 - double.parse(eurToUsd.value)).toStringAsFixed(2);
+    eurToTl.value =
+        (1 / double.parse(dovizKurlari.value[0].eurKur)).toStringAsFixed(3);
+    usdToTl.value =
+        (1 / double.parse(dovizKurlari.value[0].usdKur)).toStringAsFixed(3);
   }
 
   grafikYuzdeHesaplama() {
     expenseListYuzdeOran.value.clear();
-    grafikToplam.value = 0;
-    int travelToplam = 0;
-    int foodToplam = 0;
-    int shoppingToplam = 0;
-    int billingToplam = 0;
-    int otherToplam = 0;
+    double grafikToplam = 0;
+    double travelToplam = 0;
+    double foodToplam = 0;
+    double shoppingToplam = 0;
+    double billingToplam = 0;
+    double otherToplam = 0;
     for (var element in expenseList.value) {
-      if (element.expenseType == ExpenseModel.expenseItems.value[0].expenseType) {
-        travelToplam = travelToplam + int.parse(element.expenseTotal!);
+      if (element.expenseType ==
+          ExpenseModel.expenseItems.value[0].expenseType) {
+        travelToplam = travelToplam + double.parse(element.expenseTotal!);
       } else if (element.expenseType ==
           ExpenseModel.expenseItems.value[1].expenseType) {
-        foodToplam = foodToplam + int.parse(element.expenseTotal!);
+        foodToplam = foodToplam + double.parse(element.expenseTotal!);
       } else if (element.expenseType ==
           ExpenseModel.expenseItems.value[2].expenseType) {
-        shoppingToplam = shoppingToplam + int.parse(element.expenseTotal!);
+        shoppingToplam = shoppingToplam + double.parse(element.expenseTotal!);
       } else if (element.expenseType ==
           ExpenseModel.expenseItems.value[3].expenseType) {
-        billingToplam = billingToplam + int.parse(element.expenseTotal!);
+        billingToplam = billingToplam + double.parse(element.expenseTotal!);
       } else {
-        otherToplam = otherToplam + int.parse(element.expenseTotal!);
+        otherToplam = otherToplam + double.parse(element.expenseTotal!);
       }
     }
-    grafikToplam.value = grafikToplam.value +
+    grafikToplam = grafikToplam +
         travelToplam +
         foodToplam +
         shoppingToplam +
         billingToplam +
         otherToplam;
 
-    expenseListYuzdeOran.value
-        .insert(0, (travelToplam * 100) / grafikToplam.value);
-    expenseListYuzdeOran.value
-        .insert(1, (foodToplam * 100) / grafikToplam.value);
+    expenseListYuzdeOran.value.insert(0, (travelToplam * 100) / grafikToplam);
+    expenseListYuzdeOran.value.insert(1, (foodToplam * 100) / grafikToplam);
 
-    expenseListYuzdeOran.value
-        .insert(2, (shoppingToplam * 100) / grafikToplam.value);
-    expenseListYuzdeOran.value
-        .insert(3, (billingToplam * 100) / grafikToplam.value);
-    expenseListYuzdeOran.value
-        .insert(4, (otherToplam * 100) / grafikToplam.value);
+    expenseListYuzdeOran.value.insert(2, (shoppingToplam * 100) / grafikToplam);
+    expenseListYuzdeOran.value.insert(3, (billingToplam * 100) / grafikToplam);
+    expenseListYuzdeOran.value.insert(4, (otherToplam * 100) / grafikToplam);
   }
 
   walletLengthCalculate(List<WalletModel> wallets) {

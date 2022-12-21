@@ -8,15 +8,15 @@ import '../../../product/constant/color_settings.dart';
 import '../model/list_item_model.dart';
 
 class ListItem extends StatelessWidget {
-   ListItem(
-      {Key? key,
-      required this.listItemType,
-      required this.listItemTitle,
-      required this.listItemDescription,
-      required this.listItemTotal,
-      required this.listItemIcon,
-      required this.listItemColor})
-      : super(key: key);
+  ListItem({
+    Key? key,
+    required this.listItemType,
+    required this.listItemTitle,
+    required this.listItemDescription,
+    required this.listItemTotal,
+    required this.listItemIcon,
+    required this.listItemColor,
+  }) : super(key: key);
   final String listItemType;
   final String listItemTitle;
   final String listItemDescription;
@@ -24,9 +24,7 @@ class ListItem extends StatelessWidget {
   final String listItemTotal;
   final String listItemColor;
 
-  HomeController homeController=Get.find();
-
- 
+  HomeController homeController = Get.find();
 
   Column info(String info, String value) {
     return Column(
@@ -57,12 +55,13 @@ class ListItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: ListItem(
-          listItemColor: itemModel.expenseColor!,
-          listItemDescription: itemModel.expenseDescription!,
-          listItemIcon: itemModel.expenseIcon!,
-          listItemTitle: itemModel.expenseTitle!,
-          listItemTotal: itemModel.expenseTotal!,
-          listItemType: itemModel.expenseType!),
+        listItemColor: itemModel.expenseColor!,
+        listItemDescription: itemModel.expenseDescription!,
+        listItemIcon: itemModel.expenseIcon!,
+        listItemTitle: itemModel.expenseTitle!,
+        listItemTotal: itemModel.expenseTotal!,
+        listItemType: itemModel.expenseType!,
+      ),
     );
   }
 
@@ -79,7 +78,8 @@ class ListItem extends StatelessWidget {
     );
   }
 
-  static Widget getGroupSeparator(ListItemModel? expenseValue, IncomesModel? incomesValue,BuildContext context) {
+  static Widget getGroupSeparator(ListItemModel? expenseValue,
+      IncomesModel? incomesValue, BuildContext context) {
     final DateTime now = DateTime.now();
     final DateFormat formatter = DateFormat('d');
     final String today = formatter.format(now);
@@ -127,13 +127,14 @@ class ListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     return Stack(
+    return Stack(
       children: [
         Container(
           padding: const EdgeInsets.all(8),
           margin: const EdgeInsets.only(top: 13),
           decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.8), borderRadius: BorderRadius.circular(16)),
+              color: Colors.white.withOpacity(0.8),
+              borderRadius: BorderRadius.circular(16)),
           child: RoundedExpansionTile(
             trailing: Container(
               width: 36,
@@ -167,7 +168,7 @@ class ListItem extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        '\$$listItemTotal',
+                        '${homeController.wallets[homeController.currentWalletIndex.value].walletSymbol}${double.parse(listItemTotal).toStringAsFixed(2).split(".")[0]}',
                         style: const TextStyle(
                             color: Color(0xFF3b67b5),
                             fontSize: 28,
@@ -175,7 +176,8 @@ class ListItem extends StatelessWidget {
                       ),
                       Container(
                         margin: const EdgeInsets.only(bottom: 12, left: 0),
-                        child: const Text('.30', //Dinamik hale getirelecek.
+                        child: Text(
+                            '.${double.parse(listItemTotal).toStringAsFixed(2).split(".")[1]}', //Dinamik hale getirelecek.
                             style: TextStyle(
                                 color: Color(0xFF3b67b5),
                                 fontSize: 16,
@@ -189,7 +191,7 @@ class ListItem extends StatelessWidget {
             children: [
               Row(
                 children: [
-                 const  Expanded(
+                  const Expanded(
                     child: Divider(
                       thickness: 1,
                     ),
@@ -240,8 +242,8 @@ class ListItem extends StatelessWidget {
           ),
         ),
         Container(
-          width: MediaQuery.of(context).size.width *0.275,
-          height: MediaQuery.of(context).size.height *0.0255,
+          width: MediaQuery.of(context).size.width * 0.275,
+          height: MediaQuery.of(context).size.height * 0.0255,
           alignment: Alignment.center,
           margin: const EdgeInsets.only(left: 16),
           padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 24),

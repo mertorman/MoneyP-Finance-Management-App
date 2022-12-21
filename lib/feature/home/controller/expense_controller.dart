@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyp/feature/home/controller/auth_controller.dart';
 import 'package:moneyp/feature/home/controller/home_controller.dart';
 import 'package:moneyp/feature/home/model/expense_model.dart';
+import 'package:moneyp/services/dovizkurlari_service.dart';
 import '../../../services/firestoredb.dart';
 
 class ExpenseController extends GetxController
@@ -17,6 +18,12 @@ class ExpenseController extends GetxController
 
   late TabController tabController;
 
+  RxString? selectedItemDropDown = RxString('EUR');
+
+  RxString transactionAmount = RxString("");
+  
+
+
   final List<Tab> tabs = <Tab>[
     Tab(
       child: Text(
@@ -25,24 +32,24 @@ class ExpenseController extends GetxController
       ),
     ),
     Tab(
-      text: 'Income Add',
+      child: Text(
+        'Income Add',
+        style: GoogleFonts.poppins(fontSize: 14.8, fontWeight: FontWeight.w400),
+      ),
     ),
   ];
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 2, vsync: this, initialIndex: 0);
   }
 
   @override
-
   void onClose() {
-
     tabController.dispose();
 
     super.onClose();
-
   }
 
   addExpense(String title, String desc, String total) async {
@@ -56,6 +63,27 @@ class ExpenseController extends GetxController
         secilenWidget.value[2],
         homeController
             .wallets[homeController.currentWalletIndex.value].walletType!);
+  }
+
+  addIncome(String title, String desc, String amount) async {
+    await FireStoreDb().addIncome(
+        authController.firebaseUser.value!.uid,
+        title,
+        desc,
+        amount,
+        homeController
+            .wallets[homeController.currentWalletIndex.value].walletType!);
+  }
+
+  walletUpdateOnTransaction(String budget,String amount, String transactionType) async {
+    await FireStoreDb().addTransactionWalletUpdate(
+        authController.firebaseUser.value!.uid,
+        homeController
+            .wallets[homeController.currentWalletIndex.value].walletType!,
+             budget,
+        amount,
+       
+        transactionType);
   }
 
   expenseSec(int index) {

@@ -59,7 +59,7 @@ class SignUp extends GetWidget<AuthController> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             Column(
               children: [
                 Row(
@@ -79,6 +79,7 @@ class SignUp extends GetWidget<AuthController> {
                     ))
                   ],
                 ),
+                const SizedBox(height: 15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -97,6 +98,7 @@ class SignUp extends GetWidget<AuthController> {
                     ))
                   ],
                 ),
+                const SizedBox(height: 15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
@@ -114,6 +116,7 @@ class SignUp extends GetWidget<AuthController> {
                     ))
                   ],
                 ),
+                const SizedBox(height: 15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

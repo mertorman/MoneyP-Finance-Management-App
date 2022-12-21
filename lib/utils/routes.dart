@@ -1,8 +1,11 @@
 import 'package:get/get.dart';
+
 import 'package:moneyp/bindings/home_page_binding.dart';
 import 'package:moneyp/bindings/login_page_binding.dart';
+import 'package:moneyp/bindings/stats_page_binding.dart';
 import 'package:moneyp/bindings/wallet_homepage_binding.dart';
 import 'package:moneyp/bindings/wallet_onboard_binding.dart';
+import 'package:moneyp/feature/home/components/expense_add_widget.dart';
 import 'package:moneyp/feature/home/view/homepage_view.dart';
 import 'package:moneyp/feature/login/view/login_view.dart';
 import 'package:moneyp/feature/login/view/sign_up_view.dart';
@@ -27,7 +30,8 @@ class AppRoutes {
     GetPage(name: '/home', page: () => const HomePage(), binding: HomePageBinding()),
     GetPage(name: '/profile', page: () => const ProfilePage()),
     GetPage(name: '/walletonboard', page: () => WalletOnboardPage(),binding: WalletOnboardBinding()),
-    GetPage(name: '/stats', page:() => const StatsPage()),
+    GetPage(name: '/stats', page:() => const StatsPage(),binding: StatsPageBinding()),
     GetPage(name: '/wallets', page: () =>  WalletsPage(),binding: WalletHomepageBinding()),
+
   ];
 }

@@ -28,7 +28,22 @@ class HomePage extends StatefulWidget {
 
 int touchedIndex = -1;
 
-List<PieChartSectionData> showingSections() {
+List<PieChartSectionData> getGrafikIsEmptyData() {
+  return List.generate(
+      1,
+      (index) => PieChartSectionData(
+            color: Colors.blue.withOpacity(0.5),
+            value: null,
+            title: 'Expense not found',
+            radius: 70,
+            titleStyle: GoogleFonts.poppins(
+                color: Colors.white, fontWeight: FontWeight.w500),
+            titlePositionPercentageOffset: 0,
+          ));
+}
+
+List<PieChartSectionData>? getGrafikData() {
+  homeController.grafikYuzdeHesaplama();
   return List.generate(5, (i) {
     final isTouched = i == touchedIndex;
     final opacity = isTouched ? 1.0 : 0.6;
@@ -43,9 +58,9 @@ List<PieChartSectionData> showingSections() {
         return PieChartSectionData(
           color: Color(int.parse(ExpenseModel.expenseItems.value[0].color!))
               .withOpacity(opacity),
-          value: (homeController.expenseListYuzdeOran.value[0]) ?? 25,
+          value: (homeController.expenseListYuzdeOran.value[0]) ?? 0,
           title:
-              '%${(homeController.expenseListYuzdeOran.value[0].toInt()).toString()}',
+              '%${(homeController.expenseListYuzdeOran.value[0].toDouble().round()).toString()}',
           radius: 80,
           titleStyle: const TextStyle(
             fontSize: 18,
@@ -55,7 +70,8 @@ List<PieChartSectionData> showingSections() {
           titlePositionPercentageOffset: 0.55,
           borderSide: isTouched
               ? BorderSide(
-                  color: Color(int.parse(ExpenseModel.expenseItems.value[0].color!)),
+                  color: Color(
+                      int.parse(ExpenseModel.expenseItems.value[0].color!)),
                   width: 6)
               : BorderSide(color: color0.withOpacity(0)),
         );
@@ -65,7 +81,7 @@ List<PieChartSectionData> showingSections() {
               .withOpacity(opacity),
           value: (homeController.expenseListYuzdeOran.value[1]) ?? 25,
           title:
-              '%${(homeController.expenseListYuzdeOran.value[1].toInt()).toString()}',
+              '%${(homeController.expenseListYuzdeOran.value[1].toDouble().round()).toString()}',
           radius: 65,
           titleStyle: const TextStyle(
             fontSize: 18,
@@ -83,7 +99,7 @@ List<PieChartSectionData> showingSections() {
               .withOpacity(opacity),
           value: homeController.expenseListYuzdeOran.value[2] ?? 25,
           title:
-              '%${(homeController.expenseListYuzdeOran.value[2].toInt()).toString()}',
+              '%${(homeController.expenseListYuzdeOran.value[2].toDouble().round()).toString()}',
           radius: 75,
           titleStyle: const TextStyle(
             fontSize: 18,
@@ -101,7 +117,7 @@ List<PieChartSectionData> showingSections() {
               .withOpacity(opacity),
           value: homeController.expenseListYuzdeOran.value[3] ?? 25,
           title:
-              '%${(homeController.expenseListYuzdeOran.value[3].toInt()).toString()}',
+              '%${(homeController.expenseListYuzdeOran.value[3].toDouble().round()).toString()}',
           radius: 65,
           titleStyle: const TextStyle(
             fontSize: 18,
@@ -118,7 +134,7 @@ List<PieChartSectionData> showingSections() {
               .withOpacity(opacity),
           value: homeController.expenseListYuzdeOran.value[4] ?? 25,
           title:
-              '%${(homeController.expenseListYuzdeOran.value[4].toInt()).toString()}',
+              '%${(homeController.expenseListYuzdeOran.value[4].toDouble().round()).toString()}',
           radius: 75,
           titleStyle: const TextStyle(
             fontSize: 18,
@@ -140,10 +156,9 @@ AuthController authController = Get.find<AuthController>();
 HomeController homeController = Get.find();
 
 class _HomePageState extends State<HomePage> {
-
   @override
   Widget build(BuildContext context) {
-   return homeController.obx(
+    return homeController.obx(
         onLoading: Scaffold(
           body: Center(
               child:
@@ -215,10 +230,9 @@ class _HomePageState extends State<HomePage> {
                             ),
                             ListTile(
                               onTap: () {
-                        homeController.currentWalletIndex.value = 0;
-                          homeController.currentWalletLastIndex.value = 0;
+                                homeController.currentWalletIndex.value = 0;
+                                homeController.currentWalletLastIndex.value = 0;
                                 Get.toNamed('/wallets');
-                          
                               },
                               leading: Icon(
                                 Icons.account_balance_wallet_outlined,
@@ -244,17 +258,7 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.white, fontSize: 17),
                               ),
                             ),
-                            const ListTile(
-                              leading: Icon(
-                                Icons.settings,
-                                color: Colors.white,
-                              ),
-                              title: Text(
-                                'Settings',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 17),
-                              ),
-                            ),
+                           
                             ListTile(
                               onTap: () {
                                 authController.logOut();
@@ -291,14 +295,10 @@ class _HomePageState extends State<HomePage> {
                   ..rotateY((pi / 6) * val),
                 child: Container(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                    Color(0xFFdfe9f3),
-                    Color(0xFFffffff)
-                    ],
-                   begin: Alignment.bottomCenter,
-                   end: Alignment.topCenter
-                    )
-                  ),
+                      gradient: LinearGradient(
+                          colors: [Color(0xFFdfe9f3), Color(0xFFffffff)],
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter)),
                   child: Scaffold(
                     resizeToAvoidBottomInset: false,
                     backgroundColor: Colors.transparent,
@@ -329,7 +329,7 @@ class _HomePageState extends State<HomePage> {
                     floatingActionButton: FloatingActionButton(
                       backgroundColor: Colors.blue,
                       child: Icon(Icons.add),
-                      onPressed: () {
+                      onPressed: () async {
                         showModalBottomSheet(
                                 isScrollControlled: true,
                                 backgroundColor: Colors.transparent,
@@ -348,7 +348,8 @@ class _HomePageState extends State<HomePage> {
                           .copyWith(statusBarColor: Colors.blue),
                       toolbarHeight: 80,
                       centerTitle: true,
-                      titleTextStyle: Theme.of(context).textTheme.headlineMedium,
+                      titleTextStyle:
+                          Theme.of(context).textTheme.headlineMedium,
                       backgroundColor: Colors.blue,
                       leading: Padding(
                         padding: const EdgeInsets.all(20),
@@ -368,48 +369,48 @@ class _HomePageState extends State<HomePage> {
                       ),
                       actions: [
                         Obx(
-                          () => 
-                         Row(
+                          () => Row(
                             children: [
-                               AnimatedToggleSwitch<int>.rolling(
-                                  innerColor: Colors.transparent,
-                                  borderColor: Colors.transparent,
-                                  iconOpacity: 0.3,
-                                  current:
-                                      homeController.currentWalletLastIndex.value,
-                                  values: homeController.walletsLength,
-                                  onChanged: (i) async {
-                                    int lastIndex =
-                                        homeController.currentWalletLastIndex.value;
-                        
-                                    homeController.currentWalletLastIndex.value = i;
-                                    QuickAlert.show(
-                                      context: context,
-                                      width:
-                                          MediaQuery.of(context).size.width * 0.75,
-                                      type: QuickAlertType.confirm,
-                                      text:
-                                          "Do you want to go '${homeController.wallets[homeController.currentWalletLastIndex.value].walletType}' account?",
-                                      confirmBtnText: 'Yes',
-                                      cancelBtnText: 'No',
-                                      confirmBtnColor: Colors.green.shade400,
-                                      onConfirmBtnTap: () {
-                                        homeController.currentWalletIndex.value = i;
-                                        homeController.onInit();
-                                        Get.back();
-                                      },
-                                      onCancelBtnTap: () {
-                                        homeController.currentWalletLastIndex
-                                            .value = lastIndex;
-                                        Get.back();
-                                      },
-                                    );
-                                  },
-                                  iconBuilder: rollingIconBuilder,
-                                  indicatorColor: Colors.green.withOpacity(0.8),
-                                  height: 40,
-                                ),
-                              
+                              AnimatedToggleSwitch<int>.rolling(
+                                innerColor: Colors.transparent,
+                                borderColor: Colors.transparent,
+                                iconOpacity: 0.3,
+                                current:
+                                    homeController.currentWalletLastIndex.value,
+                                values: homeController.walletsLength,
+                                onChanged: (i) async {
+                                  int lastIndex = homeController
+                                      .currentWalletLastIndex.value;
+
+                                  homeController.currentWalletLastIndex.value =
+                                      i;
+                                  QuickAlert.show(
+                                    context: context,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.75,
+                                    type: QuickAlertType.confirm,
+                                    text:
+                                        "Do you want to go '${homeController.wallets[homeController.currentWalletLastIndex.value].walletType}' account?",
+                                    confirmBtnText: 'Yes',
+                                    cancelBtnText: 'No',
+                                    confirmBtnColor: Colors.green.shade400,
+                                    onConfirmBtnTap: () {
+                                      homeController.currentWalletIndex.value =
+                                          i;
+                                      homeController.listBindStream();
+                                      Get.back();
+                                    },
+                                    onCancelBtnTap: () {
+                                      homeController.currentWalletLastIndex
+                                          .value = lastIndex;
+                                      Get.back();
+                                    },
+                                  );
+                                },
+                                iconBuilder: rollingIconBuilder,
+                                indicatorColor: Colors.green.withOpacity(0.8),
+                                height: 40,
+                              ),
                             ],
                           ),
                         )
@@ -447,7 +448,8 @@ class _HomePageState extends State<HomePage> {
                                   Align(
                                     alignment: Alignment.center,
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         const Icon(Icons.waving_hand_outlined,
                                             color: Colors.white),
@@ -479,7 +481,7 @@ class _HomePageState extends State<HomePage> {
                                                 .wallets[homeController
                                                     .currentWalletIndex.value]
                                                 .budget!,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 42,
                                             fontWeight: FontWeight.bold),
@@ -508,35 +510,16 @@ class _HomePageState extends State<HomePage> {
                                         child: Obx(
                                           () => PieChart(
                                             PieChartData(
-                                                pieTouchData: PieTouchData(
-                                                  touchCallback:
-                                                      (FlTouchEvent event,
-                                                          pieTouchResponse) {
-                                                    setState(() {
-                                                      if (!event
-                                                              .isInterestedForInteractions ||
-                                                          pieTouchResponse ==
-                                                              null ||
-                                                          pieTouchResponse
-                                                                  .touchedSection ==
-                                                              null) {
-                                                        touchedIndex = -1;
-                                                        return;
-                                                      }
-                                                      touchedIndex =
-                                                          pieTouchResponse
-                                                              .touchedSection!
-                                                              .touchedSectionIndex;
-                                                    });
-                                                  },
-                                                ),
                                                 startDegreeOffset: 180,
                                                 borderData: FlBorderData(
                                                   show: false,
                                                 ),
                                                 sectionsSpace: 1,
                                                 centerSpaceRadius: 0,
-                                                sections: showingSections()),
+                                                sections: homeController
+                                                        .expenses.isEmpty
+                                                    ? getGrafikIsEmptyData()
+                                                    : getGrafikData()),
                                           ),
                                         ),
                                       ),
@@ -551,8 +534,9 @@ class _HomePageState extends State<HomePage> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Indicator(
-                                              color: Color(int.parse(ExpenseModel
-                                                  .expenseItems.value[0].color!)),
+                                              color: Color(int.parse(
+                                                  ExpenseModel.expenseItems
+                                                      .value[0].color!)),
                                               text: 'Travel',
                                               isSquare: false,
                                               size: touchedIndex == 0 ? 18 : 16,
@@ -564,8 +548,9 @@ class _HomePageState extends State<HomePage> {
                                               width: 10,
                                             ),
                                             Indicator(
-                                              color: Color(int.parse(ExpenseModel
-                                                  .expenseItems.value[1].color!)),
+                                              color: Color(int.parse(
+                                                  ExpenseModel.expenseItems
+                                                      .value[1].color!)),
                                               text: 'Food',
                                               isSquare: false,
                                               size: touchedIndex == 1 ? 18 : 16,
@@ -583,8 +568,9 @@ class _HomePageState extends State<HomePage> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Indicator(
-                                              color: Color(int.parse(ExpenseModel
-                                                  .expenseItems.value[2].color!)),
+                                              color: Color(int.parse(
+                                                  ExpenseModel.expenseItems
+                                                      .value[2].color!)),
                                               text: 'Shopping',
                                               isSquare: false,
                                               size: touchedIndex == 2 ? 18 : 16,
@@ -596,8 +582,9 @@ class _HomePageState extends State<HomePage> {
                                               width: 10,
                                             ),
                                             Indicator(
-                                              color: Color(int.parse(ExpenseModel
-                                                  .expenseItems.value[3].color!)),
+                                              color: Color(int.parse(
+                                                  ExpenseModel.expenseItems
+                                                      .value[3].color!)),
                                               text: 'Billing',
                                               isSquare: false,
                                               size: touchedIndex == 3 ? 18 : 16,
@@ -649,7 +636,8 @@ class _HomePageState extends State<HomePage> {
                                                 child: Icon(
                                                     color: Colors.grey,
                                                     size: 17.5,
-                                                    Icons.arrow_forward_rounded)),
+                                                    Icons
+                                                        .arrow_forward_rounded)),
                                             Text("Expenses",
                                                 style: GoogleFonts.daysOne(
                                                   textStyle: TextStyle(
@@ -658,7 +646,8 @@ class _HomePageState extends State<HomePage> {
                                                               .value
                                                           ? Colors.red.shade300
                                                           : Colors.red.shade300
-                                                              .withOpacity(0.45),
+                                                              .withOpacity(
+                                                                  0.45),
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w600),
@@ -681,9 +670,11 @@ class _HomePageState extends State<HomePage> {
                                                       color: homeController
                                                               .isExpensesOnTap
                                                               .value
-                                                          ? Colors.green.shade300
+                                                          ? Colors
+                                                              .green.shade300
                                                               .withOpacity(0.45)
-                                                          : Colors.green.shade300,
+                                                          : Colors
+                                                              .green.shade300,
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w600),
@@ -712,66 +703,61 @@ class _HomePageState extends State<HomePage> {
                                 Obx(
                                   () {
                                     return homeController.isExpensesOnTap.value
-                                        ? StickyGroupedListView<ListItemModel, DateTime>(
-                                          stickyHeaderBackgroundColor: Colors.transparent,
-                                            elements: homeController.expenses,
-                                            addAutomaticKeepAlives: true,
-                                            scrollDirection: Axis.vertical,
-                                            groupSeparatorBuilder: (value) =>
-                                                ListItem.getGroupSeparator(
-                                                    value, null, context),
-                                            shrinkWrap: true,
-                                            groupBy: (element) => DateTime(
-                                                element.expenseYear!,
-                                                element.expenseMonth!,
-                                                element.expenseDay!),
-                                            order: StickyGroupedListOrder.ASC,
-                                            groupComparator: (DateTime value1,
-                                                    DateTime value2) =>
-                                                value2.compareTo(value1),
-                                            itemBuilder: ListItem.expenseGetItem)
-                                        : StickyGroupedListView<IncomesModel, DateTime>(
-                                              stickyHeaderBackgroundColor: Colors.transparent,
-                                            elements: homeController.incomes,
-                                            addAutomaticKeepAlives: true,
-                                            scrollDirection: Axis.vertical,
-                                            groupSeparatorBuilder: (value) =>
-                                                ListItem.getGroupSeparator(
-                                                    null, value, context),
-                                            shrinkWrap: true,
-                                            groupBy: (element) =>
-                                                DateTime(element.incomesYear!, element.incomesMonth!, element.incomesDay!),
-                                            order: StickyGroupedListOrder.ASC,
-                                            groupComparator: (DateTime value1, DateTime value2) => value2.compareTo(value1),
-                                            itemBuilder: ListItem.incomesGetItem);
-
-                                    /* ListView.builder(
-                                      addAutomaticKeepAlives: true,
-                                      shrinkWrap: true,
-                                      itemCount: homeController.expenses.length,
-                                      physics: ScrollPhysics(),
-                                      itemBuilder: (context, index) {
-                                        return Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 16),
-                                          child: ListItem(
-                                            expenseType: homeController
-                                                .expenses[index].expenseType,
-                                            expenseTitle: homeController
-                                                .expenses[index].expenseTitle,
-                                            expenseDescription: homeController
-                                                .expenses[index]
-                                                .expenseDescription,
-                                            expenseTotal: homeController
-                                                .expenses[index].expenseTotal,
-                                            expenseIcon: homeController
-                                                .expenses[index].expenseIcon,
-                                            expenseColor: homeController
-                                                .expenses[index].expenseColor,
-                                          ),
-                                        );
-                                      },
-                                    );*/
+                                        ? homeController.expenses.isEmpty
+                                            ? LottieBuilder.asset(
+                                                'assets/no_data.json',
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.25,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                              )
+                                            : StickyGroupedListView<ListItemModel, DateTime>(
+                                                stickyHeaderBackgroundColor:
+                                                    Colors.transparent,
+                                                elements:
+                                                    homeController.expenses,
+                                                addAutomaticKeepAlives: true,
+                                                scrollDirection: Axis.vertical,
+                                                groupSeparatorBuilder: (value) =>
+                                                    ListItem.getGroupSeparator(
+                                                        value, null, context),
+                                                shrinkWrap: true,
+                                                groupBy: (element) => DateTime(
+                                                    element.expenseYear!,
+                                                    element.expenseMonth!,
+                                                    element.expenseDay!),
+                                                order:
+                                                    StickyGroupedListOrder.ASC,
+                                                groupComparator: (DateTime value1,
+                                                        DateTime value2) =>
+                                                    value2.compareTo(value1),
+                                                itemBuilder:
+                                                    ListItem.expenseGetItem)
+                                        : homeController.incomes.isEmpty
+                                            ? LottieBuilder.asset(
+                                                'assets/no_data.json',
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.25,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                              )
+                                            : StickyGroupedListView<IncomesModel, DateTime>(
+                                                stickyHeaderBackgroundColor: Colors.transparent,
+                                                elements: homeController.incomes,
+                                                addAutomaticKeepAlives: true,
+                                                scrollDirection: Axis.vertical,
+                                                groupSeparatorBuilder: (value) => ListItem.getGroupSeparator(null, value, context),
+                                                shrinkWrap: true,
+                                                groupBy: (element) => DateTime(element.incomesYear!, element.incomesMonth!, element.incomesDay!),
+                                                order: StickyGroupedListOrder.ASC,
+                                                groupComparator: (DateTime value1, DateTime value2) => value2.compareTo(value1),
+                                                itemBuilder: ListItem.incomesGetItem);
                                   },
                                 )
                               ],

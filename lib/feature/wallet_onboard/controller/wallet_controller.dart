@@ -57,8 +57,7 @@ class WalletController extends GetxController with StateMixin {
       List<TextEditingController> controllers) {
     int i = 0;
     for (var element in wallets) {
-      if (element.enabled!) {
-        selectedWallets.value.add({
+          selectedWallets.value.add({
           'walletType': element.walletType!,
           'enabled': element.enabled!,
           'budget': controllers[i].text,
@@ -67,7 +66,7 @@ class WalletController extends GetxController with StateMixin {
           'walletSymbol': element.walletSymbol!,
           'walletTypeName': element.walletTypeName!
         });
-      }
+     
       i++;
     }
     return selectedWallets.value;
@@ -91,11 +90,6 @@ class WalletController extends GetxController with StateMixin {
 
   addWallets(String uid, List<Map<dynamic, dynamic>> walletDetails) {
     FireStoreDb().createWallet(uid, walletDetails);
-  }
-
-  walletCheck(String uid) {
-    var sonuc = FireStoreDb().walletIsEmptyCheck(uid);
-    return sonuc;
   }
 
   walletUpdate(
