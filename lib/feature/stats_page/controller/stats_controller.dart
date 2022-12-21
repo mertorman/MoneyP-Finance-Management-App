@@ -18,12 +18,21 @@ class StatsController extends GetxController
   RxDouble expensesAmountPercent = RxDouble(0);
   RxList statsYuzde = RxList([]);
 
-  RxDouble incomeStatsToplam = RxDouble(0);
 
+//------------Incomes,Expenses Toplam
+  RxDouble incomeStatsToplam = RxDouble(0);
   RxDouble grafikToplam = RxDouble(0);
+
   RxDouble maxYStatusExpenses = RxDouble(60);
   RxDouble maxYStatusIncomes = RxDouble(60);
   late TabController tabController;
+
+  //-------------Category Total--------------
+  RxDouble travelToplam = RxDouble(0);
+  RxDouble foodToplam = RxDouble(0);
+  RxDouble shoppingToplam = RxDouble(0);
+  RxDouble billingToplam = RxDouble(0);
+  RxDouble otherToplam = RxDouble(0);
 
   @override
   void onInit() async {
@@ -49,34 +58,39 @@ class StatsController extends GetxController
   statsYuzdeHesaplama() {
     statsYuzde.value.clear();
     grafikToplam.value = 0;
-    double travelToplam = 0;
-    double foodToplam = 0;
-    double shoppingToplam = 0;
-    double billingToplam = 0;
-    double otherToplam = 0;
+    travelToplam.value = 0;
+    foodToplam.value = 0;
+    shoppingToplam.value = 0;
+    billingToplam.value = 0;
+    otherToplam.value = 0;
     for (var element in stats.value) {
       if (element.expenseType ==
           ExpenseModel.expenseItems.value[0].expenseType) {
-        travelToplam = travelToplam + double.parse(element.expenseTotal!);
+        travelToplam.value =
+            travelToplam.value + double.parse(element.expenseTotal!);
       } else if (element.expenseType ==
           ExpenseModel.expenseItems.value[1].expenseType) {
-        foodToplam = foodToplam + double.parse(element.expenseTotal!);
+        foodToplam.value =
+            foodToplam.value + double.parse(element.expenseTotal!);
       } else if (element.expenseType ==
           ExpenseModel.expenseItems.value[2].expenseType) {
-        shoppingToplam = shoppingToplam + double.parse(element.expenseTotal!);
+        shoppingToplam.value =
+            shoppingToplam.value + double.parse(element.expenseTotal!);
       } else if (element.expenseType ==
           ExpenseModel.expenseItems.value[3].expenseType) {
-        billingToplam = billingToplam + double.parse(element.expenseTotal!);
+        billingToplam.value =
+            billingToplam.value + double.parse(element.expenseTotal!);
       } else {
-        otherToplam = otherToplam + double.parse(element.expenseTotal!);
+        otherToplam.value =
+            otherToplam.value + double.parse(element.expenseTotal!);
       }
     }
     grafikToplam.value = grafikToplam.value +
-        travelToplam +
-        foodToplam +
-        shoppingToplam +
-        billingToplam +
-        otherToplam;
+        travelToplam.value +
+        foodToplam.value +
+        shoppingToplam.value +
+        billingToplam.value +
+        otherToplam.value;
 
     statsYuzde.value.insert(0, (travelToplam * 100) / grafikToplam.value);
     statsYuzde.value.insert(1, (foodToplam * 100) / grafikToplam.value);
