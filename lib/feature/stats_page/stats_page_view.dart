@@ -192,6 +192,7 @@ class _StatsPageState extends State<StatsPage> {
                         children: [
                           Flexible(
                             child: TabBarView(
+                              
                                 physics: NeverScrollableScrollPhysics(),
                                 controller: statsController.tabController,
                                 children: [

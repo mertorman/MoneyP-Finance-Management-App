@@ -156,6 +156,7 @@ AuthController authController = Get.find<AuthController>();
 HomeController homeController = Get.find();
 
 class _HomePageState extends State<HomePage> {
+
   @override
   Widget build(BuildContext context) {
     return homeController.obx(
@@ -230,8 +231,6 @@ class _HomePageState extends State<HomePage> {
                             ),
                             ListTile(
                               onTap: () {
-                                homeController.currentWalletIndex.value = 0;
-                                homeController.currentWalletLastIndex.value = 0;
                                 Get.toNamed('/wallets');
                               },
                               leading: Icon(
@@ -258,9 +257,8 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.white, fontSize: 17),
                               ),
                             ),
-                           
                             ListTile(
-                              onTap: () {
+                              onTap: () async {
                                 authController.logOut();
                               },
                               leading: const Icon(
@@ -477,10 +475,10 @@ class _HomePageState extends State<HomePage> {
                                                 .wallets[homeController
                                                     .currentWalletIndex.value]
                                                 .walletSymbol! +
-                                            homeController
+                                            double.parse(homeController
                                                 .wallets[homeController
                                                     .currentWalletIndex.value]
-                                                .budget!,
+                                                .budget!).toStringAsFixed(0),
                                         style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 42,

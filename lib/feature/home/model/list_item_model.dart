@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ListItemModel {
+  String? uid;
   Timestamp? date;
   DateTime? expenseDate;
   int? expenseYear;
@@ -21,6 +22,7 @@ class ListItemModel {
       this.expenseColor});
 
   ListItemModel.fromDocumentSnapshot(DocumentSnapshot data) {
+    uid = data.id;
     date = data["expenseDate"];
     expenseDate = (date?.toDate()) ?? DateTime(0);
     expenseYear = (date?.toDate().year) ?? 0;

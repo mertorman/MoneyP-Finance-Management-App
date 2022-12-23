@@ -122,53 +122,56 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
                     onPressed: () async {
                       if (expenseTitle.text.length > 1 &&
                           expenseDesc.text.length > 1 &&
+                          double.parse(controller.transactionAmount.value)>0 &&
                           controller.tabController.index == 0 &&
                           controller.selectedExpense.value != null) {
                         await controller.addExpense(
                             expenseTitle.text,
                             expenseDesc.text,
                             controller.transactionAmount.value);
+                       
                         String amount = (double.parse(homeController
                                     .wallets[
                                         homeController.currentWalletIndex.value]
                                     .expenseTotal!) +
                                 double.parse(
                                     controller.transactionAmount.value))
-                            .toStringAsFixed(0);
+                            .toStringAsFixed(2);
                         String budget = (double.parse(homeController
                                     .wallets[
                                         homeController.currentWalletIndex.value]
                                     .budget!) -
                                 double.parse(
                                     controller.transactionAmount.value))
-                            .toStringAsFixed(0);
+                            .toStringAsFixed(2);
                         await controller.walletUpdateOnTransaction(
                             budget, amount, 'expenseTotal');
-                        
-                           Get.back();
-                        
-                      
+
+                        Get.back();
                       } else if (incomeTitle.text.length > 1 &&
                           incomeDesc.text.length > 1 &&
+                          double.parse(controller.transactionAmount.value)>0 &&
                           controller.tabController.index == 1) {
                         await controller.addIncome(
                             incomeTitle.text,
                             incomeDesc.text,
                             controller.transactionAmount.value);
+                  
+                     
                         String amount = (double.parse(homeController
                                     .wallets[
                                         homeController.currentWalletIndex.value]
                                     .incomesTotal!) +
                                 double.parse(
                                     controller.transactionAmount.value))
-                            .toStringAsFixed(0);
+                            .toStringAsFixed(2);
                         String budget = (double.parse(homeController
                                     .wallets[
                                         homeController.currentWalletIndex.value]
                                     .budget!) +
                                 double.parse(
                                     controller.transactionAmount.value))
-                            .toStringAsFixed(0);
+                            .toStringAsFixed(2);
                         await controller.walletUpdateOnTransaction(
                             budget, amount, 'incomesTotal');
                         Get.back();
@@ -176,6 +179,7 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
                           (controller.selectedExpense.value == null ||
                               expenseTitle.text.length < 1 ||
                               expenseDesc.text.length < 1 ||
+                              double.parse(controller.transactionAmount.value) == 0 ||
                               controller.transactionAmount.value == null)) {
                         QuickAlert.show(
                             context: context,
@@ -185,6 +189,7 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
                       } else if ((controller.tabController.index == 1) &&
                           (incomeTitle.text.length < 1 ||
                               incomeDesc.text.length < 1 ||
+                              double.parse(controller.transactionAmount.value) == 0 ||
                               controller.transactionAmount.value == null)) {
                         QuickAlert.show(
                             context: context,

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class IncomesModel {
+  String? uid;
   Timestamp? date;
   DateTime? incomesDate;
   int? incomesYear;
@@ -12,15 +13,18 @@ class IncomesModel {
   String? incomesAmount;
   String? incomesIcon;
   String? incomesColor;
-  
-  IncomesModel(
-      {this.type,
-      this.incomesTitle,
-      this.incomesDescription,
-      this.incomesAmount,
-      this.incomesColor});
+
+  IncomesModel({
+    this.type,
+    this.incomesTitle,
+    this.incomesDescription,
+    this.incomesAmount,
+    this.incomesColor,
+    this.uid,
+  });
 
   IncomesModel.fromDocumentSnapshot(DocumentSnapshot data) {
+    uid = data.id;
     date = data["incomesDate"];
     incomesDate = (date?.toDate()) ?? DateTime(0);
     incomesYear = (date?.toDate().year) ?? 0;

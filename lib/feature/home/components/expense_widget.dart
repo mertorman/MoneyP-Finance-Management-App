@@ -23,7 +23,7 @@ class ExpenseWidget extends StatelessWidget {
   TextEditingController expenseDesc;
 
   List<String> items = ['EUR', 'USD', 'TL'];
- 
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -119,19 +119,17 @@ class ExpenseWidget extends StatelessWidget {
                               '€')) {
                         double deger = double.parse(value.toString());
                         if (controller.selectedItemDropDown!.value == 'EUR') {
-
                           controller.transactionAmount.value = value!;
                           return null;
                         } else if (controller.selectedItemDropDown!.value ==
                             'USD') {
-   
                           controller.transactionAmount.value = (deger *
                                   double.parse(homeController.usdToEur.value))
                               .toStringAsFixed(2);
+                        
                           return '1\$ = ${homeController.usdToEur.value}€ => ${controller.transactionAmount.value}€';
                         } else if (controller.selectedItemDropDown!.value ==
                             'TL') {
-     
                           controller.transactionAmount.value = (deger *
                                   double.parse(homeController.eurToTl.value))
                               .toStringAsFixed(2);
@@ -146,19 +144,16 @@ class ExpenseWidget extends StatelessWidget {
                               '\$')) {
                         double deger = double.parse(value.toString());
                         if (controller.selectedItemDropDown!.value == 'USD') {
-                         
                           controller.transactionAmount.value = value!;
                           return null;
                         } else if (controller.selectedItemDropDown!.value ==
                             'EUR') {
-                      
                           controller.transactionAmount.value = (deger *
                                   double.parse(homeController.eurToUsd.value))
                               .toStringAsFixed(2);
                           return '1€ = ${homeController.eurToUsd.value}\$ => ${controller.transactionAmount.value}\$';
                         } else if (controller.selectedItemDropDown!.value ==
                             'TL') {
-                     
                           controller.transactionAmount.value = (deger *
                                   double.parse(homeController.usdToTl.value))
                               .toStringAsFixed(2);
@@ -173,12 +168,10 @@ class ExpenseWidget extends StatelessWidget {
                               '₺')) {
                         double deger = double.parse(value.toString());
                         if (controller.selectedItemDropDown!.value == 'TL') {
-                      
                           controller.transactionAmount.value = value!;
                           return null;
                         } else if (controller.selectedItemDropDown!.value ==
                             'USD') {
-              
                           controller.transactionAmount.value = (deger *
                                   double.parse(homeController
                                       .dovizKurlari.value[0].usdKur))
@@ -186,7 +179,6 @@ class ExpenseWidget extends StatelessWidget {
                           return '1\$ = ${(double.parse(homeController.dovizKurlari.value[0].usdKur).toStringAsFixed(2))}₺ => ${controller.transactionAmount.value}₺';
                         } else if (controller.selectedItemDropDown!.value ==
                             'EUR') {
-            
                           controller.transactionAmount.value = (deger *
                                   double.parse(homeController
                                       .dovizKurlari.value[0].eurKur))

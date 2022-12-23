@@ -6,7 +6,7 @@ import 'package:moneyp/feature/home/controller/home_controller.dart';
 class HomePageBinding extends Bindings {
   @override
   void dependencies() {
-    Get.put(HomeController());
+    Get.lazyPut(() => HomeController(), fenix: true);
     Get.lazyPut(() => ExpenseController());
   }
 }

@@ -42,12 +42,12 @@ class _CardWidgetState extends State<TopCardWidget> {
                        Row(
                         children: [
                           Text(
-                            homeController.wallets[homeController.currentWalletIndex.value].walletSymbol!,
+                            homeController.wallets[homeController.currentWalletIndex.value].walletSymbol ?? "",
                             style: cardMoneyIconTextStyle,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 7),
-                            child: Text(homeController.wallets[homeController.currentWalletIndex.value].incomesTotal!,
+                            child: Text(double.parse(homeController.wallets[homeController.currentWalletIndex.value].incomesTotal!).toStringAsFixed(0),
                                 style: cardMoneyTextStyle),
                           )
                         ],
@@ -69,7 +69,7 @@ class _CardWidgetState extends State<TopCardWidget> {
                        Row(
                         children: [
                           Text(
-                            homeController.wallets[homeController.currentWalletIndex.value].walletSymbol!,
+                            homeController.wallets[homeController.currentWalletIndex.value].walletSymbol ?? "",
                             style: const TextStyle(
                                 color: Colors.red,
                                 fontSize: 22,
@@ -77,7 +77,7 @@ class _CardWidgetState extends State<TopCardWidget> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 7),
-                            child: Text(homeController.wallets[homeController.currentWalletIndex.value].expenseTotal!,
+                            child: Text(double.parse(homeController.wallets[homeController.currentWalletIndex.value].expenseTotal!).toStringAsFixed(0),
                                 style: GoogleFonts.daysOne(
                                     textStyle: const TextStyle(
                                   fontSize: 32,

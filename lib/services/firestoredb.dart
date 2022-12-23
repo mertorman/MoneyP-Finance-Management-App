@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:moneyp/feature/home/model/incomes_model.dart';
 import 'package:moneyp/feature/home/model/list_item_model.dart';
@@ -231,7 +229,7 @@ class FireStoreDb {
     }
   }
 
-   Future<List<IncomesModel>> statsGetIncomes(
+  Future<List<IncomesModel>> statsGetIncomes(
       String uid, String currentWalletDoc) async {
     DateTime currentDate = DateTime.now();
     DateTime queryDate = currentDate.subtract(Duration(days: 30));
@@ -255,5 +253,19 @@ class FireStoreDb {
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<void> transactionDelete(String uid, String currentWalletDoc,
+      String transactionType, String transactionUid) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(uid)
+          .collection('wallets')
+          .doc(currentWalletDoc)
+          .collection(transactionType)
+          .doc(transactionUid)
+          .delete();
+    } catch (e) {}
   }
 }

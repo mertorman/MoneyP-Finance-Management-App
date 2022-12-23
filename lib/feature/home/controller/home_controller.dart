@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:moneyp/feature/home/model/expense_model.dart';
 import 'package:moneyp/feature/home/model/incomes_model.dart';
 import 'package:moneyp/feature/home/model/list_item_model.dart';
+
 import 'package:moneyp/feature/wallet_onboard/model/wallet_model.dart';
 import 'package:moneyp/services/dovizkurlari_service.dart';
 import 'package:moneyp/services/firestoredb.dart';
@@ -50,9 +51,13 @@ class HomeController extends GetxController with StateMixin {
   @override
   void onInit() async {
     super.onInit();
+
     change(null, status: RxStatus.loading());
-    walletList.bindStream(
-        FireStoreDb().walletStream(controller.firebaseUser.value!.uid));
+
+    walletList.bindStream(FireStoreDb().walletStream(
+      controller.firebaseUser.value!.uid,
+    ));
+
     await Future.delayed(Duration(milliseconds: 500));
     ever(walletList, walletLengthCalculate);
   }
@@ -62,12 +67,12 @@ class HomeController extends GetxController with StateMixin {
     super.onReady();
     await getDovizKurlari();
     await getUserData();
-    listBindStream();
+
+    await listBindStream();
     change(null, status: RxStatus.success());
   }
 
   listBindStream() {
-    
     expenseList.clear();
 
     expenseList.bindStream(FireStoreDb().expenseStream(
@@ -78,7 +83,6 @@ class HomeController extends GetxController with StateMixin {
     incomesList.bindStream(FireStoreDb().incomesStream(
         controller.firebaseUser.value!.uid,
         wallets[currentWalletIndex.value].walletType!));
-    
   }
 
   getUserData() async {
@@ -145,5 +149,23 @@ class HomeController extends GetxController with StateMixin {
       walletsLength.add(i);
       i++;
     });
+  }
+
+  walletUpdateOnTransaction(
+      String budget, String amount, String transactionType) async {
+    await FireStoreDb().addTransactionWalletUpdate(
+        controller.firebaseUser.value!.uid,
+        wallets[currentWalletIndex.value].walletType!,
+        budget,
+        amount,
+        transactionType);
+  }
+
+  transactionDelete(String transactionType, String transactionUid) async{
+    await FireStoreDb().transactionDelete(
+        controller.firebaseUser.value!.uid,
+        wallets[currentWalletIndex.value].walletType!,
+        transactionType,
+        transactionUid);
   }
 }

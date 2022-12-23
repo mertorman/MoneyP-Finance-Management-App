@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:moneyp/feature/home/controller/home_controller.dart';
 import 'package:moneyp/feature/wallet_onboard/controller/wallet_controller.dart';
 
 import '../../../services/firestoredb.dart';
@@ -14,36 +17,29 @@ class AuthController extends GetxService {
   RxBool walletIsEmpty = false.obs;
 
   @override
-  void onInit() async{
-   
+  void onInit() {
     super.onInit();
     firebaseUser = Rx<User?>(auth.currentUser);
     firebaseUser.bindStream(auth.authStateChanges());
-   
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-    //change(null, status: RxStatus.success());
-  //  firebaseUser = Rx<User?>(auth.currentUser);
-  //  firebaseUser.bindStream(auth.authStateChanges());
     ever(firebaseUser, _initialScreen);
   }
 
-  _initialScreen(User? user) async{
+
+
+  _initialScreen(User? user) async {
     if (user == null) {
-      Get.offAllNamed('/login');
+       Get.offAllNamed('/login');
     } else if (user != null && walletIsEmpty.value == true) {
       Get.offAllNamed('/walletonboard');
     } else if (user != null && walletIsEmpty.value == false) {
-      walletIsEmpty.value= await FireStoreDb().walletIsEmptyCheck(firebaseUser.value!.uid).then((value) => value);
-      if(walletIsEmpty.value){
-         Get.offAllNamed('/walletonboard');
-      }else{
-      Get.offAllNamed('/home');
+      walletIsEmpty.value = await FireStoreDb()
+          .walletIsEmptyCheck(firebaseUser.value!.uid)
+          .then((value) => value);
+      if (walletIsEmpty.value) {
+        Get.offAllNamed('/walletonboard');
+      } else {
+        Get.offAllNamed('/home');
       }
-
     }
   }
 
@@ -51,9 +47,7 @@ class AuthController extends GetxService {
     // change(null, status: RxStatus.loading());
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
-      //walletIsEmpty.value= await FireStoreDb().walletIsEmptyCheck(firebaseUser.value!.uid).then((value) => value);
     } catch (e) {
-      //change(null, status: RxStatus.success());
       Get.snackbar("About Login", "Login message",
           titleText: const Text('Login Failed.'));
     }
@@ -79,6 +73,12 @@ class AuthController extends GetxService {
   }
 
   void logOut() async {
-    await auth.signOut();
+
+    try {
+      await auth.signOut();
+    } catch (e) {
+      print('Başarisiz');
+      print(e);
+    }
   }
 }

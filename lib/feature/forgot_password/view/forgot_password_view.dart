@@ -4,14 +4,9 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:moneyp/product/constant/color_settings.dart';
 import 'package:kartal/kartal.dart';
 
-class ForgotPasswordView extends StatefulWidget {
+class ForgotPasswordView extends StatelessWidget {
   const ForgotPasswordView({super.key});
 
-  @override
-  State<ForgotPasswordView> createState() => _ForgotPasswordViewState();
-}
-
-class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
