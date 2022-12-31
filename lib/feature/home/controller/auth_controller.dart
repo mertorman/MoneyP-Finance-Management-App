@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:moneyp/feature/home/controller/home_controller.dart';
-import 'package:moneyp/feature/wallet_onboard/controller/wallet_controller.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../services/firestoredb.dart';
 
@@ -15,6 +12,7 @@ class AuthController extends GetxService {
   FirebaseFirestore db = FirebaseFirestore.instance;
   RxBool loggedIn = false.obs;
   RxBool walletIsEmpty = false.obs;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
 
   @override
   void onInit() {
@@ -24,11 +22,9 @@ class AuthController extends GetxService {
     ever(firebaseUser, _initialScreen);
   }
 
-
-
   _initialScreen(User? user) async {
     if (user == null) {
-       Get.offAllNamed('/login');
+      Get.offAllNamed('/login');
     } else if (user != null && walletIsEmpty.value == true) {
       Get.offAllNamed('/walletonboard');
     } else if (user != null && walletIsEmpty.value == false) {
@@ -60,6 +56,26 @@ class AuthController extends GetxService {
     });
   }
 
+  signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      UserCredential user =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      createUser(user.user!.uid, user.user!.email!, user.user!.displayName!);
+    } catch (e) {
+      throw (e);
+    }
+  }
+
   void signUp(String email, password, name) async {
     try {
       walletIsEmpty.value = true;
@@ -73,12 +89,22 @@ class AuthController extends GetxService {
   }
 
   void logOut() async {
-
     try {
+      await googleSignIn.signOut();
       await auth.signOut();
     } catch (e) {
       print('Başarisiz');
       print(e);
     }
+  }
+
+  Future resetEmail(String newEmail) async {
+   try{
+ firebaseUser.update((val) {
+      val!.updateEmail(newEmail).then((value) => print('Success!'));
+    });
+   }catch(e){
+
+   }
   }
 }

@@ -119,7 +119,6 @@ class LoginPage extends StatelessWidget {
                 onPressed: () async {
                   controller.signIn(_usernameController.text.trim(),
                       _passwordController.text.trim());
-                
                 },
                 child: Text("Login"),
                 style: ElevatedButton.styleFrom(
@@ -154,8 +153,10 @@ class LoginPage extends StatelessWidget {
                   Expanded(
                     child: SignInButton(
                       Buttons.Google,
-                      text: "Sign up with Google",
-                      onPressed: () {},
+                      text: "Sign in with Google",
+                      onPressed: () async {
+                        await controller.signInWithGoogle();
+                      },
                     ),
                   ),
                 ],

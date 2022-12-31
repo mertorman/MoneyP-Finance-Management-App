@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttermoji/fluttermojiCircleAvatar.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:moneyp/feature/home/components/list_item_widget.dart';
@@ -156,7 +157,6 @@ AuthController authController = Get.find<AuthController>();
 HomeController homeController = Get.find();
 
 class _HomePageState extends State<HomePage> {
-
   @override
   Widget build(BuildContext context) {
     return homeController.obx(
@@ -180,29 +180,43 @@ class _HomePageState extends State<HomePage> {
                       DrawerHeader(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            CircleAvatar(
-                              radius: 50,
-                              backgroundImage:
-                                  AssetImage('assets/images/pp3.jpg'),
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.height * 0.13,
+                              height: MediaQuery.of(context).size.width * 0.215,
+                              decoration: BoxDecoration(
+                                  color: Colors.white70,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                      color: Colors.blue.shade300, width: 5)),
+                              child: FluttermojiCircleAvatar(
+                                backgroundColor: Colors.transparent,
+                                radius: 45,
+                              ),
                             ),
-                            SizedBox(
-                              height: 10,
+                            Obx(
+                              () {
+                                return Text(
+                                  '${homeController.homeModelValue.name}',
+                                  style: GoogleFonts.poppins(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
+                                );
+                              },
                             ),
-                            Text(
-                              'Mert',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
-                            )
                           ],
                         ),
                       ),
                       Expanded(
                         child: ListView(
                           children: [
-                            const ListTile(
+                            ListTile(
+                              onTap: () {
+                                setState(() {
+                                  value = 0;
+                                });
+                              },
                               leading: Icon(
                                 Icons.home,
                                 color: Colors.white,
@@ -309,15 +323,19 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           IconButton(
-                            icon: Icon(Icons.home_outlined),
-                            onPressed: () {},
+                            icon: Icon(Icons.account_balance_wallet_outlined),
+                            onPressed: () {
+                              Get.toNamed('/wallets');
+                            },
                           ),
                           const SizedBox(width: 48.0),
                           IconButton(
                             icon: const Icon(
-                              Icons.person,
+                              Icons.query_stats_outlined,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.toNamed('/stats');
+                            },
                           ),
                         ],
                       ),
@@ -366,50 +384,53 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       actions: [
-                        Obx(
-                          () => Row(
-                            children: [
-                              AnimatedToggleSwitch<int>.rolling(
-                                innerColor: Colors.transparent,
-                                borderColor: Colors.transparent,
-                                iconOpacity: 0.3,
-                                current:
-                                    homeController.currentWalletLastIndex.value,
-                                values: homeController.walletsLength,
-                                onChanged: (i) async {
-                                  int lastIndex = homeController
-                                      .currentWalletLastIndex.value;
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5),
+                          child: Obx(
+                            () => Row(
+                              children: [
+                                AnimatedToggleSwitch<int>.rolling(
+                                  innerColor: Colors.transparent,
+                                  borderColor: Colors.transparent,
+                                  iconOpacity: 0.3,
+                                  current: homeController
+                                      .currentWalletLastIndex.value,
+                                  values: homeController.walletsLength,
+                                  onChanged: (i) async {
+                                    int lastIndex = homeController
+                                        .currentWalletLastIndex.value;
 
-                                  homeController.currentWalletLastIndex.value =
-                                      i;
-                                  QuickAlert.show(
-                                    context: context,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.75,
-                                    type: QuickAlertType.confirm,
-                                    text:
-                                        "Do you want to go '${homeController.wallets[homeController.currentWalletLastIndex.value].walletType}' account?",
-                                    confirmBtnText: 'Yes',
-                                    cancelBtnText: 'No',
-                                    confirmBtnColor: Colors.green.shade400,
-                                    onConfirmBtnTap: () {
-                                      homeController.currentWalletIndex.value =
-                                          i;
-                                      homeController.listBindStream();
-                                      Get.back();
-                                    },
-                                    onCancelBtnTap: () {
-                                      homeController.currentWalletLastIndex
-                                          .value = lastIndex;
-                                      Get.back();
-                                    },
-                                  );
-                                },
-                                iconBuilder: rollingIconBuilder,
-                                indicatorColor: Colors.green.withOpacity(0.8),
-                                height: 40,
-                              ),
-                            ],
+                                    homeController
+                                        .currentWalletLastIndex.value = i;
+                                    QuickAlert.show(
+                                      context: context,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.75,
+                                      type: QuickAlertType.confirm,
+                                      text:
+                                          "Do you want to go '${homeController.wallets[homeController.currentWalletLastIndex.value].walletType}' account?",
+                                      confirmBtnText: 'Yes',
+                                      cancelBtnText: 'No',
+                                      confirmBtnColor: Colors.green.shade400,
+                                      onConfirmBtnTap: () {
+                                        homeController
+                                            .currentWalletIndex.value = i;
+                                        homeController.listBindStream();
+                                        Get.back();
+                                      },
+                                      onCancelBtnTap: () {
+                                        homeController.currentWalletLastIndex
+                                            .value = lastIndex;
+                                        Get.back();
+                                      },
+                                    );
+                                  },
+                                  iconBuilder: rollingIconBuilder,
+                                  indicatorColor: Colors.green.withOpacity(0.8),
+                                  height: 40,
+                                ),
+                              ],
+                            ),
                           ),
                         )
                       ],
@@ -455,9 +476,9 @@ class _HomePageState extends State<HomePage> {
                                           () {
                                             return Text(
                                               'Hello ${homeController.homeModelValue.name}',
-                                              style: const TextStyle(
+                                              style: GoogleFonts.poppins(
                                                   color: Colors.white,
-                                                  fontSize: 20),
+                                                  fontSize: 18),
                                             );
                                           },
                                         ),
@@ -476,9 +497,11 @@ class _HomePageState extends State<HomePage> {
                                                     .currentWalletIndex.value]
                                                 .walletSymbol! +
                                             double.parse(homeController
-                                                .wallets[homeController
-                                                    .currentWalletIndex.value]
-                                                .budget!).toStringAsFixed(0),
+                                                    .wallets[homeController
+                                                        .currentWalletIndex
+                                                        .value]
+                                                    .budget!)
+                                                .toStringAsFixed(0),
                                         style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 42,

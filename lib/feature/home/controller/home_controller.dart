@@ -72,6 +72,13 @@ class HomeController extends GetxController with StateMixin {
     change(null, status: RxStatus.success());
   }
 
+  @override
+  void onClose() {
+    walletList.close();
+    expenseList.close();
+    incomesList.close();
+  }
+
   listBindStream() {
     expenseList.clear();
 
@@ -161,7 +168,7 @@ class HomeController extends GetxController with StateMixin {
         transactionType);
   }
 
-  transactionDelete(String transactionType, String transactionUid) async{
+  transactionDelete(String transactionType, String transactionUid) async {
     await FireStoreDb().transactionDelete(
         controller.firebaseUser.value!.uid,
         wallets[currentWalletIndex.value].walletType!,

@@ -28,7 +28,7 @@ class AppRoutes {
       page: () => SignUp(),
     ),
     GetPage(name: '/home', page: () => const HomePage(), binding: HomePageBinding()),
-    GetPage(name: '/profile', page: () => const ProfilePage()),
+    GetPage(name: '/profile', page: () => ProfilePage()),
     GetPage(name: '/walletonboard', page: () => WalletOnboardPage(),binding: WalletOnboardBinding()),
     GetPage(name: '/stats', page:() => const StatsPage(),binding: StatsPageBinding()),
     GetPage(name: '/wallets', page: () =>  WalletsPage(),binding: WalletHomepageBinding()),
