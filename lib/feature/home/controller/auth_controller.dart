@@ -99,12 +99,10 @@ class AuthController extends GetxService {
   }
 
   Future resetEmail(String newEmail) async {
-   try{
- firebaseUser.update((val) {
-      val!.updateEmail(newEmail).then((value) => print('Success!'));
-    });
-   }catch(e){
-
-   }
+    try {
+      firebaseUser.update((val) {
+        val!.updateEmail(newEmail).then((value) => print('Success!'));
+      });
+    } catch (e) {}
   }
 }

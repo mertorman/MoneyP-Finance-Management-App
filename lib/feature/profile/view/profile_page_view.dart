@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttermoji/fluttermoji.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:moneyp/feature/home/controller/auth_controller.dart';
 import 'package:moneyp/feature/home/controller/home_controller.dart';
 import 'package:moneyp/feature/profile/view/profile_image.dart';
+import 'package:quickalert/quickalert.dart';
 import '../../../product/constant/color_settings.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -163,7 +165,7 @@ class ProfilePage extends StatelessWidget {
                           width: 10,
                         ),
                         Text(
-                          'Edit Profile',
+                          'View Profile',
                           style: GoogleFonts.poppins(fontSize: 13),
                         ),
                         SizedBox(
@@ -200,6 +202,7 @@ class ProfilePage extends StatelessWidget {
                                         Expanded(
                                             child: TextField(
                                           controller: nameController,
+                                          enabled: false,
                                           onTap: () {
                                             nameController.clear();
                                           },
@@ -235,6 +238,7 @@ class ProfilePage extends StatelessWidget {
                                             child: TextField(
                                           controller: emailController,
                                           style: GoogleFonts.poppins(),
+                                          enabled: false,
                                           decoration: InputDecoration.collapsed(
                                             hintText: 'E-Mail',
                                             border: InputBorder.none,
@@ -244,50 +248,19 @@ class ProfilePage extends StatelessWidget {
                           const SizedBox(
                             height: 10,
                           ),
-                          Container(
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              height: MediaQuery.of(context).size.height * 0.07,
-                              decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 245, 245, 245),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 10, right: 18, top: 10, bottom: 10),
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const Icon(LineAwesomeIcons.fingerprint,
-                                            color: Colors.grey),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Expanded(
-                                            child: TextField(
-                                          controller: passwordController,
-                                          style: GoogleFonts.poppins(),
-                                          decoration: InputDecoration.collapsed(
-                                            hintText: 'Password',
-                                            border: InputBorder.none,
-                                          ),
-                                        )),
-                                      ]))),
                         ],
                       )),
                     ),
                     Spacer(),
-                    ElevatedButton(
-                      onPressed: () {
-                        authController.resetEmail('mertorman@gmail.com');
-                      },
-                      child: Text('Save',
-                          style: GoogleFonts.poppins(fontSize: 18)),
-                      style: ElevatedButton.styleFrom(
-                          primary: Colors.blue,
-                          minimumSize: Size(
-                              MediaQuery.of(context).size.width * 0.85, 60),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10))),
+                    AnimatedToggleSwitch<int>.rolling(
+                      innerColor: Colors.transparent,
+                      borderColor: Colors.transparent,
+                      iconOpacity: 1.0,
+                      current: 4,
+                      values: [0, 1, 2, 3, 4],
+                      iconBuilder: rollingIconBuilder,
+                      indicatorColor: Colors.transparent,
+                      height: 40,
                     ),
                     const Spacer(
                       flex: 2,
@@ -352,5 +325,49 @@ class ProfilePage extends StatelessWidget {
             ),
           )
         ]));
+  }
+
+  Widget rollingIconBuilder(int value, Size iconSize, bool foreground) {
+    List<String> icons = [];
+    icons.add(
+      'assets/images/moneyicons/lira.png',
+    );
+
+    icons.add(
+      'assets/images/moneyicons/dollar.png',
+    );
+    icons.add(
+      'assets/images/moneyicons/euro.png',
+    );
+    icons.add(
+      'assets/images/moneyicons/lira.png',
+    );
+
+    icons.add(
+      'assets/images/moneyicons/lira.png',
+    );
+
+    List<Color> renkler = [
+      Colors.transparent,
+      Colors.grey,
+      Colors.grey,
+      Colors.grey,
+      Colors.transparent
+    ];
+    homeController.wallets.forEach((element) {
+      if (element.walletType == 'Dollar Wallet') {
+        renkler[1] = Colors.green;
+      } else if (element.walletType == 'Euro Wallet') {
+        renkler[2] = Colors.green;
+      } else if (element.walletType == 'Lira Wallet') {
+        renkler[3] = Colors.green;
+      }
+    });
+
+    return ImageIcon(
+      AssetImage(icons[value]),
+      color: renkler[value],
+      size: iconSize.shortestSide,
+    );
   }
 }
