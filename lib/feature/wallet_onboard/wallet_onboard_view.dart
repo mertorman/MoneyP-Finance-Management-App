@@ -7,6 +7,8 @@ import 'package:moneyp/feature/wallet_onboard/controller/wallet_controller.dart'
 
 import 'package:lottie/lottie.dart';
 import 'package:moneyp/product/constant/color_settings.dart';
+import 'package:quickalert/quickalert.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class WalletOnboardPage extends StatefulWidget {
   WalletOnboardPage({super.key});
@@ -23,6 +25,8 @@ class _WalletOnboardPageState extends State<WalletOnboardPage> {
     TextEditingController(),
     TextEditingController()
   ];
+
+  int enabledWalletAmount = 0;
 
   @override
   void dispose() {
@@ -94,7 +98,7 @@ class _WalletOnboardPageState extends State<WalletOnboardPage> {
                               ? 0.9
                               : 0.65,
                           child: Container(
-                            margin: EdgeInsets.only(top: 13),
+                            margin: const EdgeInsets.only(top: 13),
                             width: MediaQuery.of(context).size.width * 0.85,
                             height: MediaQuery.of(context).size.height * 0.09,
                             decoration: BoxDecoration(
@@ -108,7 +112,7 @@ class _WalletOnboardPageState extends State<WalletOnboardPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  SizedBox(),
+                                  const SizedBox(),
                                   Container(
                                       width: 40,
                                       height: 40,
@@ -122,7 +126,7 @@ class _WalletOnboardPageState extends State<WalletOnboardPage> {
                                       textAlign: TextAlign.center,
                                       keyboardType: TextInputType.number,
                                       decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.symmetric(
+                                          contentPadding: const EdgeInsets.symmetric(
                                               horizontal: 10),
                                           label: Center(
                                               child: Text(
@@ -159,6 +163,14 @@ class _WalletOnboardPageState extends State<WalletOnboardPage> {
 
                                         walletController
                                             .wallets[index].enabled = value;
+
+                                        if (value) {
+                                          enabledWalletAmount =
+                                              enabledWalletAmount + 1;
+                                        } else {
+                                          enabledWalletAmount =
+                                              enabledWalletAmount - 1;
+                                        }
                                       });
                                     },
                                   ),
@@ -196,11 +208,19 @@ class _WalletOnboardPageState extends State<WalletOnboardPage> {
             Center(
               child: ElevatedButton(
                 onPressed: () async {
-                  await walletController.selectedWallet(_controllers);
-                  await walletController.addWallets(
-                      authController.firebaseUser.value!.uid,
-                      walletController.selectedWallets);
-                  Get.offAllNamed('/home');
+                  if (enabledWalletAmount != 0) {
+                    await walletController.selectedWallet(_controllers);
+                    await walletController.addWallets(
+                        authController.firebaseUser.value!.uid,
+                        walletController.selectedWallets);
+                    Get.offAllNamed('/home');
+                  } else {
+                    QuickAlert.show(
+                        context: context,
+                        type: QuickAlertType.warning,
+                        text:
+                            'Please enable at least 1 wallet in your account.');
+                  }
                 },
                 child: Text(
                   'Finished',
@@ -215,7 +235,7 @@ class _WalletOnboardPageState extends State<WalletOnboardPage> {
                         MediaQuery.of(context).size.height * 0.05)),
               ),
             ),
-            SizedBox()
+            const SizedBox()
           ],
         ),
       ),

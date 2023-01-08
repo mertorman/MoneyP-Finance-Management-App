@@ -8,6 +8,7 @@ import 'package:moneyp/feature/home/controller/home_controller.dart';
 import 'package:moneyp/feature/wallet_onboard/controller/wallet_controller.dart';
 import 'package:moneyp/feature/wallet_onboard/model/wallet_model.dart';
 import 'package:moneyp/product/constant/color_settings.dart';
+import 'package:quickalert/quickalert.dart';
 
 class WalletsPage extends StatefulWidget {
   const WalletsPage({super.key});
@@ -31,6 +32,19 @@ class _WalletsPageState extends State<WalletsPage> {
       c.dispose();
     }
     super.dispose();
+  }
+
+  late int enabledWalletAmount2;
+
+  enabledWalletAmount() {
+    enabledWalletAmount2 = homeController.wallets.length;
+  }
+
+  @override
+  void initState() {
+    enabledWalletAmount();
+    print(enabledWalletAmount2);
+    super.initState();
   }
 
   int value = 0;
@@ -191,6 +205,17 @@ class _WalletsPageState extends State<WalletsPage> {
                                                   walletController
                                                       .wallets[index]
                                                       .enabled = value;
+                                                
+                                                  if (value) {
+                                                    enabledWalletAmount2 =
+                                                        enabledWalletAmount2 +
+                                                            1;
+                                                  } else {
+                                                    enabledWalletAmount2 =
+                                                        enabledWalletAmount2 -
+                                                            1;
+                                                  }
+                                                    
                                                 });
                                               },
                                             ),
@@ -233,25 +258,34 @@ class _WalletsPageState extends State<WalletsPage> {
                     Center(
                       child: ElevatedButton(
                         onPressed: () async {
-                          homeController.currentWalletIndex.value = 0;
-                          homeController.currentWalletLastIndex.value = 0;
+                          if (enabledWalletAmount2 != 0) {
+                            homeController.currentWalletIndex.value = 0;
+                            homeController.currentWalletLastIndex.value = 0;
 
-                          walletController.change(null,
-                              status: RxStatus.loading());
+                            walletController.change(null,
+                                status: RxStatus.loading());
 
-                          walletController.selectedUpdateWallets.clear();
+                            walletController.selectedUpdateWallets.clear();
 
-                          walletController.updateWalletsTextField(_controllers);
+                            walletController
+                                .updateWalletsTextField(_controllers);
 
-                          await walletController.walletUpdate(
-                              authController.firebaseUser.value!.uid,
-                              walletController.selectedUpdateWallets);
-                          homeController.listBindStream();
+                            await walletController.walletUpdate(
+                                authController.firebaseUser.value!.uid,
+                                walletController.selectedUpdateWallets);
+                            homeController.listBindStream();
 
-                          walletController.change(null,
-                              status: RxStatus.success());
+                            walletController.change(null,
+                                status: RxStatus.success());
 
-                          Get.back();
+                            Get.back();
+                          } else {
+                            QuickAlert.show(
+                                context: context,
+                                type: QuickAlertType.warning,
+                                text:
+                                    'Please enable at least 1 wallet in your account.');
+                          }
                         },
                         child: Text(
                           'Save',
