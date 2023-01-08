@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:moneyp/feature/home/controller/home_controller.dart';
@@ -34,10 +35,9 @@ class ListItem extends StatelessWidget {
       children: [
         Text(
           info,
-          style: TextStyle(
+          style: GoogleFonts.poppins(
               color: ColorSettings.themeColor.shade200,
-              fontSize: 16,
-              fontFamily: 'OpenSans',
+              fontSize: 14,
               fontWeight: FontWeight.w400),
         ),
         const SizedBox(
@@ -45,10 +45,7 @@ class ListItem extends StatelessWidget {
         ),
         Text(
           value,
-          style: const TextStyle(
-              fontSize: 14,
-              fontFamily: 'OpenSans',
-              fontWeight: FontWeight.w500),
+          style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500),
         ),
       ],
     );
@@ -119,8 +116,8 @@ class ListItem extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             groupText,
-            style: TextStyle(
-                color: Colors.grey.shade400,
+            style: GoogleFonts.poppins(
+                color: Colors.grey.shade500,
                 fontWeight: FontWeight.bold,
                 fontSize: 14.6),
             textAlign: TextAlign.center,
@@ -146,7 +143,7 @@ class ListItem extends StatelessWidget {
               height: 36,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(24),
-                  color: Colors.blue.withAlpha(80)),
+                  color: Colors.blue.withAlpha(200)),
               child: Material(
                 borderRadius: BorderRadius.circular(24),
                 type: MaterialType.transparency,
@@ -252,7 +249,7 @@ class ListItem extends StatelessWidget {
                             await homeController.transactionDelete(
                                 'expenses', listItemId);
                           } else {
-                             String amount = (double.parse(homeController
+                            String amount = (double.parse(homeController
                                         .wallets[homeController
                                             .currentWalletIndex.value]
                                         .incomesTotal!) -

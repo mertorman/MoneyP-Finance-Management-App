@@ -62,9 +62,10 @@ class _StatsPageState extends State<StatsPage> {
               title: Text(
                 'My Stats',
                 style: GoogleFonts.poppins(
-                    color: Colors.blueAccent.shade100,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 21),
+                  color: Colors.blue.shade300,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 24,
+                ),
               ),
               centerTitle: true,
             ),
@@ -85,7 +86,7 @@ class _StatsPageState extends State<StatsPage> {
                     ),
                     Center(
                       child: Container(
-                        width: MediaQuery.of(context).size.width * 0.82,
+                        width: MediaQuery.of(context).size.width * 0.88,
                         height: MediaQuery.of(context).size.height * 0.052,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
@@ -187,12 +188,12 @@ class _StatsPageState extends State<StatsPage> {
                       height: 20,
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height*0.3,
+                      width: MediaQuery.of(context).size.width * 0.88,
+                      height: MediaQuery.of(context).size.height * 0.3,
                       child: Column(
                         children: [
                           Flexible(
                             child: TabBarView(
-                              
                                 physics: NeverScrollableScrollPhysics(),
                                 controller: statsController.tabController,
                                 children: [
@@ -243,9 +244,7 @@ class _StatsPageState extends State<StatsPage> {
                 color: Colors.white.withOpacity(0.8),
                 borderRadius: BorderRadius.circular(15)),
             child: RoundedExpansionTile(
-             onTap: () {
-               
-             },
+              onTap: () {},
               trailing: Container(
                 width: 36,
                 height: 36,
@@ -478,8 +477,17 @@ class _StatsPageState extends State<StatsPage> {
   Row infoExpenses(String category, String amount, String walletSymbol) {
     return Row(
       children: [
-        Text("In the '$category' category =>",
+        Text("In the '$category' category ",
             style: GoogleFonts.poppins(fontSize: 14.5)),
+        Icon(
+          Icons.arrow_circle_right,
+          color: Colors.blue.shade300,
+          size: 24.0,
+          semanticLabel: 'Text to announce in accessibility modes',
+        ),
+        SizedBox(
+          width: 4,
+        ),
         Text(
           "'$amount$walletSymbol' ",
           style:
@@ -494,8 +502,17 @@ class _StatsPageState extends State<StatsPage> {
       String type, String amount, String walletSymbol, Color color) {
     return Row(
       children: [
-        Text("The amount of your $type: => ",
+        Text("The amount of your $type ",
             style: GoogleFonts.poppins(fontSize: 14.5)),
+        Icon(
+          Icons.arrow_circle_right,
+          color: Colors.blue.shade300,
+          size: 24.0,
+          semanticLabel: 'Text to announce in accessibility modes',
+        ),
+        SizedBox(
+          width: 4,
+        ),
         Text(
           "'$amount$walletSymbol' ",
           style: GoogleFonts.poppins(fontSize: 14.5, color: color),

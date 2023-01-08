@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyp/feature/home/controller/auth_controller.dart';
 import 'package:moneyp/feature/wallet_onboard/controller/wallet_controller.dart';
 
 import 'package:lottie/lottie.dart';
+import 'package:moneyp/product/constant/color_settings.dart';
 
 class WalletOnboardPage extends StatefulWidget {
   WalletOnboardPage({super.key});
@@ -35,8 +37,8 @@ class _WalletOnboardPageState extends State<WalletOnboardPage> {
     return Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(colors: [
-        Color(0xFFE0EAFC),
-        Color(0xFFCFDEF3),
+        Color.fromARGB(255, 255, 255, 255),
+        Color.fromARGB(246, 211, 226, 247),
       ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -57,12 +59,10 @@ class _WalletOnboardPageState extends State<WalletOnboardPage> {
                     alignment: Alignment.topLeft,
                     child: Text(
                       "Welcome",
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          letterSpacing: 1.3,
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent.shade100),
+                      style: GoogleFonts.poppins(
+                          fontSize: 34,
+                          fontWeight: FontWeight.w700,
+                          color: ColorSettings.themeColor.shade200),
                     ),
                   ),
                   SizedBox(
@@ -70,10 +70,10 @@ class _WalletOnboardPageState extends State<WalletOnboardPage> {
                   ),
                   Text(
                     'To get started, please create at least 1 wallet in your account. (To activate the wallets you want to add, just click the button next to it.)',
-                    style: TextStyle(
-                        color: Colors.grey.shade500,
-                        fontSize: 16,
-                        letterSpacing: 1.5),
+                    style: GoogleFonts.poppins(
+                      color: Colors.grey.shade500,
+                      fontSize: 16,
+                    ),
                   ),
                 ],
               ),
@@ -125,29 +125,34 @@ class _WalletOnboardPageState extends State<WalletOnboardPage> {
                                           contentPadding: EdgeInsets.symmetric(
                                               horizontal: 10),
                                           label: Center(
-                                              child: Text('Enter Budget')),
+                                              child: Text(
+                                            'Enter budget',
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 16),
+                                          )),
                                           hintText: walletController
-                                                        .wallets[index]
-                                                        .walletSymbol,
+                                              .wallets[index].walletSymbol,
                                           hintTextDirection: TextDirection.rtl,
                                           border: OutlineInputBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(32))),
+                                                  BorderRadius.circular(10))),
                                     ),
                                   ),
                                   FlutterSwitch(
-                                    width: 73,
+                                    width: 76,
                                     height: 30,
                                     valueFontSize: 12.0,
-                                    toggleSize: 20.0,
+                                    toggleSize: 22.0,
                                     value: walletController
                                         .wallets[index].enabled!,
-                                    borderRadius: 30.0,
-                                    padding: 3.0,
+                                    borderRadius: 10.0,
+                                    padding: 4.0,
                                     showOnOff: true,
                                     activeText: 'Disable',
                                     inactiveText: 'Enable',
-                                    inactiveColor: Colors.grey.withOpacity(0.4),
+                                    inactiveColor:
+                                        Color.fromARGB(255, 134, 134, 134)
+                                            .withOpacity(0.8),
                                     onToggle: (value) {
                                       setState(() {
                                         //Kullanılan kütüphane gereği setState yapmak zorunlu olduğundan GetX kullanılamıyor.
@@ -192,20 +197,21 @@ class _WalletOnboardPageState extends State<WalletOnboardPage> {
               child: ElevatedButton(
                 onPressed: () async {
                   await walletController.selectedWallet(_controllers);
-                  await walletController
-                      .addWallets(authController.firebaseUser.value!.uid,walletController.selectedWallets);
+                  await walletController.addWallets(
+                      authController.firebaseUser.value!.uid,
+                      walletController.selectedWallets);
                   Get.offAllNamed('/home');
                 },
                 child: Text(
                   'Finished',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: GoogleFonts.poppins(
+                      fontSize: 14, fontWeight: FontWeight.w500),
                 ),
                 style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Colors.blueAccent.shade100.withOpacity(0.6),
+                    backgroundColor: ColorSettings.themeColor.shade200,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32)),
-                    minimumSize: Size(MediaQuery.of(context).size.width * 0.8,
+                        borderRadius: BorderRadius.circular(10)),
+                    minimumSize: Size(MediaQuery.of(context).size.width * 0.84,
                         MediaQuery.of(context).size.height * 0.05)),
               ),
             ),
@@ -216,5 +222,3 @@ class _WalletOnboardPageState extends State<WalletOnboardPage> {
     );
   }
 }
-
-
