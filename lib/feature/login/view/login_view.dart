@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kartal/kartal.dart';
 import 'package:lottie/lottie.dart';
 import 'package:moneyp/feature/forgot_password/view/forgot_password_view.dart';
@@ -50,23 +51,20 @@ class LoginPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Welcome Back",
-                    style: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
+                    "Welcome back",
+                    style: GoogleFonts.poppins(
+                        fontSize: 34,
+                        fontWeight: FontWeight.w700,
                         color: ColorSettings.themeColor.shade200),
                   ),
                   const SizedBox(
                     height: 8,
                   ),
-                  const Text(
-                      'I am so happy to see you. Please sign in to continue',
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
+                  Text('I am so happy to see you. Please sign in to continue',
+                      style: GoogleFonts.poppins(
                           color: Color(0xff565656),
                           letterSpacing: 1,
-                          fontSize: 17)),
+                          fontSize: 16)),
                 ],
               ),
               Column(
@@ -83,6 +81,7 @@ class LoginPage extends StatelessWidget {
                           child: TextField(
                         controller: _usernameController,
                         decoration: InputDecoration(hintText: "Enter email"),
+                        style: GoogleFonts.poppins(fontSize: 16),
                       ))
                     ],
                   ),
@@ -96,10 +95,11 @@ class LoginPage extends StatelessWidget {
                       ),
                       Expanded(
                           child: TextField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(hintText: "Enter password"),
-                      ))
+                              controller: _passwordController,
+                              obscureText: true,
+                              decoration:
+                                  InputDecoration(hintText: "Enter password"),
+                              style: GoogleFonts.poppins(fontSize: 16)))
                     ],
                   ),
                 ],
@@ -111,7 +111,8 @@ class LoginPage extends StatelessWidget {
                     onPressed: () {
                       Get.to(() => const ForgotPasswordView());
                     },
-                    child: const Text("Forgot Password?"),
+                    child: Text("Forgot Password?",
+                        style: GoogleFonts.poppins(fontSize: 16)),
                   )
                 ],
               ),
@@ -120,16 +121,18 @@ class LoginPage extends StatelessWidget {
                   controller.signIn(_usernameController.text.trim(),
                       _passwordController.text.trim());
                 },
-                child: Text("Login"),
+                child: Text("Login",
+                    style: GoogleFonts.poppins(
+                        fontSize: 16, fontWeight: FontWeight.w500)),
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32)),
+                        borderRadius: BorderRadius.circular(10)),
                     primary: ColorSettings.themeColor.shade200,
                     minimumSize: Size(MediaQuery.of(context).size.width, 50)),
               ),
               Row(
                 mainAxisSize: MainAxisSize.max,
-                children: const [
+                children: [
                   Expanded(
                       child: Divider(
                     thickness: 1,
@@ -138,6 +141,7 @@ class LoginPage extends StatelessWidget {
                   SizedBox(width: 10),
                   Text(
                     "Or",
+                    style: GoogleFonts.poppins(fontSize: 16),
                   ),
                   SizedBox(width: 10),
                   Expanded(
@@ -166,11 +170,12 @@ class LoginPage extends StatelessWidget {
                 child: RichText(
                     text: TextSpan(
                   children: [
-                    const TextSpan(
+                    TextSpan(
                         text: "Don't have an account ? ",
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                             color: Colors.black54,
-                            fontWeight: FontWeight.w600)),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400)),
                     TextSpan(
                         text: "Register here!",
                         style: Theme.of(context).textTheme.button!.apply(

@@ -33,12 +33,12 @@ List<PieChartSectionData> getGrafikIsEmptyData() {
   return List.generate(
       1,
       (index) => PieChartSectionData(
-            color: Colors.blue.withOpacity(0.5),
+            color: Colors.blue.withOpacity(1),
             value: null,
             title: 'Expense not found',
             radius: 70,
             titleStyle: GoogleFonts.poppins(
-                color: Colors.white, fontWeight: FontWeight.w500),
+                color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14),
             titlePositionPercentageOffset: 0,
           ));
 }
@@ -201,7 +201,7 @@ class _HomePageState extends State<HomePage> {
                                   style: GoogleFonts.poppins(
                                       color: Colors.white,
                                       fontSize: 18,
-                                      fontWeight: FontWeight.w600),
+                                      fontWeight: FontWeight.w700),
                                 );
                               },
                             ),
@@ -223,8 +223,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                               title: Text(
                                 'Home',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 17),
+                                style: GoogleFonts.poppins(
+                                    color: Colors.white, fontSize: 16),
                               ),
                             ),
                             ListTile(
@@ -237,10 +237,10 @@ class _HomePageState extends State<HomePage> {
                                 Icons.person,
                                 color: Colors.white,
                               ),
-                              title: const Text(
+                              title: Text(
                                 'Profile',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 17),
+                                style: GoogleFonts.poppins(
+                                    color: Colors.white, fontSize: 16),
                               ),
                             ),
                             ListTile(
@@ -253,8 +253,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                               title: Text(
                                 'My Wallets',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 17),
+                                style: GoogleFonts.poppins(
+                                    color: Colors.white, fontSize: 16),
                               ),
                             ),
                             ListTile(
@@ -267,8 +267,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                               title: Text(
                                 'Stats',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 17),
+                                style: GoogleFonts.poppins(
+                                    color: Colors.white, fontSize: 16),
                               ),
                             ),
                             ListTile(
@@ -279,10 +279,10 @@ class _HomePageState extends State<HomePage> {
                                 Icons.logout,
                                 color: Colors.white,
                               ),
-                              title: const Text(
+                              title: Text(
                                 'Log out',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 17),
+                                style: GoogleFonts.poppins(
+                                    color: Colors.white, fontSize: 16),
                               ),
                             ),
                           ],
@@ -471,7 +471,10 @@ class _HomePageState extends State<HomePage> {
                                           MainAxisAlignment.center,
                                       children: [
                                         const Icon(Icons.waving_hand_outlined,
-                                            color: Colors.white),
+                                            color: Colors.white, size: 26),
+                                        SizedBox(
+                                          width: 6,
+                                        ),
                                         Obx(
                                           () {
                                             return Text(
@@ -502,9 +505,9 @@ class _HomePageState extends State<HomePage> {
                                                         .value]
                                                     .budget!)
                                                 .toStringAsFixed(0),
-                                        style: const TextStyle(
+                                        style: GoogleFonts.poppins(
                                             color: Colors.white,
-                                            fontSize: 42,
+                                            fontSize: 40,
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ),
@@ -660,7 +663,7 @@ class _HomePageState extends State<HomePage> {
                                                     Icons
                                                         .arrow_forward_rounded)),
                                             Text("Expenses",
-                                                style: GoogleFonts.daysOne(
+                                                style: GoogleFonts.poppins(
                                                   textStyle: TextStyle(
                                                       color: homeController
                                                               .isExpensesOnTap
@@ -686,7 +689,7 @@ class _HomePageState extends State<HomePage> {
                                         () => Row(
                                           children: [
                                             Text("Incomes",
-                                                style: GoogleFonts.daysOne(
+                                                style: GoogleFonts.poppins(
                                                   textStyle: TextStyle(
                                                       color: homeController
                                                               .isExpensesOnTap

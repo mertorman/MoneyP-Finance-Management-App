@@ -60,12 +60,12 @@ class ProfilePage extends StatelessWidget {
               color: Colors.white,
               iconSize: 40),
           centerTitle: true,
-          title: const Text(
+          title: Text(
             'Profile',
-            style: TextStyle(
+            style: GoogleFonts.poppins(
               color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 28,
+              fontWeight: FontWeight.w800,
+              fontSize: 24,
             ),
           ),
           backgroundColor: Colors.blue,
@@ -78,8 +78,9 @@ class ProfilePage extends StatelessWidget {
             heightFactor: 0.3,
             child: Container(
               decoration: const BoxDecoration(
-                  borderRadius:
-                      BorderRadius.only(bottomLeft: Radius.circular(20)),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(0),
+                      bottomRight: Radius.circular(0)),
                   color: Colors.blue),
               child: Padding(
                 padding: const EdgeInsets.only(top: 40),
@@ -105,7 +106,7 @@ class ProfilePage extends StatelessWidget {
                 color: Colors.white,
                 elevation: 3,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
+                    borderRadius: BorderRadius.circular(10)),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
@@ -166,7 +167,8 @@ class ProfilePage extends StatelessWidget {
                         ),
                         Text(
                           'View Profile',
-                          style: GoogleFonts.poppins(fontSize: 13),
+                          style: GoogleFonts.poppins(
+                              fontSize: 14, fontWeight: FontWeight.w600),
                         ),
                         SizedBox(
                           width: 10,

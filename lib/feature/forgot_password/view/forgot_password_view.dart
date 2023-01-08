@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyp/product/constant/color_settings.dart';
 import 'package:kartal/kartal.dart';
 
@@ -20,8 +21,9 @@ class ForgotPasswordView extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back_ios_new_outlined),
-          color: Colors.black,
+          icon: Icon(Icons.chevron_left),
+          color: ColorSettings.themeColor.shade200,
+          iconSize: 34,
         ),
       ),
       backgroundColor: Colors.white,
@@ -49,39 +51,40 @@ class ForgotPasswordView extends StatelessWidget {
               ),
             ),
             Text(
-              'Forgot\nPassword',
-              style: TextStyle(
-                  color: ColorSettings.themeColor.shade200,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold),
+              'Forgot Password',
+              style: GoogleFonts.poppins(
+                  fontSize: 34,
+                  fontWeight: FontWeight.w700,
+                  color: ColorSettings.themeColor.shade200),
             ),
-            const Text(
+            Text(
               'Dont worry if you forgot your password! You can easily reset your password by entering your e-mail address in the box below.',
-              style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600),
+              style: GoogleFonts.poppins(
+                  color: Color(0xff565656), letterSpacing: 1, fontSize: 16),
             ),
             Row(
               mainAxisSize: MainAxisSize.max,
-              children: const [
+              children: [
                 Icon(Icons.mail_lock_outlined),
                 SizedBox(
                   width: 12,
                 ),
                 Expanded(
                     child: TextField(
-                  decoration: InputDecoration(hintText: 'Enter e-mail'),
+                  style: GoogleFonts.poppins(fontSize: 16),
+                  decoration: InputDecoration(hintText: 'Enter email'),
                 ))
               ],
             ),
             const SizedBox(),
             ElevatedButton(
               onPressed: () {},
-              child: Text("Submit"),
+              child: Text("Submit",
+                  style: GoogleFonts.poppins(
+                      fontSize: 16, fontWeight: FontWeight.w500)),
               style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(32)),
+                      borderRadius: BorderRadius.circular(10)),
                   primary: ColorSettings.themeColor.shade200,
                   minimumSize: Size(MediaQuery.of(context).size.width, 50)),
             ),

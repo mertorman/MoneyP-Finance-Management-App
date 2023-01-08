@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kartal/kartal.dart';
 import 'package:moneyp/feature/home/controller/auth_controller.dart';
 import 'package:moneyp/product/constant/color_settings.dart';
@@ -23,8 +24,8 @@ class SignUp extends GetWidget<AuthController> {
               Navigator.pop(context);
             },
             icon: Icon(Icons.chevron_left),
-            color: Colors.grey,
-            iconSize: 30),
+            color: ColorSettings.themeColor.shade200,
+            iconSize: 34),
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -52,10 +53,10 @@ class SignUp extends GetWidget<AuthController> {
               children: [
                 Text(
                   "Sign Up",
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: ColorSettings.themeColor.shade100),
+                  style: GoogleFonts.poppins(
+                      fontSize: 34,
+                      fontWeight: FontWeight.w700,
+                      color: ColorSettings.themeColor.shade200),
                 ),
               ],
             ),
@@ -74,6 +75,7 @@ class SignUp extends GetWidget<AuthController> {
                     ),
                     Expanded(
                         child: TextField(
+                      style: GoogleFonts.poppins(fontSize: 16),
                       controller: _emailController,
                       decoration: const InputDecoration(hintText: "Email"),
                     ))
@@ -92,6 +94,7 @@ class SignUp extends GetWidget<AuthController> {
                     ),
                     Expanded(
                         child: TextField(
+                      style: GoogleFonts.poppins(fontSize: 16),
                       controller: _passwordController,
                       obscureText: true,
                       decoration: const InputDecoration(hintText: "Password"),
@@ -101,7 +104,7 @@ class SignUp extends GetWidget<AuthController> {
                 const SizedBox(height: 15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Padding(
                       padding: EdgeInsets.only(top: 8.0),
                       child: Icon(Icons.lock_clock_outlined),
@@ -111,6 +114,7 @@ class SignUp extends GetWidget<AuthController> {
                     ),
                     Expanded(
                         child: TextField(
+                      style: GoogleFonts.poppins(fontSize: 16),
                       obscureText: true,
                       decoration: InputDecoration(hintText: "Confirm Password"),
                     ))
@@ -120,7 +124,7 @@ class SignUp extends GetWidget<AuthController> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                   const  Padding(
+                    const Padding(
                       padding: EdgeInsets.only(top: 8.0),
                       child: Icon(Icons.person_outline_outlined),
                     ),
@@ -129,6 +133,7 @@ class SignUp extends GetWidget<AuthController> {
                     ),
                     Expanded(
                         child: TextField(
+                      style: GoogleFonts.poppins(fontSize: 16),
                       controller: _nameController,
                       decoration: const InputDecoration(hintText: "Full name"),
                     ))
@@ -140,10 +145,12 @@ class SignUp extends GetWidget<AuthController> {
                     controller.signUp(_emailController.text,
                         _passwordController.text, _nameController.text);
                   },
-                  child: Text("Sign Up"),
+                  child: Text("Sign Up",
+                      style: GoogleFonts.poppins(
+                          fontSize: 16, fontWeight: FontWeight.w500)),
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(32)),
+                          borderRadius: BorderRadius.circular(10)),
                       primary: ColorSettings.themeColor.shade200,
                       minimumSize: Size(MediaQuery.of(context).size.width, 50)),
                 )

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:moneyp/feature/home/controller/auth_controller.dart';
 import 'package:moneyp/feature/home/controller/home_controller.dart';
 import 'package:moneyp/feature/wallet_onboard/controller/wallet_controller.dart';
 import 'package:moneyp/feature/wallet_onboard/model/wallet_model.dart';
+import 'package:moneyp/product/constant/color_settings.dart';
 
 class WalletsPage extends StatefulWidget {
   const WalletsPage({super.key});
@@ -34,7 +36,6 @@ class _WalletsPageState extends State<WalletsPage> {
   int value = 0;
   @override
   Widget build(BuildContext context) {
-  
     return walletController.obx(
         onLoading: Scaffold(
           body: Center(
@@ -45,8 +46,8 @@ class _WalletsPageState extends State<WalletsPage> {
       return Container(
           decoration: const BoxDecoration(
               gradient: LinearGradient(colors: [
-            Color(0xFFE0EAFC),
-            Color(0xFFCFDEF3),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(246, 211, 226, 247),
           ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
           child: Scaffold(
               resizeToAvoidBottomInset: false,
@@ -67,12 +68,10 @@ class _WalletsPageState extends State<WalletsPage> {
                             alignment: Alignment.center,
                             child: Text(
                               "My Wallets",
-                              style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  letterSpacing: 1.3,
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blueAccent.shade100),
+                              style: GoogleFonts.poppins(
+                                  fontSize: 34,
+                                  fontWeight: FontWeight.w700,
+                                  color: ColorSettings.themeColor.shade200),
                             ),
                           ),
                           SizedBox(
@@ -80,10 +79,10 @@ class _WalletsPageState extends State<WalletsPage> {
                           ),
                           Text(
                             'You can open and close your wallets and update their budgets whenever you want. (You must have at least 1 open wallet)',
-                            style: TextStyle(
-                                color: Colors.grey.shade500,
-                                fontSize: 16,
-                                letterSpacing: 1.5),
+                            style: GoogleFonts.poppins(
+                              color: Colors.grey.shade500,
+                              fontSize: 16,
+                            ),
                           ),
                         ],
                       ),
@@ -156,7 +155,7 @@ class _WalletsPageState extends State<WalletsPage> {
                                                 keyboardType:
                                                     TextInputType.number,
                                                 decoration: InputDecoration(
-                                                    labelText: 'Enter Budget',
+                                                    labelText: 'Enter budget',
                                                     alignLabelWithHint: true,
                                                     contentPadding:
                                                         EdgeInsets.symmetric(
@@ -167,7 +166,7 @@ class _WalletsPageState extends State<WalletsPage> {
                                                     border: OutlineInputBorder(
                                                         borderRadius:
                                                             BorderRadius
-                                                                .circular(32))),
+                                                                .circular(10))),
                                               ),
                                             ),
                                             FlutterSwitch(
@@ -182,8 +181,9 @@ class _WalletsPageState extends State<WalletsPage> {
                                               showOnOff: true,
                                               activeText: 'Disable',
                                               inactiveText: 'Enable',
-                                              inactiveColor:
-                                                  Colors.grey.withOpacity(0.4),
+                                              inactiveColor: Color.fromARGB(
+                                                      255, 134, 134, 134)
+                                                  .withOpacity(0.8),
                                               onToggle: (value) {
                                                 setState(() {
                                                   //Kullanılan kütüphane gereği setState yapmak zorunlu olduğundan GetX kullanılamıyor.
@@ -212,7 +212,7 @@ class _WalletsPageState extends State<WalletsPage> {
                                       color: walletController
                                           .wallets[index].walletColor!
                                           .withOpacity(0.65),
-                                      borderRadius: BorderRadius.circular(36),
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Text(
                                       walletController
@@ -246,24 +246,24 @@ class _WalletsPageState extends State<WalletsPage> {
                           await walletController.walletUpdate(
                               authController.firebaseUser.value!.uid,
                               walletController.selectedUpdateWallets);
-                           homeController.listBindStream();
+                          homeController.listBindStream();
 
                           walletController.change(null,
                               status: RxStatus.success());
-                        
+
                           Get.back();
                         },
-                        child: const Text(
+                        child: Text(
                           'Save',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style:
+                              GoogleFonts.poppins(fontWeight: FontWeight.bold),
                         ),
                         style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Colors.blueAccent.shade100.withOpacity(0.6),
+                            backgroundColor: ColorSettings.themeColor.shade200,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(32)),
+                                borderRadius: BorderRadius.circular(10)),
                             minimumSize: Size(
-                                MediaQuery.of(context).size.width * 0.8,
+                                MediaQuery.of(context).size.width * 0.84,
                                 MediaQuery.of(context).size.height * 0.05)),
                       ),
                     ),
