@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:moneyp/feature/onboard/models/onboard_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyp/product/constant/color_settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardPage extends StatefulWidget {
   const OnboardPage({super.key});
@@ -20,6 +22,13 @@ class _OnboardPageState extends State<OnboardPage>
 
   bool opacity = false;
 
+  verityFirstRun() async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+
+    sharedPreferences.setString("SPLASH_DONE", "DONE");
+  }
+
   void _changeOpacity() {
     setState(() {
       opacity = !opacity;
@@ -28,15 +37,19 @@ class _OnboardPageState extends State<OnboardPage>
 
   @override
   void initState() {
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 3, vsync: this, initialIndex: 0);
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _changeOpacity();
     });
   }
 
+  bool isPageChange = false;
   void _changeIndicator(int value) {
     _tabController.animateTo(value);
+    if (value == 2) {
+      isPageChange = true;
+    }
   }
 
   @override
@@ -72,6 +85,7 @@ class _OnboardPageState extends State<OnboardPage>
           children: [
             Expanded(
               child: PageView.builder(
+                physics: NeverScrollableScrollPhysics(),
                 controller: pageController,
                 onPageChanged: (value) => _changeIndicator(value),
                 itemCount: OnBoardModels.onBoardModels.length,
@@ -100,7 +114,6 @@ class _OnboardPageState extends State<OnboardPage>
                         style: TextStylesOnBoard.onBoardDescriptionText,
                         textAlign: TextAlign.center,
                       ),
-                     
                     ],
                   );
                 },
@@ -110,6 +123,7 @@ class _OnboardPageState extends State<OnboardPage>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 FloatingActionButton(
+                  heroTag: 'previous',
                   backgroundColor: Colors.white,
                   onPressed: () {
                     pageController.previousPage(
@@ -123,11 +137,17 @@ class _OnboardPageState extends State<OnboardPage>
                   controller: _tabController,
                 ),
                 FloatingActionButton(
+                  heroTag: 'next',
                   backgroundColor: Colors.white,
-                  onPressed: () {
+                  onPressed: () async{
                     pageController.nextPage(
                         duration: const Duration(milliseconds: 500),
                         curve: Curves.easeInOut);
+
+                    if (isPageChange) {
+                      Get.offAllNamed('/login');
+                      await verityFirstRun();
+                    }
                   },
                   child: const Icon(Icons.arrow_forward,
                       color: Color.fromRGBO(0, 125, 168, 1)),
@@ -145,15 +165,11 @@ class _OnboardPageState extends State<OnboardPage>
 }
 
 class TextStylesOnBoard {
-  static TextStyle onBoardTitleText = const TextStyle(
+  static TextStyle onBoardTitleText = GoogleFonts.poppins(
       color: Color(0xFF007DA8), //App Theme Color Here
       fontWeight: FontWeight.w700,
-      fontFamily: 'OpenSans',
       fontSize: 25);
 
-  static TextStyle onBoardDescriptionText = const TextStyle(
-      color: Color(0xff585858),
-      fontWeight: FontWeight.w500,
-      fontFamily: 'Poppins',
-      fontSize: 18);
+  static TextStyle onBoardDescriptionText = GoogleFonts.poppins(
+      color: Color(0xff585858), fontWeight: FontWeight.w500, fontSize: 18);
 }

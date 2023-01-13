@@ -99,10 +99,10 @@ class HomeController extends GetxController with StateMixin {
 
   getDovizKurlari() async {
     dovizKurlari.value = await DovizKurlariService().dovizKurGet();
-    eurToUsd.value = (double.parse(dovizKurlari.value[0].eurKur) -
+    eurToUsd.value = (double.parse(dovizKurlari.value[0].eurKur) /
             double.parse(dovizKurlari.value[0].usdKur))
         .toStringAsFixed(2);
-    usdToEur.value = (2 - double.parse(eurToUsd.value)).toStringAsFixed(2);
+    usdToEur.value = (double.parse(dovizKurlari.value[0].usdKur) / double.parse(dovizKurlari.value[0].eurKur)).toStringAsFixed(2);
     eurToTl.value =
         (1 / double.parse(dovizKurlari.value[0].eurKur)).toStringAsFixed(3);
     usdToTl.value =

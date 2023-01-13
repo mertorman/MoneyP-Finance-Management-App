@@ -6,7 +6,9 @@ import 'package:moneyp/product/constant/color_settings.dart';
 import 'package:moneyp/utils/routes.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import "package:firebase_core/firebase_core.dart";
+import 'package:shared_preferences/shared_preferences.dart';
 
+var splash;
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -14,6 +16,8 @@ Future<void> main() async {
   await Future.delayed(const Duration(seconds: 1));
   FlutterNativeSplash.remove();
   Get.testMode = true;
+  final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  splash= sharedPreferences.getString("SPLASH_DONE");
   runApp(const MyApp());
 }
 
@@ -36,7 +40,7 @@ class MyApp extends StatelessWidget {
       ),
       theme: ThemeData(primarySwatch: ColorSettings.themeColor),
       debugShowCheckedModeBanner: false,
-      initialRoute: "/login",
+      initialRoute: splash == null ? "/onboard" : "/login",
       getPages: AppRoutes.routes,
     );
   }
