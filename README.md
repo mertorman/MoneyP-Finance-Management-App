@@ -27,8 +27,6 @@
    
 </table>
 
-
-
 <h3 align="left">Application Purpose:</h3>
 
 <p align="left">MoneyP helps people track their spending and income. This helps people understand how much money they are spending and how much they are making so they can better manage their budgets. Also, the finance management app shows in which areas people spend more money and in which areas they need to save. This helps people achieve their financial goals and helps them become financially healthier and any income and expense can be tracked.
