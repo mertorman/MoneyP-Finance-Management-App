@@ -48,12 +48,6 @@
 </div>
 <h1 align="center" ></h1>
 
- 
-<h3 align="left">
-    <a href="https://docs.google.com/document/d/10n_8yGKisZx72j0OJjnNXVZqNAVPL2yy/edit?usp=sharing&ouid=103440456632788284316&rtpof=true&sd=true">
-    Application Document 
-    </a>
-</h3>
 
 <h3 align="left"><a href="https://drive.google.com/file/d/1jOgm2cym-Mv8bP_vInCx2NTYsRskGozl/view?usp=sharing"> Application Introduction (Video)</a></h3>
  
