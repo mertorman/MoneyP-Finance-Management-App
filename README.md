@@ -49,7 +49,6 @@
 <h1 align="center" ></h1>
 
 
-<h3 align="left"><a href="https://drive.google.com/file/d/1jOgm2cym-Mv8bP_vInCx2NTYsRskGozl/view?usp=sharing"> Application Introduction (Video)</a></h3>
  
 <h3 align="left">Installation</h3>
  
